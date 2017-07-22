@@ -6,8 +6,11 @@ public class BoardManager : MonoBehaviour {
 
 	public int columns = 8;
 	public int rows = 8;
-	//contenedor para los objetos del juego para que no quede todo regado
+	//contenedor para los objetos del piso y muros externos del juego para que no quede todo regado
 	private Transform boardHolder;
+
+	//Contenedor de los objetos internos como muros internos, comida, enemigos, y exit
+	private Transform itemsHolder;
 
 	// Arrays donde estan los gameObjects que se generan en el juego como las paredes, el piso, la comida, enemigos y la salida.
 	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles;
@@ -22,12 +25,15 @@ public class BoardManager : MonoBehaviour {
 		Debug.Log ("Se ejecuto!!");
 		//genera el tablero.
 		BoardSetup ();
+
 		InitializeSList ();
+		itemsHolder = new GameObject ("Items").transform;
 		LayoutObjectAtRandom (wallTiles,5,9);
 		LayoutObjectAtRandom (foodTiles,1,5);
 		int enemyCount = (int)Mathf.Log (level, 2);
 		LayoutObjectAtRandom (enemyTiles,enemyCount,enemyCount);
-		Instantiate (exit, new Vector2(columns-1, rows-1), Quaternion.identity );
+		GameObject objectInstan = Instantiate (exit, new Vector2(columns-1, rows-1), Quaternion.identity );
+		objectInstan.transform.SetParent (itemsHolder);
 	}
 
 	//llena el lista de 6x6
@@ -51,26 +57,25 @@ public class BoardManager : MonoBehaviour {
 
 	//Encargado de instanciar los objetos en el tablero (enemigos, comida o muros internos)
 	void LayoutObjectAtRandom(GameObject[] tileArray, int min, int max){
-
 		int objectCount = Random.Range (min,max+1); // numero de objetos que se instanciaran.
 		for(int i=0; i < objectCount ; i++){
 			Vector2 randomPosition = RandomPosition(); //posicion a instanciar
 			GameObject tileChoice = GetRandomInArray(tileArray); // objeto que se va a instanciar (la imagen)
-			Instantiate(tileChoice,randomPosition,Quaternion.identity);
+			GameObject objectInstan = Instantiate(tileChoice,randomPosition,Quaternion.identity);
+			objectInstan.transform.SetParent (itemsHolder);
+
 			
 		}
 		
 	}
 
-	//Encargado de pintar el tablero que es el piso y los bordes del tableroS
+	//Encargado de pintar el tablero que son el piso y los bordes del tableros
 	void BoardSetup(){
 
 		boardHolder = new GameObject ("board").transform;
 		for(int i = -1; i < columns +1 ;i++){
-			Debug.Log ("Entro");
 
 			for(int j = -1; j < rows +1 ;j++){
-				Debug.Log ("Entro2");
 
 				GameObject toInstantiate = GetRandomInArray (floorTiles);
 
