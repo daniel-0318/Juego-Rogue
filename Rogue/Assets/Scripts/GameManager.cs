@@ -4,9 +4,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+	public static GameManager instance;//para el singleton
 	public BoardManager boardScript;
 
 	private void Awake(){
+		//esto es para volverlo singleton
+		if (GameManager.instance == null) {
+			
+			GameManager.instance = this;
+
+		}else if (GameManager.instance != this){
+			
+			Destroy (gameObject);
+			
+		}
+
+		DontDestroyOnLoad (gameObject);
+
 		boardScript = GetComponent<BoardManager> ();
 
 	}
@@ -16,7 +30,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void InitGame(){
-		boardScript.SetupScene ();
+		boardScript.SetupScene (3);
 	
 	}
 
