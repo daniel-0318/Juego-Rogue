@@ -5,7 +5,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;//para el singleton
+
 	public BoardManager boardScript;
+	public int PlayerFoodPoints = 100;
+	[HideInInspector] public bool PlayerTurn = true;
 
 	private void Awake(){
 		//esto es para volverlo singleton
@@ -34,4 +37,7 @@ public class GameManager : MonoBehaviour {
 	
 	}
 
+	public void GameOver(){
+		enabled = false;
+	}
 }
