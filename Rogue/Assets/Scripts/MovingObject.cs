@@ -58,6 +58,7 @@ public abstract class MovingObject : MonoBehaviour {
 
 	protected abstract void OnCantMove (GameObject go);
 
+
 	protected virtual void AttempMove(int xDir, int yDir){
 		RaycastHit2D hit;
 		bool canMove = Move (xDir, yDir, out hit);

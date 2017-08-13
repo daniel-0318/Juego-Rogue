@@ -1,0 +1,61 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Enemy : MovingObject {
+
+
+	public int playerDamage;
+
+	private Animator animator;
+	private Transform target; //el jugador que es el objetivo del enemigo
+	private bool skipmove;
+
+	protected override void Awake(){
+		animator = GetComponent<Animator> ();
+		base.Awake ();
+	}
+
+	protected override void Start(){
+		target = GameObject.FindGameObjectWithTag ("Player").transform;
+		base.Start ();
+	}
+
+	protected override void AttempMove(int xDir, int yDir){
+		if (skipmove) {
+			skipmove = false;
+			return;
+		}
+		base.AttempMove (xDir, yDir);
+		skipmove = true;
+	}
+
+	/**
+	 * Proposito: Mover al enemigo.
+	 * Procedimiento: Primero revisa si el jugador esta en la misma columna, si lo esta entonces procede a ver si
+	 * se mueve para arriba o para abajo, de lo contrario revisa en que columna esta para ir acercandose.
+	*/
+	public void MoveEnemy(){
+		int xDir=0, yDir=0;
+		if (Mathf.Abs (target.position.x - transform.position.x) < float.Epsilon) {
+			yDir = target.position.y > transform.position.y ? 1 : -1;
+		} else {
+			xDir = target.position.x > transform.position.y ? 1 : -1;
+		}
+		AttempMove (xDir, yDir);
+	}
+
+	protected override void OnCantMove(GameObject go){
+		Player hitPlayer = go.GetComponent<Player> ();
+		if(hitPlayer != null){
+			hitPlayer.LoseFood (playerDamage);
+		}
+
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+}

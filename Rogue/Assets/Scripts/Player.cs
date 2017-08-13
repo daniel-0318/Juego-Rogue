@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Palyer : MovingObject {
+public class Player : MovingObject {
 
 
 	public int wallDamage = 1;
