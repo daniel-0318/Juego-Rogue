@@ -17,6 +17,7 @@ public class Enemy : MovingObject {
 	}
 
 	protected override void Start(){
+		GameManager.instance.AddEnemyToList (this);//Cada enemigo se añade a la lista por su cuenta
 		target = GameObject.FindGameObjectWithTag ("Player").transform;
 		base.Start ();
 	}
@@ -49,6 +50,7 @@ public class Enemy : MovingObject {
 		Player hitPlayer = go.GetComponent<Player> ();
 		if(hitPlayer != null){
 			hitPlayer.LoseFood (playerDamage);
+			animator.SetTrigger ("enemyAttack");
 		}
 
 
