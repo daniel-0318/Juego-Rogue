@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour {
 	public bool doingSetup; //sirve para saber si aun se esta preparando la escena, pasa a true luego del tiempo levelStartDelay
 
 	public BoardManager boardScript;
-	public int PlayerFoodPoints = 100;
+	public int PlayerHealthtPoints = 100;
+	public int ammo = 20;
 	[HideInInspector] public bool PlayerTurn = true;
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviour {
 
 	/**Se llama cada vez que se carga alguna escena*/
 	private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode){
+		Debug.Log ("Se inicio");
 		level++;
 		InitGame();
 	}

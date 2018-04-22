@@ -5,15 +5,18 @@ using UnityEngine.UI;
 
 public class Player : MovingObject {
 
+	public AudioClip moveSound1, moveSound2, eatSound1, eatSound2, drinkSound1, drinkSound2, gameOverSound;
 
 	public int wallDamage = 1;
 	public int pointPerfood = 10;
 	public int pointPerSoda = 20;
+	public int pointPerAmmo = 10;
 	public float restartLEvelDelay = 1f;
 	public Text foodText;
 
 	private Animator animator;
-	private int food;
+	private int health;
+
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -22,8 +25,8 @@ public class Player : MovingObject {
 
 	protected override void Start(){
 		
-		food = GameManager.instance.PlayerFoodPoints;
-		foodText.text = "Food: " + food;
+		health = GameManager.instance.PlayerHealthtPoints;
+		foodText.text = "Health Point: " + health;
 		base.Start ();
 	}
 
@@ -32,20 +35,27 @@ public class Player : MovingObject {
 	 * Esto hara que se guarde en la clase GameManager la comida que se lleva
 	*/
 	private void OnDisable(){
-		GameManager.instance.PlayerFoodPoints = food;
+		GameManager.instance.PlayerHealthtPoints = health;
 	}
 
 	void CheckIfGameOver(){
-		if (food < 0)
+		if (health < 0) {
+			SoundManager.instance.musicSource.Stop ();
+			SoundManager.instance.PlaySingle (gameOverSound);
 			GameManager.instance.GameOver ();
+		}
 	}
 
-	protected override void AttempMove(int xDir, int yDir){
-		food--;
-		foodText.text = "Food: " + food;
-		base.AttempMove(xDir, yDir);
+	/**
+	 * Metodo sobreescrito del script movingObject
+	*/
+	protected override bool AttempMove(int xDir, int yDir){
+		health--;
+		foodText.text = "Health Points: " + health;
+		bool canMove = base.AttempMove(xDir, yDir);
 		CheckIfGameOver ();
 		GameManager.instance.PlayerTurn = false;
+		return canMove;
 
 	}
 	
@@ -65,7 +75,10 @@ public class Player : MovingObject {
 			vertical = 0;
 		}
 		if(horizontal !=0 || vertical !=0){
-			AttempMove (horizontal, vertical);
+			bool canMove = AttempMove (horizontal, vertical);
+			if (canMove) {
+				SoundManager.instance.RandomizeSfx (moveSound1,moveSound2);
+			}
 		}
 	}
 
@@ -87,28 +100,30 @@ public class Player : MovingObject {
 	}
 
 	public void LoseFood(int loss){
-		food -= loss;
-		foodText.text = "-" + loss +" Food: " + food;
+		health -= loss;
+		foodText.text = "-" + loss +" Health Point: " + health;
 		animator.SetTrigger ("playerHit");
 		CheckIfGameOver ();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Exit")) {
-
 			Invoke ("Restart", restartLEvelDelay);
+			Rigidbody2D rb2D =  GetComponent<Rigidbody2D> ();
 			enabled = false; // para que no se pueda seguir moviendo el jugador
 			
 		} else if (other.CompareTag ("Food")) {
 
-			food += pointPerfood;
-			foodText.text = "+" + pointPerfood +" Food: " + food;
+			health += pointPerfood;
+			SoundManager.instance.RandomizeSfx (eatSound1,eatSound2);
+			foodText.text = "+" + pointPerfood +" Health Points: " + health;
 			other.gameObject.SetActive (false);
 			
 		} else if (other.CompareTag ("Soda")) {
 
-			food += pointPerSoda;
-			foodText.text = "+" + pointPerSoda +" Food: " + food;
+			health += pointPerSoda;
+			SoundManager.instance.RandomizeSfx (drinkSound1,drinkSound2);
+			foodText.text = "+" + pointPerSoda +" Health Points: " + health;
 			other.gameObject.SetActive (false);
 		}
 	}

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MovingObject {
 
+	public AudioClip enemyAttack1, enemyAttack2;
 
 	public int playerDamage;
 
@@ -22,13 +23,14 @@ public class Enemy : MovingObject {
 		base.Start ();
 	}
 
-	protected override void AttempMove(int xDir, int yDir){
+	protected override bool AttempMove(int xDir, int yDir){
 		if (skipmove) {
 			skipmove = false;
-			return;
+			return false;
 		}
-		base.AttempMove (xDir, yDir);
+		bool canMove = base.AttempMove (xDir, yDir);
 		skipmove = true;
+		return canMove;
 	}
 
 	/**
@@ -51,6 +53,7 @@ public class Enemy : MovingObject {
 		if(hitPlayer != null){
 			hitPlayer.LoseFood (playerDamage);
 			animator.SetTrigger ("enemyAttack");
+			SoundManager.instance.RandomizeSfx (enemyAttack1,enemyAttack2);
 		}
 
 

@@ -9,7 +9,6 @@ public abstract class MovingObject : MonoBehaviour {
 	//solos los que tengan como layer "blokingLayer" no dejaran que pasen por encima de ellos.
 	public LayerMask blokingLayer;
 
-
 	private  float movementSpeed;
 	private BoxCollider2D boxCollider;
 	private Rigidbody2D rb2D;
@@ -22,10 +21,12 @@ public abstract class MovingObject : MonoBehaviour {
 		movementSpeed = 1f / moveTime;
 	}
 
-	//corrutina donde se hace el movimiento
+	//corrutina donde se hace el movimiento ######### tentativamente esta funcion no se usa
 	protected IEnumerator SmoothMovement(Vector2 end){
 		float remainingDistance = Vector2.Distance (rb2D.position, end);
-		while (remainingDistance > float.Epsilon) {
+		Debug.Log ("init: "+ rb2D.position + " finish: " + remainingDistance);
+		while (remainingDistance > float.Epsilon ) {
+			Debug.Log (remainingDistance);
 			Vector2 newPosition = Vector2.MoveTowards (rb2D.position, end, movementSpeed * Time.deltaTime);
 			rb2D.MovePosition (newPosition);
 			remainingDistance = Vector2.Distance (rb2D.position, end);
@@ -34,7 +35,10 @@ public abstract class MovingObject : MonoBehaviour {
 	}
 
 
-	/*devuelve true si el objecto se a movido y de lo contrario falso*/
+	/**
+	 * devuelve true si el objecto se a movido y de lo contrario falso
+	 * este metodo devuelve dos valores, un bool y otro por el out
+	*/
 	protected bool Move(int XDir, int yDir, out RaycastHit2D hit){
 		Vector2 start = transform.position; // posicion donde esta el objeto
 		Vector2 end = start + new Vector2 (XDir, yDir); // posicion final.
@@ -47,8 +51,8 @@ public abstract class MovingObject : MonoBehaviour {
 
 		if (hit.transform == null) {
 
-			StartCoroutine (SmoothMovement(end));
-
+			//StartCoroutine (SmoothMovement(end));
+			rb2D.MovePosition (end);
 			return true;
 		}
 		return false;
@@ -56,15 +60,25 @@ public abstract class MovingObject : MonoBehaviour {
 
 	}
 
+	/**
+	 * Metodo abstracto para que dependiendo de quien sea "go" (ej el jugador o los muros)
+	 * s
+	*/
 	protected abstract void OnCantMove (GameObject go);
 
 
-	protected virtual void AttempMove(int xDir, int yDir){
+	/**
+	 * Este metodo llama a move para intentar moverse, si se hizo el movimiento Raycasthit2d ya tiene algo
+	 * sino se "notifica que no pudo" y ya se llama oncantmove que es abstracto para que el enemigo o el jugador
+	 * haga lo que tenga que hacer.
+	*/
+	protected virtual bool AttempMove(int xDir, int yDir){
 		RaycastHit2D hit;
 		bool canMove = Move (xDir, yDir, out hit);
-		if (canMove) {
-			return;
+		if (!canMove) {
+			OnCantMove (hit.transform.gameObject);
 		}
-		OnCantMove (hit.transform.gameObject);
+		return canMove;
+
 	}
 }

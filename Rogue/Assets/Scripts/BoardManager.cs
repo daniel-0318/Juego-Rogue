@@ -13,11 +13,10 @@ public class BoardManager : MonoBehaviour {
 	private Transform itemsHolder;
 
 	// Arrays donde estan los gameObjects que se generan en el juego como las paredes, el piso, la comida, enemigos y la salida.
-	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles;
+	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles, ammos;
 	public GameObject exit;
 
-
-	private List<Vector2> gridPositions = new List<Vector2>();
+	private List<Vector2> gridPositions = new List<Vector2>();//lista de casillas libres.
 
 
 	public void SetupScene(int level){
@@ -25,14 +24,14 @@ public class BoardManager : MonoBehaviour {
 		Debug.Log ("Se ejecuto!!");
 		//genera el tablero.
 		BoardSetup ();
-
-		InitializeSList ();
+		InitializeSList (); // inicializa la lista de posiciones
 		itemsHolder = new GameObject ("Items").transform;
 		LayoutObjectAtRandom (wallTiles,5,9);
 		LayoutObjectAtRandom (foodTiles,1,5);
-		int enemyCount = (int)Mathf.Log (level, 2);
+		randomAmmon ();
+		int enemyCount = (int)Mathf.Log (level, 2);// La cantidad de enemigos creceria logaritmicamente.
 		LayoutObjectAtRandom (enemyTiles,enemyCount,enemyCount);
-		GameObject objectInstan = Instantiate (exit, new Vector2(columns-1, rows-1), Quaternion.identity );
+		GameObject objectInstan = Instantiate (exit, new Vector2(columns-1, rows-1), Quaternion.identity ); //quaternion es la rotacion.
 		objectInstan.transform.SetParent (itemsHolder);
 	}
 
@@ -62,7 +61,7 @@ public class BoardManager : MonoBehaviour {
 			Vector2 randomPosition = RandomPosition(); //posicion a instanciar
 			GameObject tileChoice = GetRandomInArray(tileArray); // objeto que se va a instanciar (la imagen)
 			GameObject objectInstan = Instantiate(tileChoice,randomPosition,Quaternion.identity);
-			objectInstan.transform.SetParent (itemsHolder);
+			objectInstan.transform.SetParent (itemsHolder); // aca estamos metiendo el suelo en el objeto padre
 
 			
 		}
@@ -72,7 +71,7 @@ public class BoardManager : MonoBehaviour {
 	//Encargado de pintar el tablero que son el piso y los bordes del tableros
 	void BoardSetup(){
 
-		boardHolder = new GameObject ("board").transform;
+		boardHolder = new GameObject ("board").transform; //Es el objeto contenedor para el suelo
 		for(int i = -1; i < columns +1 ;i++){
 
 			for(int j = -1; j < rows +1 ;j++){
@@ -92,7 +91,14 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	GameObject GetRandomInArray(GameObject [] array){
-		Debug.Log ("pidio");
 		return array [Random.Range (0, array.Length)];
+	}
+
+	//Funcion que sirve para generar municion en el mapa con una probabilidad del 30%
+	void randomAmmon(){
+		int probabilidad = Random.Range (1, 10);
+		if (probabilidad >= 7)
+			LayoutObjectAtRandom (ammos, 1, 3);
+
 	}
 }
