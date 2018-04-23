@@ -21,12 +21,10 @@ public abstract class MovingObject : MonoBehaviour {
 		movementSpeed = 1f / moveTime;
 	}
 
-	//corrutina donde se hace el movimiento ######### tentativamente esta funcion no se usa
+	//corrutina donde se hace el movimiento
 	protected IEnumerator SmoothMovement(Vector2 end){
 		float remainingDistance = Vector2.Distance (rb2D.position, end);
-		Debug.Log ("init: "+ rb2D.position + " finish: " + remainingDistance);
 		while (remainingDistance > float.Epsilon ) {
-			Debug.Log (remainingDistance);
 			Vector2 newPosition = Vector2.MoveTowards (rb2D.position, end, movementSpeed * Time.deltaTime);
 			rb2D.MovePosition (newPosition);
 			remainingDistance = Vector2.Distance (rb2D.position, end);
@@ -51,8 +49,8 @@ public abstract class MovingObject : MonoBehaviour {
 
 		if (hit.transform == null) {
 
-			//StartCoroutine (SmoothMovement(end));
-			rb2D.MovePosition (end);
+			StartCoroutine (SmoothMovement(end));
+//			rb2D.MovePosition (end);
 			return true;
 		}
 		return false;

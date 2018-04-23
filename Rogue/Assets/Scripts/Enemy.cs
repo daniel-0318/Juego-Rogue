@@ -11,6 +11,7 @@ public class Enemy : MovingObject {
 	private Animator animator;
 	private Transform target; //el jugador que es el objetivo del enemigo
 	private bool skipmove;
+	private int healthPoints=10;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -51,16 +52,18 @@ public class Enemy : MovingObject {
 	protected override void OnCantMove(GameObject go){
 		Player hitPlayer = go.GetComponent<Player> ();
 		if(hitPlayer != null){
-			hitPlayer.LoseFood (playerDamage);
+			hitPlayer.LoseHealth (playerDamage);
 			animator.SetTrigger ("enemyAttack");
 			SoundManager.instance.RandomizeSfx (enemyAttack1,enemyAttack2);
 		}
 
 
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public void LoseHealth(int damage){
+		healthPoints -= damage;
+		if (healthPoints <= 0)
+			Destroy (gameObject);
 	}
+		
 }

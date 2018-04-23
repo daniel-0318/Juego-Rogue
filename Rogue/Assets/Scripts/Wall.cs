@@ -23,7 +23,7 @@ public class Wall : MonoBehaviour {
 		SoundManager.instance.RandomizeSfx (chopSound1,chopSound2);
 		sprinteRenderer.sprite = dmgSprite;
 		hp -= loss;
-		if(hp<0){
+		if(hp<=0){
 			/*No es aconsejable destruir un objeto durante la partida
 			para que no se ejecute el recolector de basura y disminuya
 			el rendimiento del juego. Es mejor deshabilitarlo*/

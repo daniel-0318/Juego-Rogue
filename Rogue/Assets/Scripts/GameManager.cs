@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
 
 	public BoardManager boardScript;
 	public int PlayerHealthtPoints = 100;
-	public int ammo = 20;
+	public int PlayerammoPoints = 10;
 	[HideInInspector] public bool PlayerTurn = true;
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 		levelImage.SetActive (true);
 		enemies.Clear ();
 		boardScript.SetupScene (level);
-		Invoke ("HideLevelImage",levelStartDelay);
+		Invoke ("HideLevelImage",levelStartDelay); //invoke sirve para ejecutar un metodo luego de cierto tiempo (levelstardelay)
 	
 	}
 

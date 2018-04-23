@@ -10,12 +10,17 @@ public class Player : MovingObject {
 	public int wallDamage = 1;
 	public int pointPerfood = 10;
 	public int pointPerSoda = 20;
-	public int pointPerAmmo = 10;
+	public int pointPerAmmo = 2;
 	public float restartLEvelDelay = 1f;
-	public Text foodText;
+	public Text healthText;
+	public Text ammoText;
+	bool disparo = false;
 
 	private Animator animator;
 	private int health;
+	private int ammo;
+
+	public GameObject bulletObject;
 
 
 	protected override void Awake(){
@@ -26,7 +31,9 @@ public class Player : MovingObject {
 	protected override void Start(){
 		
 		health = GameManager.instance.PlayerHealthtPoints;
-		foodText.text = "Health Point: " + health;
+		ammo = GameManager.instance.PlayerammoPoints;
+		healthText.text = "Health Point: " + health;
+		ammoText.text = "Ammo: " + ammo;
 		base.Start ();
 	}
 
@@ -36,22 +43,19 @@ public class Player : MovingObject {
 	*/
 	private void OnDisable(){
 		GameManager.instance.PlayerHealthtPoints = health;
+		GameManager.instance.PlayerammoPoints = ammo;
 	}
 
 	void CheckIfGameOver(){
-		if (health < 0) {
+		if (health <= 0) {
 			SoundManager.instance.musicSource.Stop ();
 			SoundManager.instance.PlaySingle (gameOverSound);
 			GameManager.instance.GameOver ();
 		}
 	}
 
-	/**
-	 * Metodo sobreescrito del script movingObject
-	*/
+
 	protected override bool AttempMove(int xDir, int yDir){
-		health--;
-		foodText.text = "Health Points: " + health;
 		bool canMove = base.AttempMove(xDir, yDir);
 		CheckIfGameOver ();
 		GameManager.instance.PlayerTurn = false;
@@ -66,20 +70,70 @@ public class Player : MovingObject {
 			return;
 		}
 
-		int horizontal;
-		int vertical;
+		int horizontal=0;
+		int vertical=0;
 
-		horizontal = (int)Input.GetAxisRaw ("Horizontal");
-		vertical = (int)Input.GetAxisRaw ("Vertical");
+		if (Input.GetKeyDown (KeyCode.UpArrow)) {
+			vertical = 1;
+		}else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+			vertical = -1;
+		}else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+			horizontal = -1;
+		}else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+			horizontal = 1;
+		}
+
+		if ((horizontal == 0 && vertical == 0) &&( Input.GetKeyDown (KeyCode.W) || Input.GetKeyDown (KeyCode.S) || 
+			Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.D)) && (ammo > 0) ) {
+			Debug.Log ("Entro a disparar");
+			//accedemos al Script del objeto bala
+			Bullet Scriptbullet = bulletObject.GetComponent<Bullet>();
+
+			if (Input.GetKeyDown (KeyCode.W)) {//Ataque hacia arriba
+				Debug.Log ("W");
+				Scriptbullet.direccionArma = Direccion.Vertical;
+				Scriptbullet.velocidad = Math.Abs (Scriptbullet.velocidad);
+				disparo = true;
+			}else if (Input.GetKeyDown (KeyCode.S)) {
+				Debug.Log ("S");
+				Scriptbullet.direccionArma = Direccion.Vertical;
+				Scriptbullet.velocidad = -Math.Abs (Scriptbullet.velocidad);
+				disparo = true;
+			}else if (Input.GetKeyDown (KeyCode.A)) {
+				Debug.Log ("A");
+				Scriptbullet.direccionArma = Direccion.Horizontal;
+				Scriptbullet.velocidad = -Math.Abs (Scriptbullet.velocidad);
+				disparo = true;
+			}else if (Input.GetKeyDown (KeyCode.D)) {
+				Debug.Log ("D");
+				Scriptbullet.direccionArma = Direccion.Horizontal;
+				Scriptbullet.velocidad = Math.Abs (Scriptbullet.velocidad);
+				disparo = true;
+			}
+			ammo--;
+			ammoText.text = " Ammo: " + ammo;
+			//Se crea la bala en la escena, en la posicion del jugador
+			Instantiate (bulletObject, transform.position, Quaternion.identity);
+			GameManager.instance.PlayerTurn = false;
+
+		}
+
+		/**
+		 * No usamos getaxisraw porque este se llama muchas veces por cada frame y termina malogrando el movimiento
+		*/
+//		horizontal = (int)Input.GetAxisRaw ("Horizontal");
+//		vertical = (int)Input.GetAxisRaw ("Vertical");
 		if(horizontal !=0){
 			vertical = 0;
 		}
-		if(horizontal !=0 || vertical !=0){
+		if ((horizontal != 0 || vertical != 0) && !disparo) {
 			bool canMove = AttempMove (horizontal, vertical);
 			if (canMove) {
-				SoundManager.instance.RandomizeSfx (moveSound1,moveSound2);
+				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 			}
+
 		}
+		disparo = false;
 	}
 
 	/*Se encarga de ver si el objeto que no a dejado mover el jugador es un muro
@@ -99,9 +153,9 @@ public class Player : MovingObject {
 		SceneManager.LoadScene (SceneManager.GetActiveScene().name);
 	}
 
-	public void LoseFood(int loss){
+	public void LoseHealth(int loss){
 		health -= loss;
-		foodText.text = "-" + loss +" Health Point: " + health;
+		healthText.text = "-" + loss +" Health Point: " + health;
 		animator.SetTrigger ("playerHit");
 		CheckIfGameOver ();
 	}
@@ -109,21 +163,26 @@ public class Player : MovingObject {
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Exit")) {
 			Invoke ("Restart", restartLEvelDelay);
-			Rigidbody2D rb2D =  GetComponent<Rigidbody2D> ();
 			enabled = false; // para que no se pueda seguir moviendo el jugador
 			
 		} else if (other.CompareTag ("Food")) {
 
 			health += pointPerfood;
-			SoundManager.instance.RandomizeSfx (eatSound1,eatSound2);
-			foodText.text = "+" + pointPerfood +" Health Points: " + health;
+			SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
+			healthText.text = "+" + pointPerfood + " Health Points: " + health;
 			other.gameObject.SetActive (false);
 			
 		} else if (other.CompareTag ("Soda")) {
 
 			health += pointPerSoda;
+			SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
+			healthText.text = "+" + pointPerSoda + " Health Points: " + health;
+			other.gameObject.SetActive (false);
+		} else if (other.CompareTag ("Ammo")) {
+
+			ammo += pointPerAmmo;
 			SoundManager.instance.RandomizeSfx (drinkSound1,drinkSound2);
-			foodText.text = "+" + pointPerSoda +" Health Points: " + health;
+			ammoText.text = "+" + pointPerAmmo + " Ammo: " + ammo;
 			other.gameObject.SetActive (false);
 		}
 	}
