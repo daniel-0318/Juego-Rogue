@@ -60,10 +60,15 @@ public class Enemy : MovingObject {
 
 	}
 
+	/**Metodo que sirve para disminuir los puntos de vida de los enemigos y de llegar esta a cero, destruirlo	*/
 	public void LoseHealth(int damage){
 		healthPoints -= damage;
-		if (healthPoints <= 0)
+		Debug.Log (healthPoints <= 0);
+		if (healthPoints <= 0) {
+			Debug.Log ("Entro a destruir el enemigo");
+			GameManager.instance.DeleteEnemyToList (gameObject.transform);
 			Destroy (gameObject);
+		}
 	}
 		
 }

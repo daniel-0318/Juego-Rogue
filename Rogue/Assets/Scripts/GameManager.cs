@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	public BoardManager boardScript;
 	public int PlayerHealthtPoints = 100;
 	public int PlayerammoPoints = 10;
-	[HideInInspector] public bool PlayerTurn = true;
+	[HideInInspector] public bool PlayerTurn = true; //Por defecto comienza moviendo el player
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
@@ -92,6 +92,17 @@ public class GameManager : MonoBehaviour {
 
 	public void AddEnemyToList(Enemy enemy){
 		enemies.Add (enemy);
+	}
+
+	/**Proposito: cuando un enemigo sea eliminado desde este metodo se buscara su posicion para eliminarlo*/
+	public void DeleteEnemyToList(Transform enemyFound){
+		Debug.Log ("######" + enemies.Count);
+		for (int i = 0; i < enemies.Count; i++) {
+			if(enemies[i].transform.position.Equals(enemyFound.position)){
+				Debug.Log ("$$$$$  Enemigo encontrado $$$$$");
+				enemies.RemoveAt (i);
+			}
+		}
 	}
 
 	/**Proposito: Cuando el componente GameManager se activa se notifica a SceneLoaded
