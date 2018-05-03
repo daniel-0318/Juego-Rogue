@@ -12,6 +12,8 @@ public class Enemy : MovingObject {
 	private Transform target; //el jugador que es el objetivo del enemigo
 	private bool skipmove;
 	private int healthPoints=10;
+	private Vector2 MovEsquive;
+	private bool aunEsquivando;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -24,6 +26,10 @@ public class Enemy : MovingObject {
 		base.Start ();
 	}
 
+	/**
+	 *Proposito hacer que los enemigos se muevan una vez y otra vez no cuando les toque mover llama a la base
+	 *para realizar el movimiento
+	*/
 	protected override bool AttempMove(int xDir, int yDir){
 		if (skipmove) {
 			skipmove = false;
@@ -44,17 +50,30 @@ public class Enemy : MovingObject {
 		if (Mathf.Abs (target.position.x - transform.position.x) < float.Epsilon) {
 			yDir = target.position.y > transform.position.y ? 1 : -1;
 		} else {
-			xDir = target.position.x > transform.position.y ? 1 : -1;
+			xDir = target.position.x > transform.position.x ? 1 : -1;
 		}
-		AttempMove (xDir, yDir);
+		if ( !(MovEsquive.Equals(new Vector2(xDir,yDir)))) {//si no acaba de esquivar y para donde quiere moverse es donde estaba atorado
+			Debug.Log("Entro a moverse sin problema por ahora");
+			AttempMove (xDir, yDir);
+		} else {
+			Debug.Log ("la posicion que queria era donde acaba de salir");
+			PreparseParaEsquivar (new Vector2(xDir, yDir));
+		}
 	}
 
 	protected override void OnCantMove(GameObject go){
 		Player hitPlayer = go.GetComponent<Player> ();
-		if(hitPlayer != null){
+		if (hitPlayer != null) {
 			hitPlayer.LoseHealth (playerDamage);
 			animator.SetTrigger ("enemyAttack");
-			SoundManager.instance.RandomizeSfx (enemyAttack1,enemyAttack2);
+			SoundManager.instance.RandomizeSfx (enemyAttack1, enemyAttack2);
+		} else {
+			Debug.Log ("No pudo mover.");
+			Wall pared = go.GetComponent<Wall> ();
+			if (pared != null) {
+				Debug.Log ("Pared encontrada");
+				PreparseParaEsquivar (new Vector2 (pared.transform.position.x, pared.transform.position.y));
+			}
 		}
 
 
@@ -65,10 +84,68 @@ public class Enemy : MovingObject {
 		healthPoints -= damage;
 		Debug.Log (healthPoints <= 0);
 		if (healthPoints <= 0) {
-			Debug.Log ("Entro a destruir el enemigo");
 			GameManager.instance.DeleteEnemyToList (gameObject.transform);
 			Destroy (gameObject);
 		}
+	}
+
+	/**Metodo el cual hace que el enemigo esquive un obstaculo
+	 * si el obstaculo esta en horizontal el buscara moverse verticialmente y viceversa
+	*/
+	public void PreparseParaEsquivar (Vector2 obstaclePos){
+		
+		float posX = transform.position.x, posY = transform.position.y;
+		float posObsX = obstaclePos.x, posObsY = obstaclePos.y;
+		Debug.Log ("Entro a esquivar " + !obstaclePos.Equals(new Vector2 (posX + 1, posY)) + " " + 
+			!obstaclePos.Equals(new Vector2 (posX, posY+1)));
+
+		if (posX == posObsX) {
+			Debug.Log ("Obstaculo en x");		
+			bool right = AroundObstacle (new Vector2 (posX + 1, posY));
+			if (right && !obstaclePos.Equals (new Vector2 (posX + 1, posY))) { // la comparacion de vectores es por si acababa de salir de ahi antes
+				Debug.Log ("Der libre");
+				AttempMove (1, 0);
+				MovEsquive = new Vector2 (-1, 0);
+			} else if (AroundObstacle (new Vector2 (posX - 1, posY)) && !obstaclePos.Equals (new Vector2 (posX - 1, posY))) {
+				Debug.Log ("Izq libre");
+				AttempMove (-1, 0);
+				MovEsquive = new Vector2 (1, 0);
+			} else {
+				Debug.Log ("devolviendose por sanja");
+				if (posY > posObsY) {
+					AttempMove (0, 1);
+					MovEsquive = new Vector2 (0, 1);
+				} else {
+					AttempMove (0, -1);
+					MovEsquive = new Vector2 (0, -1);
+				}
+			}
+		} else if (posY == posObsY) {
+			Debug.Log ("Obstaculo en y");
+			bool up = AroundObstacle (new Vector2 (posX, posY+1));
+			if (up && !obstaclePos.Equals (new Vector2 (posX, posY + 1))) {
+				Debug.Log ("Arriba libre");
+				AttempMove (0, 1);
+				MovEsquive = new Vector2 (0, -1);
+			} else if (AroundObstacle (new Vector2 (posX, posY - 1)) && !obstaclePos.Equals (new Vector2 (posX, posY - 1))) {
+				Debug.Log ("abajo libre");
+				AttempMove (0, -1);
+				MovEsquive = new Vector2 (0, 1);
+			} else {
+				Debug.Log ("devolviendose por sanja");
+				if (posX > posObsX) {
+					AttempMove (1, 0);
+					MovEsquive = new Vector2 (1, 0);
+				} else {
+					AttempMove (-1, 0);
+					MovEsquive = new Vector2 (-1, 0);
+				}
+			}
+		}
+		aunEsquivando = aunEsquivando == false ? true : false; // para que esquive solo dos veces
+		if (!aunEsquivando)
+			MovEsquive = new Vector2 (0, 0);
+
 	}
 		
 }

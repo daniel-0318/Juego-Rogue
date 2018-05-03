@@ -88,41 +88,40 @@ public class Player : MovingObject {
 			Debug.Log ("Entro a disparar");
 			//accedemos al Script del objeto bala
 			Bullet Scriptbullet = bulletObject.GetComponent<Bullet>();
-
+			/*por ahora repito el cambiar de turno en cada if para evitar que los enemigos se muevan antes de que el jugador termine de moverse*/
 			if (Input.GetKeyDown (KeyCode.W)) {//Ataque hacia arriba
 				Debug.Log ("W");
 				Scriptbullet.direccionArma = Direccion.Vertical;
 				Scriptbullet.velocidad = Math.Abs (Scriptbullet.velocidad);
 				disparo = true;
+				GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.S)) {
 				Debug.Log ("S");
 				Scriptbullet.direccionArma = Direccion.Vertical;
 				Scriptbullet.velocidad = -Math.Abs (Scriptbullet.velocidad);
 				disparo = true;
+				GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.A)) {
 				Debug.Log ("A");
 				Scriptbullet.direccionArma = Direccion.Horizontal;
 				Scriptbullet.velocidad = -Math.Abs (Scriptbullet.velocidad);
 				disparo = true;
+				GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.D)) {
 				Debug.Log ("D");
 				Scriptbullet.direccionArma = Direccion.Horizontal;
 				Scriptbullet.velocidad = Math.Abs (Scriptbullet.velocidad);
 				disparo = true;
+				GameManager.instance.PlayerTurn = false;
 			}
 			ammo--;
 			ammoText.text = " Ammo: " + ammo;
 			//Se crea la bala en la escena, en la posicion del jugador
 			Instantiate (bulletObject, transform.position, Quaternion.identity);
-			GameManager.instance.PlayerTurn = false;
+
 
 		}
-
-		/**
-		 * No usamos getaxisraw porque este se llama muchas veces por cada frame y termina malogrando el movimiento
-		*/
-//		horizontal = (int)Input.GetAxisRaw ("Horizontal");
-//		vertical = (int)Input.GetAxisRaw ("Vertical");
+			
 		if(horizontal !=0){
 			vertical = 0;
 		}
@@ -131,7 +130,7 @@ public class Player : MovingObject {
 			if (canMove) {
 				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 			}
-
+			GameManager.instance.PlayerTurn = false;
 		}
 		disparo = false;
 	}

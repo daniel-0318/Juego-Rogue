@@ -79,4 +79,28 @@ public abstract class MovingObject : MonoBehaviour {
 		return canMove;
 
 	}
+
+
+	/**Metodo que se encarga de validar si desde la posicion del objeto hasta un punto determinado
+	 * tiene o no obstaculos en linea recto del tipo Blockinglayer.
+	 * Devuelve true si no colisiono con nada.
+	*/
+	public bool AroundObstacle(Vector2 esquive){
+		RaycastHit2D obstacle;
+		Vector2 start = transform.position; // posicion donde esta el objeto
+		Vector2 end = start + esquive; // posicion final.
+
+		/*se desactiva el boxcollider del objeto para evitar que se detecte a ella misma como si fuera una "colision"
+		**y luego de los calculos se vuelve a activar*/
+		boxCollider.enabled = false;
+		obstacle = Physics2D.Linecast (start, end, blokingLayer);
+		boxCollider.enabled = true;
+
+		if (obstacle.transform == null) {
+			return true;
+		}
+		return false;
+				
+	}
+
 }

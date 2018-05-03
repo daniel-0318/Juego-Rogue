@@ -28,7 +28,6 @@ public class Bullet : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter2D(Collider2D other){
-		Debug.Log ("entro al trigger de la bala");
 		if (other.CompareTag ("Enemy")) {
 			Enemy hit = other.gameObject.GetComponent<Enemy> ();
 			if (hit != null) {
