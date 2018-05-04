@@ -89,13 +89,13 @@ public abstract class MovingObject : MonoBehaviour {
 		RaycastHit2D obstacle;
 		Vector2 start = transform.position; // posicion donde esta el objeto
 		Vector2 end = start + esquive; // posicion final.
-
+		Debug.Log("Posicion donde esta buscando: "+start + " " + esquive + " "+ end);
 		/*se desactiva el boxcollider del objeto para evitar que se detecte a ella misma como si fuera una "colision"
 		**y luego de los calculos se vuelve a activar*/
 		boxCollider.enabled = false;
 		obstacle = Physics2D.Linecast (start, end, blokingLayer);
 		boxCollider.enabled = true;
-
+		Debug.Log ("Encontro algun obstaculo? " +obstacle.transform == null );
 		if (obstacle.transform == null) {
 			return true;
 		}

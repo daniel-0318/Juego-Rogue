@@ -71,7 +71,7 @@ public class Enemy : MovingObject {
 			Debug.Log ("No pudo mover.");
 			Wall pared = go.GetComponent<Wall> ();
 			if (pared != null) {
-				Debug.Log ("Pared encontrada");
+				Debug.Log ("Pared encontrada en: " + new Vector2 (pared.transform.position.x, pared.transform.position.y));
 				PreparseParaEsquivar (new Vector2 (pared.transform.position.x, pared.transform.position.y));
 			}
 		}
@@ -96,22 +96,26 @@ public class Enemy : MovingObject {
 		
 		float posX = transform.position.x, posY = transform.position.y;
 		float posObsX = obstaclePos.x, posObsY = obstaclePos.y;
-		Debug.Log ("Entro a esquivar " + !obstaclePos.Equals(new Vector2 (posX + 1, posY)) + " " + 
-			!obstaclePos.Equals(new Vector2 (posX, posY+1)));
+		Debug.Log ("Obstaculo en: " + obstaclePos);
+		Debug.Log ("Posicion del enemigo: " + transform.position);
+		Debug.Log ("posicion restringida? " + MovEsquive);
 
-		if (posX == posObsX) {
-			Debug.Log ("Obstaculo en x");		
-			bool right = AroundObstacle (new Vector2 (posX + 1, posY));
-			if (right && !obstaclePos.Equals (new Vector2 (posX + 1, posY))) { // la comparacion de vectores es por si acababa de salir de ahi antes
+		if (posY != posObsY) {
+			Debug.Log ("Obstaculo en Y");		
+			bool right = AroundObstacle (new Vector2 (1, 0));
+			Debug.Log ("right y 1 0 "+ right + " " + !MovEsquive.Equals (new Vector2 (posX + 1, posY)));
+			Debug.Log ("left y -1 0: "+ AroundObstacle (new Vector2 (-1, 0)) + " " + !MovEsquive.Equals (new Vector2 (posX - 1, posY)));
+			if (right && !MovEsquive.Equals (new Vector2 (posX + 1, posY))) { // la comparacion de vectores es por si acababa de salir de ahi antes
 				Debug.Log ("Der libre");
 				AttempMove (1, 0);
 				MovEsquive = new Vector2 (-1, 0);
-			} else if (AroundObstacle (new Vector2 (posX - 1, posY)) && !obstaclePos.Equals (new Vector2 (posX - 1, posY))) {
+			} else if (AroundObstacle (new Vector2 (-1, 0)) && !MovEsquive.Equals (new Vector2 (posX - 1, posY))) {
 				Debug.Log ("Izq libre");
 				AttempMove (-1, 0);
 				MovEsquive = new Vector2 (1, 0);
 			} else {
 				Debug.Log ("devolviendose por sanja");
+
 				if (posY > posObsY) {
 					AttempMove (0, 1);
 					MovEsquive = new Vector2 (0, 1);
@@ -119,20 +123,25 @@ public class Enemy : MovingObject {
 					AttempMove (0, -1);
 					MovEsquive = new Vector2 (0, -1);
 				}
+				Debug.Log ("Posicion que no deberia ir esta en: " + MovEsquive);
 			}
-		} else if (posY == posObsY) {
-			Debug.Log ("Obstaculo en y");
-			bool up = AroundObstacle (new Vector2 (posX, posY+1));
-			if (up && !obstaclePos.Equals (new Vector2 (posX, posY + 1))) {
+		} else if (posX != posObsX) {
+			Debug.Log ("Obstaculo en X");
+			bool up = AroundObstacle (new Vector2 (0, 1));
+			Debug.Log ("up y 0 1: "+ up + " " + !MovEsquive.Equals (new Vector2 (posX, posY + 1)));
+			Debug.Log ("down y 0 -1: "+ AroundObstacle (new Vector2 (0, -1)) + " " + !MovEsquive.Equals (new Vector2 (posX, posY - 1)));
+
+			if (up && !MovEsquive.Equals (new Vector2 (posX, posY + 1))) {
 				Debug.Log ("Arriba libre");
 				AttempMove (0, 1);
 				MovEsquive = new Vector2 (0, -1);
-			} else if (AroundObstacle (new Vector2 (posX, posY - 1)) && !obstaclePos.Equals (new Vector2 (posX, posY - 1))) {
+			} else if (AroundObstacle (new Vector2 (0, -1)) && !MovEsquive.Equals (new Vector2 (posX, posY - 1))) {
 				Debug.Log ("abajo libre");
 				AttempMove (0, -1);
 				MovEsquive = new Vector2 (0, 1);
 			} else {
 				Debug.Log ("devolviendose por sanja");
+
 				if (posX > posObsX) {
 					AttempMove (1, 0);
 					MovEsquive = new Vector2 (1, 0);
@@ -140,11 +149,15 @@ public class Enemy : MovingObject {
 					AttempMove (-1, 0);
 					MovEsquive = new Vector2 (-1, 0);
 				}
+				Debug.Log ("Posicion que no deberia ir esta en: " + MovEsquive);
 			}
 		}
+		Debug.Log ("Aun esquivando esta en : " + aunEsquivando);
 		aunEsquivando = aunEsquivando == false ? true : false; // para que esquive solo dos veces
+		Debug.Log ("y paso a ser: " + aunEsquivando);
 		if (!aunEsquivando)
 			MovEsquive = new Vector2 (0, 0);
+		Debug.Log ("MovEsquivado al final es : " + MovEsquive);
 
 	}
 		
