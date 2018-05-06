@@ -95,7 +95,7 @@ public abstract class MovingObject : MonoBehaviour {
 		boxCollider.enabled = false;
 		obstacle = Physics2D.Linecast (start, end, blokingLayer);
 		boxCollider.enabled = true;
-		Debug.Log ("Encontro algun obstaculo? " +obstacle.transform == null );
+		Debug.Log ("Encontro algun obstaculo? " + obstacle.transform != null );
 		if (obstacle.transform == null) {
 			return true;
 		}
