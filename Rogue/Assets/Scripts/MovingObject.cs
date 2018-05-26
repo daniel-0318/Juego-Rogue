@@ -89,18 +89,36 @@ public abstract class MovingObject : MonoBehaviour {
 		RaycastHit2D obstacle;
 		Vector2 start = transform.position; // posicion donde esta el objeto
 		Vector2 end = start + esquive; // posicion final.
-		Debug.Log("Posicion donde esta buscando: "+start + " " + esquive + " "+ end);
 		/*se desactiva el boxcollider del objeto para evitar que se detecte a ella misma como si fuera una "colision"
 		**y luego de los calculos se vuelve a activar*/
 		boxCollider.enabled = false;
 		obstacle = Physics2D.Linecast (start, end, blokingLayer);
 		boxCollider.enabled = true;
-		Debug.Log ("Encontro algun obstaculo? " + obstacle.transform != null );
 		if (obstacle.transform == null) {
 			return true;
 		}
 		return false;
 				
+	}
+
+	/*Metodo Prueba 
+	 * Metodo prueba que una vez al prefab de exit se le cambia el layer a BlockingLayer y el jugador esta cerca detecta si
+	 * si tiene algun objeto interfiriendo en linea recta hacia la salida.
+	*/
+	public void GoalLook(){
+		RaycastHit2D objeto;
+		Vector2 start = transform.position;
+		Vector2 end = start + new Vector2(1,1);
+		Debug.Log ("End es: :" + end);
+		boxCollider.enabled = false;
+		objeto = Physics2D.Linecast (start, end, blokingLayer);
+		boxCollider.enabled = true;
+		if (objeto.transform == null) {
+			Debug.Log ("paila");
+		} else {
+			Debug.Log ("Encontrado: " + objeto.transform.gameObject.tag);
+
+		}
 	}
 
 }

@@ -73,6 +73,15 @@ public class Player : MovingObject {
 		int horizontal=0;
 		int vertical=0;
 
+		//////////////////////////   ZONA PRUEBA
+		if(Input.GetKeyDown(KeyCode.M)){
+			Debug.Log ("Entro en la letra M a mapiar");
+			GoalLook ();
+
+		}
+
+		/////////////////////////
+
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			vertical = 1;
 		}else if (Input.GetKeyDown (KeyCode.DownArrow)) {

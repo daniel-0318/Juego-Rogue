@@ -24,7 +24,7 @@ public class BoardManager : MonoBehaviour {
 		Debug.Log ("Se ejecuto!!");
 		//genera el tablero.
 		BoardSetup ();
-		InitializeSList (); // inicializa la lista de posiciones
+		InitializeList (); // inicializa la lista de posiciones
 		itemsHolder = new GameObject ("Items").transform;
 		LayoutObjectAtRandom (wallTiles,5,9);
 		LayoutObjectAtRandom (foodTiles,1,5);
@@ -35,8 +35,8 @@ public class BoardManager : MonoBehaviour {
 		objectInstan.transform.SetParent (itemsHolder);
 	}
 
-	//llena el lista de 6x6
-	void InitializeSList(){
+	//llena la lista
+	void InitializeList(){
 		gridPositions.Clear();
 		for (int x = 1; x<columns-1 ; x++) {
 			for(int y=1;y<rows-1;y++){

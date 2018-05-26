@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 		levelText.text = "Day " + level;
 		levelImage.SetActive (true);
 		enemies.Clear ();
-		boardScript.SetupScene (level);
+		boardScript.SetupScene (level); //crear nivel
 		Invoke ("HideLevelImage",levelStartDelay); //invoke sirve para ejecutar un metodo luego de cierto tiempo (levelstardelay)
 	
 	}
