@@ -58,16 +58,6 @@ public class Enemy : MovingObject {
 			Debug.Log ("Entro a MoveEnemy, movEsquive y la compacion es: " + MovEsquive + " " + !(MovEsquive.Equals (new Vector2 (xDir, yDir))));
 			esquivar ();
 		}
-//		if (!(MovEsquive.Equals (new Vector2 (xDir, yDir)))) {//si no acaba de esquivar y para donde quiere moverse es donde estaba atorado
-//			Debug.Log ("Entro a moverse sin problema por ahora");
-//			bool resp = AttempMove (xDir, yDir);
-//			if (resp) {
-//				MovEsquive.Set (0,0);
-//			}
-//		} else {
-//			Debug.Log ("Va a esquivar porque ya estuvo ahi : " + xDir + " " + yDir);
-//			esquivar (new Vector2(0,0));
-//		}
 	}
 
 	protected override void OnCantMove(GameObject go){

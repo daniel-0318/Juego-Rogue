@@ -13,7 +13,7 @@ public class BoardManager : MonoBehaviour {
 	private Transform itemsHolder;
 
 	// Arrays donde estan los gameObjects que se generan en el juego como las paredes, el piso, la comida, enemigos y la salida.
-	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles, ammos;
+	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles, ammos, nodePoints;
 	public GameObject exit;
 
 	private List<Vector2> gridPositions = new List<Vector2>();//lista de casillas libres.
@@ -29,6 +29,7 @@ public class BoardManager : MonoBehaviour {
 		LayoutObjectAtRandom (wallTiles,5,9);
 		LayoutObjectAtRandom (foodTiles,1,5);
 		randomAmmon ();
+		radomNodes (); //nodos para waypoint
 		int enemyCount = (int)Mathf.Log (level, 2);// La cantidad de enemigos creceria logaritmicamente.
 		LayoutObjectAtRandom (enemyTiles,enemyCount,enemyCount);
 		GameObject objectInstan = Instantiate (exit, new Vector2(columns-1, rows-1), Quaternion.identity ); //quaternion es la rotacion.
@@ -100,5 +101,9 @@ public class BoardManager : MonoBehaviour {
 		if (probabilidad >= 7)
 			LayoutObjectAtRandom (ammos, 1, 3);
 
+	}
+
+	void radomNodes(){
+		LayoutObjectAtRandom (nodePoints, 3, 6);
 	}
 }

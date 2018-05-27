@@ -192,6 +192,10 @@ public class Player : MovingObject {
 			SoundManager.instance.RandomizeSfx (drinkSound1,drinkSound2);
 			ammoText.text = "+" + pointPerAmmo + " Ammo: " + ammo;
 			other.gameObject.SetActive (false);
+
+		}else if (other.CompareTag ("Node")) {
+			Debug.Log ("Funciono =)(/&%$#");
+			GameManager.instance.ActiveNode (true);
 		}
 	}
 

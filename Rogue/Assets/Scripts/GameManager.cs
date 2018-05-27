@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour {
 	private GameObject levelImage;
 	private Text levelText;
 
+	private bool moveToNode = false;
+
 
 	private void Awake(){
 		//esto es para volverlo singleton
@@ -44,6 +46,7 @@ public class GameManager : MonoBehaviour {
 
 	void InitGame(){
 		doingSetup = true;
+		moveToNode = false;
 		levelImage = GameObject.Find ("LevelImage");
 		levelText = GameObject.Find ("LevelText").GetComponent<Text>();
 		levelText.text = "Day " + level;
@@ -66,14 +69,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator MoveEnemies(){
-
 		enemiesMoving = true;
 		yield return new WaitForSeconds (turnDelay);
 		if (enemies.Count == 0) {
 			yield return new WaitForSeconds (turnDelay);
 		}
 		for(int i=0;i<enemies.Count;i++){
-
+			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
 			enemies [i].MoveEnemy ();
 			yield return new WaitForSeconds (enemies[i].moveTime);
 			
@@ -125,4 +127,10 @@ public class GameManager : MonoBehaviour {
 		level++;
 		InitGame();
 	}
+		
+	public void ActiveNode(bool valor){
+		moveToNode = valor;
+		Debug.Log ("Cambio de valor a nodo " + moveToNode);
+	}
+		
 }
