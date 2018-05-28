@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	public BoardManager boardScript;
 	public int PlayerHealthtPoints = 100;
 	public int PlayerammoPoints = 10;
- public bool PlayerTurn = true; //Por defecto comienza moviendo el player
+ 	public bool PlayerTurn = true; //Por defecto comienza moviendo el player
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 	private Text levelText;
 
 	private bool moveToNode = false;
+	private Vector2 coordeNode;
 
 
 	private void Awake(){
@@ -76,7 +77,11 @@ public class GameManager : MonoBehaviour {
 		}
 		for(int i=0;i<enemies.Count;i++){
 			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
-			enemies [i].MoveEnemy ();
+			//Si el jugador toca un nodo los enemigos iran al nodo mientras
+			if (moveToNode) {
+				Debug.Log ("Se ira al nodo");
+			}else
+				enemies [i].moveEnemyRandom ();
 			yield return new WaitForSeconds (enemies[i].moveTime);
 			
 		}
@@ -131,6 +136,11 @@ public class GameManager : MonoBehaviour {
 	public void ActiveNode(bool valor){
 		moveToNode = valor;
 		Debug.Log ("Cambio de valor a nodo " + moveToNode);
+	}
+
+	public void setCoordeNode(Vector2 coorde){
+		coordeNode = coorde;
+		Debug.Log ("vector nodo: "  + coorde);
 	}
 		
 }

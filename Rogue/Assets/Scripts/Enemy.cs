@@ -60,6 +60,40 @@ public class Enemy : MovingObject {
 		}
 	}
 
+	/*Metodo que hace que el enemigo se mueva aleatoriamente.*/
+	public void moveEnemyRandom(){
+		bool moveOk = false;
+		Vector2 mov = generarMovimiento();
+		moveOk = AroundObstacle(mov);
+		while (!moveOk) {
+			mov = generarMovimiento();
+			moveOk = AroundObstacle(mov);
+		}
+		AttempMove ((int)mov.x, (int)mov.y);
+	}
+
+	/*Metodo auxiliar para moveEnemyRandom para decirdir un movieminto */
+	public Vector2 generarMovimiento(){
+		int xDir=0, yDir=0, num=0;
+		float desicionXOrY, desicionLR;
+		desicionXOrY = Random.Range (0.0f, 1.0f);
+		desicionLR = Random.Range (0.0f, 1.0f);
+
+		if (desicionLR > 0.5) {
+			num = 1;
+		} else {
+			num = -1;
+		}
+		if (desicionXOrY > 0.5) {
+			yDir = num;
+		} else {
+			xDir = num;
+		}
+		return new Vector2 (xDir, yDir);
+	}
+
+
+	/**Metodo usado para esquivar cuando se usa esquivar obstaculos*/
 	protected override void OnCantMove(GameObject go){
 		Player hitPlayer = go.GetComponent<Player> ();
 		if (hitPlayer != null) {
@@ -75,8 +109,6 @@ public class Enemy : MovingObject {
 				esquivar ();
 			}
 		}
-
-
 	}
 
 	/**Metodo que sirve para disminuir los puntos de vida de los enemigos y de llegar esta a cero, destruirlo	*/

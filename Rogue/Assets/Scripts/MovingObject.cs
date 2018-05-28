@@ -73,9 +73,10 @@ public abstract class MovingObject : MonoBehaviour {
 	protected virtual bool AttempMove(int xDir, int yDir){
 		RaycastHit2D hit;
 		bool canMove = Move (xDir, yDir, out hit);
-		if (!canMove) {
-			OnCantMove (hit.transform.gameObject);
-		}
+		/**No lo usamos para waypoint*/
+//		if (!canMove) {
+//			OnCantMove (hit.transform.gameObject);
+//		}
 		return canMove;
 
 	}
