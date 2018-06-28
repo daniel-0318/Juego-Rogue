@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
+	private int enemiesAllInNode = 0;
 
 	private int level = 0;
 	private GameObject levelImage;
@@ -75,16 +76,30 @@ public class GameManager : MonoBehaviour {
 		if (enemies.Count == 0) {
 			yield return new WaitForSeconds (turnDelay);
 		}
+		Debug.Log ("Cantidad de enemigos " + enemies.Count); 
 		for(int i=0;i<enemies.Count;i++){
 			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
-			//Si el jugador toca un nodo los enemigos iran al nodo mientras
+			//Si el jugador toca un nodo los enemigos iran al nodo mientras no esten cerca del jugador
 			if (moveToNode) {
-				Debug.Log ("Se ira al nodo");
-			}else
+				Debug.Log ("Se ira al nodo " + coordeNode);
+				if (enemies [i].getGoalOk ()) { //Si ya llego al nodo siga sus movimientos aleatorios
+					enemiesAllInNode++;
+					enemies [i].moveEnemyRandom ();
+				} else {
+					enemies [i].moveEnemyToNode (coordeNode);//De lo contrario siga acercandose al nodo
+				}
+			} else {
 				enemies [i].moveEnemyRandom ();
+			}
+			if(enemiesAllInNode>=enemies.Count){
+				Debug.Log ("Enemigo, todos los enemigos llegaron, se resetear sus nodos");
+				moveToNode = false;
+				resetNodeEnemies();
+			}
 			yield return new WaitForSeconds (enemies[i].moveTime);
 			
 		}
+
 		PlayerTurn = true;
 		enemiesMoving = false;
 
@@ -140,7 +155,24 @@ public class GameManager : MonoBehaviour {
 
 	public void setCoordeNode(Vector2 coorde){
 		coordeNode = coorde;
+		resetNodeEnemies ();
 		Debug.Log ("vector nodo: "  + coorde);
+	}
+
+	public float getCoordeNodeX(){
+		return coordeNode.x;
+	}
+
+	public float getCoordeNodeY(){
+		return coordeNode.y;
+	}
+
+	public void resetNodeEnemies(){
+		Debug.Log ("Enemigo, reseteando nodo");
+		for (int i = 0; i < enemies.Count; i++) {
+			enemies [i].setGoalOk (false);
+		}
+		enemiesAllInNode = 0;
 	}
 		
 }

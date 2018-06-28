@@ -194,7 +194,7 @@ public class Player : MovingObject {
 			other.gameObject.SetActive (false);
 
 		}else if (other.CompareTag ("Node")) {
-			Debug.Log ("Funciono =)(/&%$#");
+			Debug.Log ("Funciono =) (/&%$#");
 			GameManager.instance.ActiveNode (true);
 			GameManager.instance.setCoordeNode ((Vector2)other.gameObject.transform.position);
 		}

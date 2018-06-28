@@ -10,10 +10,11 @@ public class Enemy : MovingObject {
 
 	private Animator animator;
 	private Transform target; //el jugador que es el objetivo del enemigo
-	//private bool skipmove;
+	private bool skipmove;
 	private int healthPoints=10;
 	public Vector2 MovEsquive = new Vector2 (0,0);
 	private bool aunEsquivando;
+	private bool goalOk = false;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -40,12 +41,7 @@ public class Enemy : MovingObject {
 		return canMove;
 	}
 
-	/**
-	 * Proposito: Mover al enemigo.
-	 * Procedimiento: Primero revisa si el jugador esta en la misma columna, si lo esta entonces procede a ver si
-	 * se mueve para arriba o para abajo, de lo contrario revisa en que columna esta para ir acercandose.
-	*/
-	public void MoveEnemy(){
+	public Vector2 PlayerNear(){
 		int xDir=0, yDir=0;
 		if (Mathf.Abs (target.position.x - transform.position.x) <= 1 && Mathf.Abs (target.position.y - transform.position.y) <= 1) {
 			if (Mathf.Abs (target.position.x - transform.position.x) < float.Epsilon) {
@@ -53,23 +49,61 @@ public class Enemy : MovingObject {
 			} else {
 				xDir = target.position.x > transform.position.x ? 1 : -1;
 			}
-			AttempMove (xDir, yDir);
+		}
+
+			return new Vector2 (xDir, yDir);
+	}
+
+	/**
+	 * Proposito: Mover al enemigo.
+	 * Procedimiento: Primero revisa si el jugador esta en la misma columna, si lo esta entonces procede a ver si
+	 * se mueve para arriba o para abajo, de lo contrario revisa en que columna esta para ir acercandose.
+	*/
+	public void MoveEnemy(){
+		Vector2 playerIsNear = PlayerNear ();
+		if (playerIsNear.x != 0f || playerIsNear.y != 0f) {
+			Debug.Log ("Enemigo, jugador cerca");
+			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
 		} else {
-			Debug.Log ("Entro a MoveEnemy, movEsquive y la compacion es: " + MovEsquive + " " + !(MovEsquive.Equals (new Vector2 (xDir, yDir))));
-			esquivar ();
+			esquivar ((Vector2) target.position, 0);
 		}
 	}
 
-	/*Metodo que hace que el enemigo se mueva aleatoriamente.*/
+	/*Proposito: Mover al enemigo rumbo al nodo que fue activado por el jugador con ayuda de attempMove*/
+	public void moveEnemyToNode(Vector2 coordeNode){
+		Debug.Log ("enemigo, movimiento hacia nodo");
+		Vector2 playerIsNear = PlayerNear ();
+		if (playerIsNear.x != 0f || playerIsNear.y != 0f) {
+			Debug.Log ("Enemigo, jugador cerca");
+			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
+		}else {//Acercarse al nodo que fue activado
+			if (coordeNode == (Vector2)transform.position) {
+				Debug.Log ("Enemigo, ya llego a la meta");
+				goalOk = true;
+				moveEnemyRandom ();
+			} else {
+				esquivar (coordeNode, 1);
+			}
+		}
+	}
+
+
+	/*Proposito: hacer que el enemigo se mueva aleatoriamente siempre y cuando el jugador no este cerca de él.*/
 	public void moveEnemyRandom(){
+		Debug.Log ("enemigo, movimiento aleatorio");
 		bool moveOk = false;
 		Vector2 mov = generarMovimiento();
 		moveOk = AroundObstacle(mov);
-		while (!moveOk) {
-			mov = generarMovimiento();
-			moveOk = AroundObstacle(mov);
+		Vector2 playerIsNear = PlayerNear ();
+		if (playerIsNear.x != 0 || playerIsNear.y != 0) {
+			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
+		} else {
+			while (!moveOk) {
+				mov = generarMovimiento ();
+				moveOk = AroundObstacle (mov);
+			}
+			AttempMove ((int)mov.x, (int)mov.y);
 		}
-		AttempMove ((int)mov.x, (int)mov.y);
 	}
 
 	/*Metodo auxiliar para moveEnemyRandom para decirdir un movieminto */
@@ -106,7 +140,7 @@ public class Enemy : MovingObject {
 			Wall pared = go.GetComponent<Wall> ();
 			if (pared != null) {
 				Debug.Log ("Pared encontrada en: " + new Vector2 (pared.transform.position.x, pared.transform.position.y));
-				esquivar ();
+				esquivar((Vector2) target.position, 0);
 			}
 		}
 	}
@@ -122,11 +156,15 @@ public class Enemy : MovingObject {
 	}
 
 
-	/**Version mejorada de PreparseParaEsquivar*/
-	public void esquivar(){
+	/**Version mejorada de PreparseParaEsquivar
+	 *Ultima modif: mayo 28 2018 
+	 *Parametros: Vector2 -> posicion del objetivo, isNode -> si su objetivo es ir a un nodo entonces 1, si es el jugador entonces 0
+	*/
+	public void esquivar(Vector2 objetivo, int isnode){
 		Debug.Log ("Esquivando");
 		float posX = transform.position.x, posY = transform.position.y;
-		float targetX = target.position.x, targetY = target.position.y;
+		float targetX = objetivo.x, targetY = objetivo.y;
+		Debug.Log ("posiciones, enemigo: " + posX +" " + posY +" Tarjet: " + targetX + " " + targetY );
 		bool obsR = AroundObstacle (new Vector2 (1, 0));
 		bool obsU = AroundObstacle (new Vector2 (0, 1));
 		bool obsL = AroundObstacle (new Vector2 (-1, 0));
@@ -223,6 +261,13 @@ public class Enemy : MovingObject {
 		}
 		
 	}
-		
+
+	public bool getGoalOk(){
+		return goalOk;
+	}
+
+	public void setGoalOk(bool valor){
+		goalOk = valor;
+	}
 		
 }
