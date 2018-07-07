@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class GameManager : MonoBehaviour {
 
@@ -15,6 +18,9 @@ public class GameManager : MonoBehaviour {
 	public int PlayerHealthtPoints = 100;
 	public int PlayerammoPoints = 10;
  	public bool PlayerTurn = true; //Por defecto comienza moviendo el player
+	public int numeroPasosJugador = 0;
+
+	private string rutaGuardarCargar;
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
@@ -29,6 +35,8 @@ public class GameManager : MonoBehaviour {
 
 
 	private void Awake(){
+		rutaGuardarCargar =  Application.persistentDataPath + "/datos.dat";
+		Debug.Log (Application.persistentDataPath);
 		//esto es para volverlo singleton
 		if (GameManager.instance == null) {
 			
@@ -145,6 +153,7 @@ public class GameManager : MonoBehaviour {
 	private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode){
 		Debug.Log ("Se inicio");
 		level++;
+		numeroPasosJugador = 0;
 		InitGame();
 	}
 		
@@ -174,5 +183,53 @@ public class GameManager : MonoBehaviour {
 		}
 		enemiesAllInNode = 0;
 	}
+
+	public void guardar(){
+		Debug.Log ("Guardando");
+		BinaryFormatter bf = new BinaryFormatter ();
+		FileStream file = File.Create (rutaGuardarCargar);
+
+		//datos a guardar
+		DatosSaveLoad datos = new DatosSaveLoad();
+		datos.numeroPasosJugador = numeroPasosJugador;
+		datos.nivel = level;
+		datos.listaEnemigos = enemies;
+
+
+		bf.Serialize (file, datos);
+
+		file.Close ();
 		
+	}
+
+	public void cargar(){
+		if (File.Exists(rutaGuardarCargar)) {
+			Debug.Log ("cargando");
+			BinaryFormatter bf = new BinaryFormatter ();
+			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
+
+			DatosSaveLoad datos = (DatosSaveLoad)bf.Deserialize (file);
+
+			Debug.Log ("existe y se carga " + datos.numeroPasosJugador); 
+			numeroPasosJugador = datos.numeroPasosJugador;
+
+			file.Close ();
+		}
+	}
+
+		
+}
+
+[Serializable]
+public class DatosSaveLoad{
+	//variables
+	public int numeroPasosJugador=0;
+	public int nivel = 0;
+	public int vidajugador = 0;
+	public bool jugadorMuerto = false;
+	public Vector2 posJugadorMuerto = new Vector2 ();
+	public List<Enemy> listaEnemigos = new List<Enemy>();
+
+		
+
 }
