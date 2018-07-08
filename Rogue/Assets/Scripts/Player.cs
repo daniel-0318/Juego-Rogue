@@ -20,6 +20,8 @@ public class Player : MovingObject {
 	private int health;
 	private int ammo;
 
+	public int cantidadPasos = 0;
+
 	public GameObject bulletObject;
 
 
@@ -138,7 +140,7 @@ public class Player : MovingObject {
 		}
 		if ((horizontal != 0 || vertical != 0) && !disparo) {
 			bool canMove = AttempMove (horizontal, vertical);
-			GameManager.instance.numeroPasosJugador += 1;
+			cantidadPasos += 1;
 			if (canMove) {
 				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 			}
@@ -173,8 +175,9 @@ public class Player : MovingObject {
 
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Exit")) {
+			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
+			cantidadPasos = 0;
 			GameManager.instance.guardar ();
-			GameManager.instance.numeroPasosJugador = 0;
 			Debug.Log ("numero de pasos quedo " + GameManager.instance.numeroPasosJugador);
 			Invoke ("Restart", restartLEvelDelay);
 			enabled = false; // para que no se pueda seguir moviendo el jugador

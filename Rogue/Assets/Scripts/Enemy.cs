@@ -15,10 +15,12 @@ public class Enemy : MovingObject {
 	public Vector2 MovEsquive = new Vector2 (0,0);
 	private bool aunEsquivando;
 	private bool goalOk = false;
+	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio, nodo, esqui_obstaculos, normal(el que tenia el juego ya))
+	public int vecesGolepandoJugador = 0;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
-		base.Awake ();
+		base.Awake ();  
 	}
 
 	protected override void Start(){
@@ -132,6 +134,7 @@ public class Enemy : MovingObject {
 		Player hitPlayer = go.GetComponent<Player> ();
 		if (hitPlayer != null) {
 			Debug.Log ("Encontro al jugador");
+			vecesGolepandoJugador += 1; //se aumenta 1 la cantida de daño que le hizo al jugador (para las metricas)
 			hitPlayer.LoseHealth (playerDamage);
 			animator.SetTrigger ("enemyAttack");
 			SoundManager.instance.RandomizeSfx (enemyAttack1, enemyAttack2);

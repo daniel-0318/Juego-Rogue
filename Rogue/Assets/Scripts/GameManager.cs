@@ -15,16 +15,19 @@ public class GameManager : MonoBehaviour {
 	public bool doingSetup; //sirve para saber si aun se esta preparando la escena, pasa a true luego del tiempo levelStartDelay
 
 	public BoardManager boardScript;
+
 	public int PlayerHealthtPoints = 100;
 	public int PlayerammoPoints = 10;
  	public bool PlayerTurn = true; //Por defecto comienza moviendo el player
-	public int numeroPasosJugador = 0;
+	public List<int> numeroPasosJugador = new List<int>();
 
 	private string rutaGuardarCargar;
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
 	private int enemiesAllInNode = 0;
+	public List<List<int>> listadoEnemigos = new List<List<int>>();
+	public List<int> enemigosNivelActual = new List<int> ();
 
 	private int level = 0;
 	private GameObject levelImage;
@@ -88,21 +91,24 @@ public class GameManager : MonoBehaviour {
 		for(int i=0;i<enemies.Count;i++){
 			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
 			//Si el jugador toca un nodo los enemigos iran al nodo mientras no esten cerca del jugador
-			if (moveToNode) {
-				Debug.Log ("Se ira al nodo " + coordeNode);
-				if (enemies [i].getGoalOk ()) { //Si ya llego al nodo siga sus movimientos aleatorios
-					enemiesAllInNode++;
-					enemies [i].moveEnemyRandom ();
+			Debug.Log("Estado del enemigo: " + enemies[i].gameObject.activeSelf);
+			if (enemies [i].gameObject.activeSelf == true) {
+				if (moveToNode) {
+					Debug.Log ("Se ira al nodo " + coordeNode);
+					if (enemies [i].getGoalOk ()) { //Si ya llego al nodo siga sus movimientos aleatorios
+						enemiesAllInNode++;
+						enemies [i].moveEnemyRandom ();
+					} else {
+						enemies [i].moveEnemyToNode (coordeNode);//De lo contrario siga acercandose al nodo
+					}
 				} else {
-					enemies [i].moveEnemyToNode (coordeNode);//De lo contrario siga acercandose al nodo
+					enemies [i].moveEnemyRandom ();
 				}
-			} else {
-				enemies [i].moveEnemyRandom ();
-			}
-			if(enemiesAllInNode>=enemies.Count){
-				Debug.Log ("Enemigo, todos los enemigos llegaron, se resetear sus nodos");
-				moveToNode = false;
-				resetNodeEnemies();
+				if (enemiesAllInNode >= enemies.Count) {
+					Debug.Log ("Enemigo, todos los enemigos llegaron, se resetear sus nodos");
+					moveToNode = false;
+					resetNodeEnemies ();
+				}
 			}
 			yield return new WaitForSeconds (enemies[i].moveTime);
 			
@@ -128,6 +134,10 @@ public class GameManager : MonoBehaviour {
 	public void DeleteEnemyToList(Transform enemyFound){
 		for (int i = 0; i < enemies.Count; i++) {
 			if(enemies[i].transform.position.Equals(enemyFound.position)){
+				enemigosNivelActual.Add (enemies [i].vecesGolepandoJugador);
+				enemigosNivelActual.Add (enemies [i].tipoMovimiento);
+				enemigosNivelActual.Add ((int)enemies [i].transform.position.x);
+				enemigosNivelActual.Add ((int)enemies [i].transform.position.y);
 				enemies.RemoveAt (i);
 			}
 		}
@@ -153,7 +163,6 @@ public class GameManager : MonoBehaviour {
 	private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode){
 		Debug.Log ("Se inicio");
 		level++;
-		numeroPasosJugador = 0;
 		InitGame();
 	}
 		
@@ -188,14 +197,18 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("Guardando");
 		BinaryFormatter bf = new BinaryFormatter ();
 		FileStream file = File.Create (rutaGuardarCargar);
-
+		for (int i = 0;i<enemies.Count;i++) {
+			enemigosNivelActual.Add (enemies [i].vecesGolepandoJugador);
+			enemigosNivelActual.Add (enemies [i].tipoMovimiento);
+			enemigosNivelActual.Add ((int)enemies [i].transform.position.x);
+			enemigosNivelActual.Add ((int)enemies [i].transform.position.y);
+		}
+		listadoEnemigos.Add (enemigosNivelActual);
+		enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
 		//datos a guardar
 		DatosSaveLoad datos = new DatosSaveLoad();
 		datos.numeroPasosJugador = numeroPasosJugador;
-		datos.nivel = level;
-		datos.listaEnemigos = enemies;
-
-
+		datos.listadoEnemigos = listadoEnemigos; //cada posicion corresponde a un nivel.
 		bf.Serialize (file, datos);
 
 		file.Close ();
@@ -209,9 +222,8 @@ public class GameManager : MonoBehaviour {
 			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
 
 			DatosSaveLoad datos = (DatosSaveLoad)bf.Deserialize (file);
-
-			Debug.Log ("existe y se carga " + datos.numeroPasosJugador); 
-			numeroPasosJugador = datos.numeroPasosJugador;
+			Debug.Log (datos.listadoEnemigos.Count);
+			Debug.Log ("pasos jugador, tamaño lista: " + datos.numeroPasosJugador.Count); 
 
 			file.Close ();
 		}
@@ -223,12 +235,11 @@ public class GameManager : MonoBehaviour {
 [Serializable]
 public class DatosSaveLoad{
 	//variables
-	public int numeroPasosJugador=0;
-	public int nivel = 0;
-	public int vidajugador = 0;
+	public List<int> numeroPasosJugador= new List<int>();
+	public List<int> vidajugador = new List<int>();
 	public bool jugadorMuerto = false;
-	public Vector2 posJugadorMuerto = new Vector2 ();
-	public List<Enemy> listaEnemigos = new List<Enemy>();
+	public List<List<Vector2>> posJugadorMuerto = new List<List<Vector2>> ();
+	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 3 numeros son tiposIA, PosX y posY de cada enemigo en cada nivel (de la lista interna)
 
 		
 
