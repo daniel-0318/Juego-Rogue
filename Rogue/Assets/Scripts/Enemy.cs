@@ -16,6 +16,7 @@ public class Enemy : MovingObject {
 	private bool aunEsquivando;
 	private bool goalOk = false;
 	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio, nodo, esqui_obstaculos, normal(el que tenia el juego ya))
+	public List<Vector4> LugarDelGolpe = new List<Vector4>(); //las dos primeras posiciones son del enemigo y las otras dos del jugador
 	public int vecesGolepandoJugador = 0;
 
 	protected override void Awake(){
@@ -129,12 +130,14 @@ public class Enemy : MovingObject {
 	}
 
 
-	/**Metodo usado para esquivar cuando se usa esquivar obstaculos*/
+	/**Metodo usado para esquivar cuando se usa esquivar obstaculos o si es el jugador atacarlo*/
 	protected override void OnCantMove(GameObject go){
 		Player hitPlayer = go.GetComponent<Player> ();
 		if (hitPlayer != null) {
 			Debug.Log ("Encontro al jugador");
 			vecesGolepandoJugador += 1; //se aumenta 1 la cantida de daño que le hizo al jugador (para las metricas)
+			Vector4 posiones = new Vector4 (transform.position.x, transform.position.y, target.position.x,transform.position.y);
+			LugarDelGolpe.Add (posiones);
 			hitPlayer.LoseHealth (playerDamage);
 			animator.SetTrigger ("enemyAttack");
 			SoundManager.instance.RandomizeSfx (enemyAttack1, enemyAttack2);

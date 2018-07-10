@@ -178,7 +178,6 @@ public class Player : MovingObject {
 			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
 			cantidadPasos = 0;
 			GameManager.instance.guardar ();
-			Debug.Log ("numero de pasos quedo " + GameManager.instance.numeroPasosJugador);
 			Invoke ("Restart", restartLEvelDelay);
 			enabled = false; // para que no se pueda seguir moviendo el jugador
 			

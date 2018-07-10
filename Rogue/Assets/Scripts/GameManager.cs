@@ -26,8 +26,10 @@ public class GameManager : MonoBehaviour {
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
 	private int enemiesAllInNode = 0;
-	public List<List<int>> listadoEnemigos = new List<List<int>>();
-	public List<int> enemigosNivelActual = new List<int> ();
+	public List<List<int>> listadoEnemigos = new List<List<int>>(); //guarda de cada nivel la informacion integer de los enemigos (cantidaGolpes,IA, posFinalEnemigo)
+	public List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo.
+	public List<List<Vector4>> listaGolpesEnemigosNivelActual = new List<List<Vector4>> ();
+	public List<List<List<Vector4>>> ListadoGolpesEnemigosNiveles = new List<List<List<Vector4>>> ();
 
 	private int level = 0;
 	private GameObject levelImage;
@@ -130,7 +132,7 @@ public class GameManager : MonoBehaviour {
 		enemies.Add (enemy);
 	}
 
-	/**Proposito: cuando un enemigo sea eliminado desde este metodo se buscara su posicion para eliminarlo*/
+	/**Proposito: cuando un enemigo sea eliminado desde este metodo se buscara se guarda la info importante y se elimina el personaje enemigo*/
 	public void DeleteEnemyToList(Transform enemyFound){
 		for (int i = 0; i < enemies.Count; i++) {
 			if(enemies[i].transform.position.Equals(enemyFound.position)){
@@ -138,6 +140,7 @@ public class GameManager : MonoBehaviour {
 				enemigosNivelActual.Add (enemies [i].tipoMovimiento);
 				enemigosNivelActual.Add ((int)enemies [i].transform.position.x);
 				enemigosNivelActual.Add ((int)enemies [i].transform.position.y);
+				listaGolpesEnemigosNivelActual.Add (enemies [i].LugarDelGolpe);
 				enemies.RemoveAt (i);
 			}
 		}
@@ -202,13 +205,23 @@ public class GameManager : MonoBehaviour {
 			enemigosNivelActual.Add (enemies [i].tipoMovimiento);
 			enemigosNivelActual.Add ((int)enemies [i].transform.position.x);
 			enemigosNivelActual.Add ((int)enemies [i].transform.position.y);
+			listaGolpesEnemigosNivelActual.Add (enemies [i].LugarDelGolpe);
 		}
 		listadoEnemigos.Add (enemigosNivelActual);
+		if (listadoEnemigos.Count > 1) {
+			Debug.Log ("Prueba: "+listadoEnemigos [1].Count);
+		}
 		enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
+		if (listadoEnemigos.Count > 1) {
+			Debug.Log ("Prueba 2: "+listadoEnemigos [1].Count);
+		}
+		ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
+		listaGolpesEnemigosNivelActual.Clear ();
 		//datos a guardar
 		DatosSaveLoad datos = new DatosSaveLoad();
 		datos.numeroPasosJugador = numeroPasosJugador;
 		datos.listadoEnemigos = listadoEnemigos; //cada posicion corresponde a un nivel.
+		datos.ListadoGolpesEnemigosNiveles = ListadoGolpesEnemigosNiveles;
 		bf.Serialize (file, datos);
 
 		file.Close ();
@@ -223,7 +236,10 @@ public class GameManager : MonoBehaviour {
 
 			DatosSaveLoad datos = (DatosSaveLoad)bf.Deserialize (file);
 			Debug.Log (datos.listadoEnemigos.Count);
-			Debug.Log ("pasos jugador, tamaño lista: " + datos.numeroPasosJugador.Count); 
+			Debug.Log (datos.listadoEnemigos[1].Count);
+			Debug.Log ("Tamño listado golpes "+datos.ListadoGolpesEnemigosNiveles.Count);
+			Debug.Log ("Listado golpes: "+datos.ListadoGolpesEnemigosNiveles[1].Count);
+			Debug.Log ("pasos jugador, tamaño lista: " + datos.numeroPasosJugador.Count);
 
 			file.Close ();
 		}
@@ -240,6 +256,7 @@ public class DatosSaveLoad{
 	public bool jugadorMuerto = false;
 	public List<List<Vector2>> posJugadorMuerto = new List<List<Vector2>> ();
 	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 3 numeros son tiposIA, PosX y posY de cada enemigo en cada nivel (de la lista interna)
+	public List<List<List<Vector4>>> ListadoGolpesEnemigosNiveles = new List<List<List<Vector4>>> ();
 
 		
 
