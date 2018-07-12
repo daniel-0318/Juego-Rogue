@@ -26,10 +26,10 @@ public class GameManager : MonoBehaviour {
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
 	private int enemiesAllInNode = 0;
-	public List<List<int>> listadoEnemigos = new List<List<int>>(); //guarda de cada nivel la informacion integer de los enemigos (cantidaGolpes,IA, posFinalEnemigo)
-	public List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo.
-	public List<List<Vector4>> listaGolpesEnemigosNivelActual = new List<List<Vector4>> ();
-	public List<List<List<Vector4>>> ListadoGolpesEnemigosNiveles = new List<List<List<Vector4>>> ();
+	public List<List<int>> listadoEnemigos = new List<List<int>>(); //guarda de cada nivel la informacion integer de los enemigos (cantidaGolpes,IA, posFinalesEnemigo)
+	public List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
+	public List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>> ();
+	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
 
 	private int level = 0;
 	private GameObject levelImage;
@@ -208,23 +208,18 @@ public class GameManager : MonoBehaviour {
 			listaGolpesEnemigosNivelActual.Add (enemies [i].LugarDelGolpe);
 		}
 		listadoEnemigos.Add (enemigosNivelActual);
-		if (listadoEnemigos.Count > 1) {
-			Debug.Log ("Prueba: "+listadoEnemigos [1].Count);
-		}
-		enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
-		if (listadoEnemigos.Count > 1) {
-			Debug.Log ("Prueba 2: "+listadoEnemigos [1].Count);
-		}
 		ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
-		listaGolpesEnemigosNivelActual.Clear ();
+
 		//datos a guardar
 		DatosSaveLoad datos = new DatosSaveLoad();
 		datos.numeroPasosJugador = numeroPasosJugador;
 		datos.listadoEnemigos = listadoEnemigos; //cada posicion corresponde a un nivel.
 		datos.ListadoGolpesEnemigosNiveles = ListadoGolpesEnemigosNiveles;
 		bf.Serialize (file, datos);
-
 		file.Close ();
+
+		enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
+		listaGolpesEnemigosNivelActual.Clear ();
 		
 	}
 
@@ -237,7 +232,7 @@ public class GameManager : MonoBehaviour {
 			DatosSaveLoad datos = (DatosSaveLoad)bf.Deserialize (file);
 			Debug.Log (datos.listadoEnemigos.Count);
 			Debug.Log (datos.listadoEnemigos[1].Count);
-			Debug.Log ("Tamño listado golpes "+datos.ListadoGolpesEnemigosNiveles.Count);
+			Debug.Log ("Tamaño listado golpes "+datos.ListadoGolpesEnemigosNiveles.Count);
 			Debug.Log ("Listado golpes: "+datos.ListadoGolpesEnemigosNiveles[1].Count);
 			Debug.Log ("pasos jugador, tamaño lista: " + datos.numeroPasosJugador.Count);
 
@@ -256,7 +251,7 @@ public class DatosSaveLoad{
 	public bool jugadorMuerto = false;
 	public List<List<Vector2>> posJugadorMuerto = new List<List<Vector2>> ();
 	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 3 numeros son tiposIA, PosX y posY de cada enemigo en cada nivel (de la lista interna)
-	public List<List<List<Vector4>>> ListadoGolpesEnemigosNiveles = new List<List<List<Vector4>>> ();
+	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
 
 		
 

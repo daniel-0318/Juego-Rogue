@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour {
 
-	public int columns = 8;
-	public int rows = 8;
+	public int columnas = 16;
+	public int filas = 16;
 	//contenedor para los objetos del piso y muros externos del juego para que no quede todo regado
 	private Transform boardHolder;
 
@@ -20,8 +20,6 @@ public class BoardManager : MonoBehaviour {
 
 
 	public void SetupScene(int level){
-		
-		Debug.Log ("Se ejecuto!!");
 		//genera el tablero.
 		BoardSetup ();
 		InitializeList (); // inicializa la lista de posiciones
@@ -32,18 +30,19 @@ public class BoardManager : MonoBehaviour {
 		radomNodes (); //nodos para waypoint
 		int enemyCount = (int)Mathf.Log (level, 2);// La cantidad de enemigos creceria logaritmicamente.
 		LayoutObjectAtRandom (enemyTiles,enemyCount,enemyCount);
-		GameObject objectInstan = Instantiate (exit, new Vector2(columns-1, rows-1), Quaternion.identity ); //quaternion es la rotacion.
+		GameObject objectInstan = Instantiate (exit, new Vector2(columnas-1, filas-1), Quaternion.identity ); //quaternion es la rotacion.
 		objectInstan.transform.SetParent (itemsHolder);
 	}
 
 	//llena la lista
 	void InitializeList(){
 		gridPositions.Clear();
-		for (int x = 1; x<columns-1 ; x++) {
-			for(int y=1;y<rows-1;y++){
+		for (int x = 1; x<columnas-1 ; x++) {
+			for(int y=1;y<filas-1;y++){
 				gridPositions.Add (new Vector2(x,y));
 			}
 		}
+		Debug.Log ("BoardManager,InitializeList " + gridPositions.Count);
 	}
 
 	/*Devuelve una position del tablero (x,y) para generar algun objeto en ella y tener un control para que luego en la
@@ -71,15 +70,15 @@ public class BoardManager : MonoBehaviour {
 
 	//Encargado de pintar el tablero que son el piso y los bordes del tableros
 	void BoardSetup(){
-
+		Debug.Log ("Tamaño de column y row:  " + columnas + " " + filas);
 		boardHolder = new GameObject ("board").transform; //Es el objeto contenedor para el suelo
-		for(int i = -1; i < columns +1 ;i++){
-
-			for(int j = -1; j < rows +1 ;j++){
+		for(int i = -1; i < columnas +1 ;i++){
+			Debug.Log ("ENTROOO!! " + i);
+			for(int j = -1; j < filas +1 ;j++){
 
 				GameObject toInstantiate = GetRandomInArray (floorTiles);
 
-				if (i == -1 || j == -1 || i == columns || j == rows) {
+				if (i == -1 || j == -1 || i == columnas || j == filas) {
 					toInstantiate = GetRandomInArray (outerWallTiles);
 				}
 			
