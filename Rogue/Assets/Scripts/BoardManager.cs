@@ -35,7 +35,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//llena la lista
-	void InitializeList(){
+	public void InitializeList(){
 		gridPositions.Clear();
 		for (int x = 1; x<columnas-1 ; x++) {
 			for(int y=1;y<filas-1;y++){
@@ -55,7 +55,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//Encargado de instanciar los objetos en el tablero (enemigos, comida o muros internos)
-	void LayoutObjectAtRandom(GameObject[] tileArray, int min, int max){
+	public void LayoutObjectAtRandom(GameObject[] tileArray, int min, int max){
 		int objectCount = Random.Range (min,max+1); // numero de objetos que se instanciaran.
 		for(int i=0; i < objectCount ; i++){
 			Vector2 randomPosition = RandomPosition(); //posicion a instanciar
@@ -69,11 +69,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//Encargado de pintar el tablero que son el piso y los bordes del tableros
-	void BoardSetup(){
+	public void BoardSetup(){
 		Debug.Log ("Tamaño de column y row:  " + columnas + " " + filas);
 		boardHolder = new GameObject ("board").transform; //Es el objeto contenedor para el suelo
 		for(int i = -1; i < columnas +1 ;i++){
-			Debug.Log ("ENTROOO!! " + i);
 			for(int j = -1; j < filas +1 ;j++){
 
 				GameObject toInstantiate = GetRandomInArray (floorTiles);
@@ -95,14 +94,14 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//Funcion que sirve para generar municion en el mapa con una probabilidad del 30%
-	void randomAmmon(){
+	public void randomAmmon(){
 		int probabilidad = Random.Range (1, 10);
 		if (probabilidad >= 7)
 			LayoutObjectAtRandom (ammos, 1, 3);
 
 	}
 
-	void radomNodes(){
+	public void radomNodes(){
 		LayoutObjectAtRandom (nodePoints, 3, 6);
 	}
 }

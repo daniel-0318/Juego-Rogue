@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour {
 	public List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>> ();
 	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
 
+	GameObject[] sodas,foods,ammos; //Toca tener sus instancias ya que una vez desactivadas no aparecen con findObjectswhithtag
+
 	private int level = 0;
 	private GameObject levelImage;
 	private Text levelText;
@@ -68,6 +70,7 @@ public class GameManager : MonoBehaviour {
 		levelImage.SetActive (true);
 		enemies.Clear ();
 		boardScript.SetupScene (level); //crear nivel
+		setListaItems();
 		Invoke ("HideLevelImage",levelStartDelay); //invoke sirve para ejecutar un metodo luego de cierto tiempo (levelstardelay)
 	
 	}
@@ -196,6 +199,39 @@ public class GameManager : MonoBehaviour {
 		enemiesAllInNode = 0;
 	}
 
+	public void setListaItems(){
+		sodas = GameObject.FindGameObjectsWithTag ("Soda");
+		foods = GameObject.FindGameObjectsWithTag ("Food");
+		ammos = GameObject.FindGameObjectsWithTag ("Ammo");
+		Debug.Log ("Prueba de si esta activo el item: " + sodas.Length);
+		Debug.Log ("Prueba de si esta activo el item: " + foods.Length);
+		Debug.Log ("Prueba de si esta activo el item: " + ammos.Length);
+	}
+
+	/*Función que sirve para obtener la lista de items de cada nivel (posx, posy, adquiriojugador)*/
+	public List<List<int>> getListaItems(){
+		
+		List<List<int>> listaitems = new List<List<int>> ();
+
+		Debug.Log ("Prueba de si esta activo el item: " + sodas.Length);
+		Debug.Log ("Prueba de si esta activo el item: " + foods.Length);
+		Debug.Log ("Prueba de si esta activo el item: " + ammos.Length);
+		for (int i = 0; i < sodas.Length; i++) {
+			List <int> item = new List<int> ();
+			item.Add ((int)sodas [i].transform.position.x);
+			item.Add ((int)sodas [i].transform.position.y);
+			Debug.Log ("Prueba de si esta activo el item: "+ sodas.Length+" " +sodas[i].activeInHierarchy);
+			listaitems.Add (item);
+		}
+		Debug.Log (listaitems.Count);
+		Debug.Log (listaitems[0].Count);
+		/*
+		for (int i = 0; i < ammos.Length; i++) {
+
+		}*/
+		return listaitems;
+	}
+
 	public void guardar(){
 		Debug.Log ("Guardando");
 		BinaryFormatter bf = new BinaryFormatter ();
@@ -215,6 +251,8 @@ public class GameManager : MonoBehaviour {
 		datos.numeroPasosJugador = numeroPasosJugador;
 		datos.listadoEnemigos = listadoEnemigos; //cada posicion corresponde a un nivel.
 		datos.ListadoGolpesEnemigosNiveles = ListadoGolpesEnemigosNiveles;
+		datos.ListadoitemsNiveles.Add (getListaItems ());
+
 		bf.Serialize (file, datos);
 		file.Close ();
 
@@ -230,12 +268,11 @@ public class GameManager : MonoBehaviour {
 			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
 
 			DatosSaveLoad datos = (DatosSaveLoad)bf.Deserialize (file);
-			Debug.Log (datos.listadoEnemigos.Count);
-			Debug.Log (datos.listadoEnemigos[1].Count);
-			Debug.Log ("Tamaño listado golpes "+datos.ListadoGolpesEnemigosNiveles.Count);
-			Debug.Log ("Listado golpes: "+datos.ListadoGolpesEnemigosNiveles[1].Count);
-			Debug.Log ("pasos jugador, tamaño lista: " + datos.numeroPasosJugador.Count);
 
+			//Cargando datos necesarios
+			listadoEnemigos = datos.listadoEnemigos;
+
+			int p1 = datos.mostarListadoEnemigos ();
 			file.Close ();
 		}
 	}
@@ -252,6 +289,49 @@ public class DatosSaveLoad{
 	public List<List<Vector2>> posJugadorMuerto = new List<List<Vector2>> ();
 	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 3 numeros son tiposIA, PosX y posY de cada enemigo en cada nivel (de la lista interna)
 	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
+	public List<List<List<int>>> ListadoitemsNiveles = new List<List<List<int>>> ();
+
+
+
+	public int mostarPasos(){
+		for(int i=0;i<numeroPasosJugador.Count;i++){
+			Debug.Log ("####################  Pasos jugador ################");
+			Debug.Log ("nivel " + (i+1) + numeroPasosJugador[i]);
+		}
+		return 1;
+	}
+
+	public int mostarVidaJugador(){
+		for(int i=0;i<vidajugador.Count;i++){
+			Debug.Log ("####################  Vida jugador ################");
+			Debug.Log ("nivel " + (i+1) + vidajugador[i]);
+		}
+		return 1;
+	}
+
+	public int mostarListadoEnemigos(){
+		Debug.Log ("####################  Listado Enemigos ################");
+		Debug.Log (listadoEnemigos.Count);
+		for(int i=0;i<listadoEnemigos.Count;i++){
+			Debug.Log ("nivel " + i + " "+ listadoEnemigos.Count );
+			for(int j=0;j<listadoEnemigos[i].Count;j++){
+				Debug.Log (listadoEnemigos[i][j]);
+			}
+		}
+		return 1;
+	}
+
+	public int mostarListadoGolpesEnemigosNiveles(){
+		for(int i=0;i<ListadoGolpesEnemigosNiveles.Count;i++){
+			Debug.Log ("####################  Listado Golpes Enemigos Niveles ################");
+			for(int j=0;j<ListadoGolpesEnemigosNiveles[i].Count;j++){
+				for(int k=0;k<ListadoGolpesEnemigosNiveles[i][j].Count;k++){
+					Debug.Log ("nivel " + (i+1) + ListadoGolpesEnemigosNiveles[i][j][k]);
+				}
+			}
+		}
+		return 1;
+	}
 
 		
 
