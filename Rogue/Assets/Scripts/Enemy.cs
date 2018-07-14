@@ -15,6 +15,8 @@ public class Enemy : MovingObject {
 	public Vector2 MovEsquive = new Vector2 (0,0);
 	private bool aunEsquivando;
 	private bool goalOk = false;
+	private Vector2 posicionNodo = new Vector2 (-1, -1);
+
 	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio=0,normal=1, esqui_obstaculos=2, nodo=3 )
 	public List<int> LugarDelGolpe = new List<int>(); //las dos primeras posiciones son del enemigo y las otras dos del jugador
 	public int vecesGolepandoJugador = 0;
@@ -54,9 +56,38 @@ public class Enemy : MovingObject {
 	}
 
 	public void RealizarMovimiento(){
-		if (tipoMovimiento == 0) {
-			MoveEnemyRandom ();
+		Debug.Log ("---------------------- valor de skip: " + skipmove);
+		if (!skipmove) {
+			if (tipoMovimiento == 0) { //movimiento normal del juego
+				movimientoNormal ();
+			} else if (tipoMovimiento == 1) {//Movimiento aleatorio
+				MoveEnemyRandom ();
+			} else if (tipoMovimiento == 2) {//movimiento esquivar obstaculos
+				esquivar ((Vector2)target.position, 0);
+			} else if (tipoMovimiento == 3) {//movimiento ir a nodo
+				Debug.Log ("---------------------- valor goal: " + goalOk);
+				if (goalOk) {
+					Debug.Log ("---------------------- se cambia a mov aleatorio ");
+					MoveEnemyRandom ();
+				} else {
+					MoveEnemyToNode ();
+				}
+			}
+			skipmove = true;
+		} else {
+			skipmove = false;
 		}
+	}
+
+	public void movimientoNormal(){
+		int xDir=0, yDir=0;
+		if (Mathf.Abs (target.position.x - transform.position.x) < float.Epsilon) {
+			yDir = target.position.y > transform.position.y ? 1 : -1;
+		} else {
+			xDir = target.position.x > transform.position.x ? 1 : -1;
+		}
+		AttempMove (xDir, yDir);
+
 	}
 
 	public Vector2 PlayerNear(){
@@ -88,19 +119,19 @@ public class Enemy : MovingObject {
 	}
 
 	/*Proposito: Mover al enemigo rumbo al nodo que fue activado por el jugador con ayuda de attempMove*/
-	public void MoveEnemyToNode(Vector2 coordeNode){
+	public void MoveEnemyToNode(){
 		Debug.Log ("enemigo, movimiento hacia nodo");
 		Vector2 playerIsNear = PlayerNear ();
 		if (playerIsNear.x != 0f || playerIsNear.y != 0f) {
 			Debug.Log ("Enemigo, jugador cerca");
 			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
 		}else {//Acercarse al nodo que fue activado
-			if (coordeNode == (Vector2)transform.position) {
+			if (posicionNodo == (Vector2)transform.position) {
 				Debug.Log ("Enemigo, ya llego a la meta");
 				goalOk = true;
 				MoveEnemyRandom ();
 			} else {
-				esquivar (coordeNode, 1);
+				esquivar (posicionNodo, 1);
 			}
 		}
 	}
@@ -294,5 +325,8 @@ public class Enemy : MovingObject {
 	public void setGoalOk(bool valor){
 		goalOk = valor;
 	}
-		
+
+	public void SetPosicionNodo(int posX, int posY){
+		posicionNodo = new Vector2 (posX, posY);
+	}
 }

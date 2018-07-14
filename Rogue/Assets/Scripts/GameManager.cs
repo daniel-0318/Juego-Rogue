@@ -96,24 +96,14 @@ public class GameManager : MonoBehaviour {
 		for(int i=0;i<enemies.Count;i++){
 			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
 			//Si el jugador toca un nodo los enemigos iran al nodo mientras no esten cerca del jugador
-			if (enemies [i].gameObject.activeInHierarchy == true) {
-				if (moveToNode) {
-					Debug.Log ("Se ira al nodo " + coordeNode);
-					if (enemies [i].getGoalOk ()) { //Si ya llego al nodo siga sus movimientos aleatorios
-						enemiesAllInNode++;
-						enemies [i].MoveEnemyRandom ();
-					} else {
-						enemies [i].MoveEnemyToNode (coordeNode);//De lo contrario siga acercandose al nodo
-					}
-				} else {
-					enemies [i].MoveEnemyRandom ();
-				}
-				if (enemiesAllInNode >= enemies.Count) {
-					Debug.Log ("Enemigo, todos los enemigos llegaron, se resetear sus nodos");
-					moveToNode = false;
-					resetNodeEnemies ();
-				}
+
+			if (enemies [i].tipoMovimiento == 3) {
+				enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
+				enemies [i].RealizarMovimiento ();
+			} else {
+				enemies [i].RealizarMovimiento ();
 			}
+
 			yield return new WaitForSeconds (enemies[i].moveTime);
 			
 		}
