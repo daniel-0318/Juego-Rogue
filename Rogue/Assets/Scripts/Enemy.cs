@@ -15,7 +15,7 @@ public class Enemy : MovingObject {
 	public Vector2 MovEsquive = new Vector2 (0,0);
 	private bool aunEsquivando;
 	private bool goalOk = false;
-	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio, nodo, esqui_obstaculos, normal(el que tenia el juego ya))
+	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio=0,normal=1, esqui_obstaculos=2, nodo=3 )
 	public List<int> LugarDelGolpe = new List<int>(); //las dos primeras posiciones son del enemigo y las otras dos del jugador
 	public int vecesGolepandoJugador = 0;
 
@@ -25,6 +25,20 @@ public class Enemy : MovingObject {
 	}
 
 	protected override void Start(){
+		float tipoIA = Random.Range (0.0f, 3.9f);
+
+		if (tipoIA <= 0.9) {
+			tipoMovimiento = 0;
+		}else if(tipoIA > 0.9 && tipoIA <= 1.9){
+			tipoMovimiento = 1;
+		}else if(tipoIA > 1.9 && tipoIA <= 2.9){
+			tipoMovimiento = 2;
+		}else if(tipoIA > 2.9 && tipoIA <= 3.9){
+			tipoMovimiento = 3;
+		}
+
+		Debug.Log ("Este enemigo sera: " + tipoMovimiento);
+
 		GameManager.instance.AddEnemyToList (this);//Cada enemigo se añade a la lista por su cuenta
 		target = GameObject.FindGameObjectWithTag ("Player").transform;
 		base.Start ();
@@ -35,13 +49,14 @@ public class Enemy : MovingObject {
 	 *para realizar el movimiento
 	*/
 	protected override bool AttempMove(int xDir, int yDir){
-//		if (skipmove) {
-//			skipmove = false;
-//			return false;
-//		}
 		bool canMove = base.AttempMove (xDir, yDir);
-//		skipmove = true;
 		return canMove;
+	}
+
+	public void RealizarMovimiento(){
+		if (tipoMovimiento == 0) {
+			MoveEnemyRandom ();
+		}
 	}
 
 	public Vector2 PlayerNear(){
@@ -73,7 +88,7 @@ public class Enemy : MovingObject {
 	}
 
 	/*Proposito: Mover al enemigo rumbo al nodo que fue activado por el jugador con ayuda de attempMove*/
-	public void moveEnemyToNode(Vector2 coordeNode){
+	public void MoveEnemyToNode(Vector2 coordeNode){
 		Debug.Log ("enemigo, movimiento hacia nodo");
 		Vector2 playerIsNear = PlayerNear ();
 		if (playerIsNear.x != 0f || playerIsNear.y != 0f) {
@@ -83,7 +98,7 @@ public class Enemy : MovingObject {
 			if (coordeNode == (Vector2)transform.position) {
 				Debug.Log ("Enemigo, ya llego a la meta");
 				goalOk = true;
-				moveEnemyRandom ();
+				MoveEnemyRandom ();
 			} else {
 				esquivar (coordeNode, 1);
 			}
@@ -92,7 +107,7 @@ public class Enemy : MovingObject {
 
 
 	/*Proposito: hacer que el enemigo se mueva aleatoriamente siempre y cuando el jugador no este cerca de él.*/
-	public void moveEnemyRandom(){
+	public void MoveEnemyRandom(){
 		Debug.Log ("enemigo, movimiento aleatorio");
 		bool moveOk = false;
 		Vector2 mov = generarMovimiento();
@@ -140,6 +155,8 @@ public class Enemy : MovingObject {
 			LugarDelGolpe.Add ((int)transform.position.y);
 			LugarDelGolpe.Add ((int)target.position.x);
 			LugarDelGolpe.Add ((int)target.position.y);
+			int disMinItem = GameManager.instance.itemMasCercanoAlJugador ((int) target.position.x,(int) target.position.y);
+			LugarDelGolpe.Add (disMinItem);
 			hitPlayer.LoseHealth (playerDamage);
 			animator.SetTrigger ("enemyAttack");
 			SoundManager.instance.RandomizeSfx (enemyAttack1, enemyAttack2);

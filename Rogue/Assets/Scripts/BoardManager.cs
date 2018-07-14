@@ -42,7 +42,6 @@ public class BoardManager : MonoBehaviour {
 				gridPositions.Add (new Vector2(x,y));
 			}
 		}
-		Debug.Log ("BoardManager,InitializeList " + gridPositions.Count);
 	}
 
 	/*Devuelve una position del tablero (x,y) para generar algun objeto en ella y tener un control para que luego en la
