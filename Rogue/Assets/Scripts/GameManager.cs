@@ -25,11 +25,12 @@ public class GameManager : MonoBehaviour {
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
-	private int enemiesAllInNode = 0;
 	public List<List<int>> listadoEnemigos = new List<List<int>>(); //guarda de cada nivel la informacion integer de los enemigos (cantidaGolpes,IA, posFinalesEnemigo)
 	public List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
 	public List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>> ();
 	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
+
+	SaveLoad datos = new SaveLoad();
 
 	GameObject[] sodas,foods,ammos; //Toca tener sus instancias ya que una vez desactivadas no aparecen con findObjectswhithtag
 
@@ -160,11 +161,6 @@ public class GameManager : MonoBehaviour {
 		level++;
 		InitGame();
 	}
-		
-	public void ActiveNode(bool valor){
-		moveToNode = valor;
-		Debug.Log ("Cambio de valor a nodo " + moveToNode);
-	}
 
 	public void setCoordeNode(Vector2 coorde){
 		coordeNode = coorde;
@@ -185,7 +181,6 @@ public class GameManager : MonoBehaviour {
 		for (int i = 0; i < enemies.Count; i++) {
 			enemies [i].setGoalOk (false);
 		}
-		enemiesAllInNode = 0;
 	}
 
 	public void setListaItems(){
@@ -283,11 +278,14 @@ public class GameManager : MonoBehaviour {
 		ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
 
 		//datos a guardar
-		DatosSaveLoad datos = new DatosSaveLoad();
+
 		datos.numeroPasosJugador = numeroPasosJugador;
+		datos.vidajugador.Add (PlayerHealthtPoints);
 		datos.listadoEnemigos = listadoEnemigos; //cada posicion corresponde a un nivel.
 		datos.ListadoGolpesEnemigosNiveles = ListadoGolpesEnemigosNiveles;
 		datos.ListadoitemsNiveles.Add (getListaItems ());
+
+		datos.GuardarParaExportar ();
 
 		bf.Serialize (file, datos);
 		file.Close ();
@@ -303,85 +301,18 @@ public class GameManager : MonoBehaviour {
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
 
-			DatosSaveLoad datos = (DatosSaveLoad)bf.Deserialize (file);
+			SaveLoad datos = (SaveLoad)bf.Deserialize (file);
 
 			//Cargando datos necesarios
 			listadoEnemigos = datos.listadoEnemigos;
 
-			int p1 = datos.mostrarListadoEnemigos ();
-			int p2 = datos.mostrarListadoitemsNiveles ();
+			int p0 = datos.MostrarPasos ();
+			int p00 = datos.MostrarVidaJugador ();
+			int p1 = datos.MostrarListadoEnemigos ();
+			int p2 = datos.MostrarListadoitemsNiveles ();
 			file.Close ();
 		}
 	}
 
 		
-}
-
-[Serializable]
-public class DatosSaveLoad{
-	//variables
-	public List<int> numeroPasosJugador= new List<int>();
-	public List<int> vidajugador = new List<int>();
-	public bool jugadorMuerto = false;
-	public List<List<Vector2>> posJugadorMuerto = new List<List<Vector2>> ();
-	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 3 numeros son tiposIA, PosX y posY de cada enemigo en cada nivel (de la lista interna)
-	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
-	public List<List<List<int>>> ListadoitemsNiveles = new List<List<List<int>>> ();
-
-
-
-	public int mostrarPasos(){
-		for(int i=0;i<numeroPasosJugador.Count;i++){
-			Debug.Log ("####################  Pasos jugador ################");
-			Debug.Log ("nivel " + (i+1) + numeroPasosJugador[i]);
-		}
-		return 1;
-	}
-
-	public int mostrarVidaJugador(){
-		for(int i=0;i<vidajugador.Count;i++){
-			Debug.Log ("####################  Vida jugador ################");
-			Debug.Log ("nivel " + (i+1) + vidajugador[i]);
-		}
-		return 1;
-	}
-
-	public int mostrarListadoEnemigos(){
-		Debug.Log ("####################  Listado Enemigos ################");
-		Debug.Log (listadoEnemigos.Count);
-		for(int i=0;i<listadoEnemigos.Count;i++){
-			Debug.Log ("nivel " + i + " "+ listadoEnemigos.Count );
-			for(int j=0;j<listadoEnemigos[i].Count;j++){
-				Debug.Log (listadoEnemigos[i][j]);
-			}
-		}
-		return 1;
-	}
-
-	public int mostrarListadoGolpesEnemigosNiveles(){
-		for(int i=0;i<ListadoGolpesEnemigosNiveles.Count;i++){
-			Debug.Log ("####################  Listado Golpes Enemigos Niveles ################");
-			for(int j=0;j<ListadoGolpesEnemigosNiveles[i].Count;j++){
-				for(int k=0;k<ListadoGolpesEnemigosNiveles[i][j].Count;k++){
-					Debug.Log ("nivel " + (i+1) +" "+ ListadoGolpesEnemigosNiveles[i][j][k]);
-				}
-			}
-		}
-		return 1;
-	}
-
-	public int mostrarListadoitemsNiveles(){
-		for(int i=0;i<ListadoitemsNiveles.Count;i++){
-			Debug.Log ("####################  ListadoitemsNiveles ################");
-			for(int j=0;j<ListadoitemsNiveles[i].Count;j++){
-				for(int k=0;k<ListadoitemsNiveles[i][j].Count;k++){
-					Debug.Log ("nivel " + (i+1)+" " + ListadoitemsNiveles[i][j][k]);
-				}
-			}
-		}
-		return 1;
-	}
-
-		
-
 }

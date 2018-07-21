@@ -203,7 +203,6 @@ public class Player : MovingObject {
 
 		}else if (other.CompareTag ("Node")) {
 			Debug.Log ("Funciono =) (/&%$#");
-			GameManager.instance.ActiveNode (true);
 			GameManager.instance.setCoordeNode ((Vector2)other.gameObject.transform.position);
 		}
 	}
