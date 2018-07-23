@@ -25,10 +25,7 @@ public class GameManager : MonoBehaviour {
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
-	public List<List<int>> listadoEnemigos = new List<List<int>>(); //guarda de cada nivel la informacion integer de los enemigos (cantidaGolpes,IA, posFinalesEnemigo)
-	public List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
-	public List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>> ();
-	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
+
 
 	SaveLoad datos = new SaveLoad();
 
@@ -96,13 +93,17 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("Cantidad de enemigos " + enemies.Count); 
 		for(int i=0;i<enemies.Count;i++){
 			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
-			//Si el jugador toca un nodo los enemigos iran al nodo mientras no esten cerca del jugador
+			if (!enemies [i].gameObject.activeInHierarchy) {
+				Debug.Log ("************** Enemigo desactivado ***********");
+			}
+			if (enemies [i].gameObject.activeInHierarchy) {
 
-			if (enemies [i].tipoMovimiento == 3) {
-				enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
-				enemies [i].RealizarMovimiento ();
-			} else {
-				enemies [i].RealizarMovimiento ();
+				if (enemies [i].tipoMovimiento == 3) {
+					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
+					enemies [i].RealizarMovimiento ();
+				} else {
+					enemies [i].RealizarMovimiento ();
+				}
 			}
 
 			yield return new WaitForSeconds (enemies[i].moveTime);
@@ -123,20 +124,6 @@ public class GameManager : MonoBehaviour {
 
 	public void AddEnemyToList(Enemy enemy){
 		enemies.Add (enemy);
-	}
-
-	/**Proposito: cuando un enemigo sea eliminado desde este metodo se buscara se guarda la info importante y se elimina el personaje enemigo*/
-	public void DeleteEnemyToList(Transform enemyFound){
-		for (int i = 0; i < enemies.Count; i++) {
-			if(enemies[i].transform.position.Equals(enemyFound.position)){
-				enemigosNivelActual.Add (enemies [i].vecesGolepandoJugador);
-				enemigosNivelActual.Add (enemies [i].tipoMovimiento);
-				enemigosNivelActual.Add ((int)enemies [i].transform.position.x);
-				enemigosNivelActual.Add ((int)enemies [i].transform.position.y);
-				listaGolpesEnemigosNivelActual.Add (enemies [i].LugarDelGolpe);
-				enemies.RemoveAt (i);
-			}
-		}
 	}
 
 	/**Proposito: Cuando el componente GameManager se activa se notifica a SceneLoaded
@@ -265,6 +252,8 @@ public class GameManager : MonoBehaviour {
 
 	public void guardar(){
 		Debug.Log ("Guardando");
+		List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
+		List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>>();
 		BinaryFormatter bf = new BinaryFormatter ();
 		FileStream file = File.Create (rutaGuardarCargar);
 		for (int i = 0;i<enemies.Count;i++) {
@@ -274,15 +263,13 @@ public class GameManager : MonoBehaviour {
 			enemigosNivelActual.Add ((int)enemies [i].transform.position.y);
 			listaGolpesEnemigosNivelActual.Add (enemies [i].LugarDelGolpe);
 		}
-		listadoEnemigos.Add (enemigosNivelActual);
-		ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
 
 		//datos a guardar
 
 		datos.numeroPasosJugador = numeroPasosJugador;
 		datos.vidajugador.Add (PlayerHealthtPoints);
-		datos.listadoEnemigos = listadoEnemigos; //cada posicion corresponde a un nivel.
-		datos.ListadoGolpesEnemigosNiveles = ListadoGolpesEnemigosNiveles;
+		datos.listadoEnemigos.Add (enemigosNivelActual);
+		datos.ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
 		datos.ListadoitemsNiveles.Add (getListaItems ());
 
 		datos.GuardarParaExportar ();
@@ -290,8 +277,8 @@ public class GameManager : MonoBehaviour {
 		bf.Serialize (file, datos);
 		file.Close ();
 
-		enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
-		listaGolpesEnemigosNivelActual.Clear ();
+		//enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
+		//listaGolpesEnemigosNivelActual.Clear ();
 		
 	}
 
@@ -303,12 +290,11 @@ public class GameManager : MonoBehaviour {
 
 			SaveLoad datos = (SaveLoad)bf.Deserialize (file);
 
-			//Cargando datos necesarios
-			listadoEnemigos = datos.listadoEnemigos;
 
 			int p0 = datos.MostrarPasos ();
 			int p00 = datos.MostrarVidaJugador ();
 			int p1 = datos.MostrarListadoEnemigos ();
+			int p11 = datos.MostrarListadoGolpesEnemigosNiveles ();
 			int p2 = datos.MostrarListadoitemsNiveles ();
 			file.Close ();
 		}

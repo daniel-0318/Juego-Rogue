@@ -206,8 +206,8 @@ public class Enemy : MovingObject {
 		healthPoints -= damage;
 		Debug.Log (healthPoints <= 0);
 		if (healthPoints <= 0) {
-			GameManager.instance.DeleteEnemyToList (gameObject.transform);
-			Destroy (gameObject);
+			//GameManager.instance.DeleteEnemyToList (gameObject.transform);
+			gameObject.SetActive(false);
 		}
 	}
 

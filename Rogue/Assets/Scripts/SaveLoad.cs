@@ -59,7 +59,7 @@ public class SaveLoad {
 		Debug.Log ("####################  Pasos jugador ################");
 		for(int i=0;i<numeroPasosJugador.Count;i++){
 			Debug.Log ("nivel " + (i+1) + " " + numeroPasosJugador[i]);
-			pasosDelJugador = pasosDelJugador+";"+numeroPasosJugador[i];
+			pasosDelJugador = pasosDelJugador + numeroPasosJugador[i] + ";";
 		}
 		Debug.Log (pasosDelJugador);
 		return 1;
@@ -69,7 +69,7 @@ public class SaveLoad {
 		Debug.Log ("####################  Vida jugador ################");
 		for(int i=0;i<vidajugador.Count;i++){
 			Debug.Log ("nivel " + (i+1) + " " + vidajugador[i]);
-			vidaDelJugador = vidaDelJugador + ";" + vidajugador [i];
+			vidaDelJugador = vidaDelJugador + vidajugador [i] + ";";
 		}
 		Debug.Log (vidaDelJugador);
 		return 1;
