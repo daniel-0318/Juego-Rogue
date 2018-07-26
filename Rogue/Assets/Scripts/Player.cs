@@ -42,11 +42,12 @@ public class Player : MovingObject {
 	/*OnDisable se ejecuta antes de ejecutar el OnDestroy, que se ejecutara
 	 * cuando el objeto Player sea destruido para recargar la escena con una nueva
 	 * Esto hara que se guarde en la clase GameManager la comida que se lleva
-	*/
+
 	private void OnDisable(){
 		GameManager.instance.PlayerHealthtPoints = health;
 		GameManager.instance.PlayerammoPoints = ammo;
 	}
+	*/
 
 	void CheckIfGameOver(){
 		if (health <= 0) {
@@ -176,8 +177,10 @@ public class Player : MovingObject {
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Exit")) {
 			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
+			GameManager.instance.PlayerHealthtPoints = health;
+			GameManager.instance.PlayerammoPoints = ammo;
 			cantidadPasos = 0;
-			GameManager.instance.guardar ();
+			GameManager.instance.guardar (0);
 			Invoke ("Restart", restartLEvelDelay);
 			enabled = false; // para que no se pueda seguir moviendo el jugador
 			

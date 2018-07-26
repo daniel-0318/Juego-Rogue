@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameOver(){
+		guardar (1);
 		levelText.text = "After " + level + " days, you starved.";
 		levelImage.SetActive(true);
 		enabled = false;
@@ -250,7 +251,7 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	public void guardar(){
+	public void guardar(int playerDead){
 		Debug.Log ("Guardando");
 		List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
 		List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>>();
@@ -268,6 +269,18 @@ public class GameManager : MonoBehaviour {
 
 		datos.numeroPasosJugador = numeroPasosJugador;
 		datos.vidajugador.Add (PlayerHealthtPoints);
+		if (playerDead == 1) {
+			Debug.Log ("Se murio------------------------------------------------");
+			List<int> posicion = enemies [0].getTargetPosition ();
+			datos.jugadorMuerto = 1;
+			datos.posicionMuerteJugador[0] = posicion [0];
+			datos.posicionMuerteJugador[1] = posicion [1];
+		} else {
+			datos.posicionMuerteJugador.Clear ();
+			datos.posicionMuerteJugador.Add (-1);
+			datos.posicionMuerteJugador.Add (-1);
+		}
+		
 		datos.listadoEnemigos.Add (enemigosNivelActual);
 		datos.ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
 		datos.ListadoitemsNiveles.Add (getListaItems ());
@@ -277,9 +290,6 @@ public class GameManager : MonoBehaviour {
 		bf.Serialize (file, datos);
 		file.Close ();
 
-		//enemigosNivelActual.Clear ();//se limpia para que el sgte nivel no guarde más
-		//listaGolpesEnemigosNivelActual.Clear ();
-		
 	}
 
 	public void cargar(){
@@ -293,6 +303,8 @@ public class GameManager : MonoBehaviour {
 
 			int p0 = datos.MostrarPasos ();
 			int p00 = datos.MostrarVidaJugador ();
+			int p000 = datos.MostrarJugadorMuerto ();
+			int p0000 = datos.MostrarPosicionMuerteDelJugador ();
 			int p1 = datos.MostrarListadoEnemigos ();
 			int p11 = datos.MostrarListadoGolpesEnemigosNiveles ();
 			int p2 = datos.MostrarListadoitemsNiveles ();

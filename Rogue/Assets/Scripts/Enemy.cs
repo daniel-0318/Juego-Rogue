@@ -206,7 +206,6 @@ public class Enemy : MovingObject {
 		healthPoints -= damage;
 		Debug.Log (healthPoints <= 0);
 		if (healthPoints <= 0) {
-			//GameManager.instance.DeleteEnemyToList (gameObject.transform);
 			gameObject.SetActive(false);
 		}
 	}
@@ -328,5 +327,12 @@ public class Enemy : MovingObject {
 
 	public void SetPosicionNodo(int posX, int posY){
 		posicionNodo = new Vector2 (posX, posY);
+	}
+
+	public List<int> getTargetPosition(){
+		List<int> posicion = new List<int> ();
+		posicion.Add ((int)target.position.x);
+		posicion.Add ((int)target.position.y);
+		return posicion;
 	}
 }

@@ -12,19 +12,19 @@ public class SaveLoad {
 	//variables
 	public List<int> numeroPasosJugador= new List<int>();
 	public List<int> vidajugador = new List<int>();
-	public bool jugadorMuerto = false;
+	public int jugadorMuerto = 0;
 	public List<int> posicionMuerteJugador = new List<int> ();
 	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 4 num son vecesGolpeJugador, IA, Px y posY de cada enemigo en cada nivel (de lista interna)
 	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
 	public List<List<List<int>>> ListadoitemsNiveles = new List<List<List<int>>> ();
 
-	private string pasosDelJugador;
-	private string vidaDelJugador;
-	private string jugadorSeMurio;
-	private string posicionMuerteDelJugador;
-	private string listadoDeEnemigos;
-	private string listadoDeGolpesDeEnemigosNiveles;
-	private string listadoDeItems;
+	private string pasosDelJugador = "";
+	private string vidaDelJugador = "";
+	private string jugadorSeMurio = "";
+	private string posicionMuerteDelJugador = "";
+	private string listadoDeEnemigos = "";
+	private string listadoDeGolpesDeEnemigosNiveles = "";
+	private string listadoDeItems = "";
 
 
 	public string getPasosDelJugador(){
@@ -97,22 +97,34 @@ public class SaveLoad {
 		Debug.Log ("####################  Listado Enemigos ################");
 		Debug.Log (listadoEnemigos.Count);
 		for(int i=0;i<listadoEnemigos.Count;i++){
-			Debug.Log ("nivel " + i + " "+ listadoEnemigos.Count );
-			for(int j=0;j<listadoEnemigos[i].Count;j++){
-				Debug.Log (listadoEnemigos[i][j]);
+			Debug.Log ("nivel " + (i+1));
+			for (int j = 0; j < listadoEnemigos [i].Count; j += 4) {
+				Debug.Log (listadoEnemigos [i] [j] + " " + listadoEnemigos [i] [j + 1] + " " + listadoEnemigos [i] [j + 2] + " " + listadoEnemigos [i] [j + 3]);
+				listadoDeEnemigos += listadoEnemigos [i] [j] + "," + listadoEnemigos [i] [j + 1] + "," + listadoEnemigos [i] [j + 2] + "," + listadoEnemigos [i] [j + 3];
+				if ((j + 4) < listadoEnemigos [i].Count)
+					listadoDeEnemigos += ",";
+				else
+					listadoDeEnemigos += ";";
 			}
 		}
+
+		Debug.Log (listadoDeEnemigos);
 		return 1;
 	}
 
 	public int MostrarListadoGolpesEnemigosNiveles(){
 		Debug.Log ("####################  Listado Golpes Enemigos Niveles ################");
 		for(int i=0;i<ListadoGolpesEnemigosNiveles.Count;i++){
+			Debug.Log ("nivel " + (i + 1));
 			for(int j=0;j<ListadoGolpesEnemigosNiveles[i].Count;j++){
 				for(int k=0;k<ListadoGolpesEnemigosNiveles[i][j].Count;k++){
-					Debug.Log ("nivel " + (i+1) +" "+ ListadoGolpesEnemigosNiveles[i][j][k]);
+					Debug.Log (ListadoGolpesEnemigosNiveles[i][j][k]);
+					listadoDeGolpesDeEnemigosNiveles += ListadoGolpesEnemigosNiveles [i] [j] [k] + ",";
 				}
+				listadoDeGolpesDeEnemigosNiveles += "#";
+				Debug.Log ("Fin de un enemigo");
 			}
+			listadoDeGolpesDeEnemigosNiveles += ";";
 		}
 		return 1;
 	}
@@ -131,14 +143,37 @@ public class SaveLoad {
 
 
 	public void GuardarParaExportar(){
-
+		Debug.Log ("Entro a crear el archivo de texto");
 		StreamWriter texto = new StreamWriter ("Assets/Prueba.txt");
 
-		texto.WriteLine ("Hola mundo");
-		texto.WriteLine ("hello world");
+		resetDatosStringAGuardar (); //para que no se duplique la informacion en el archivo txt
+
+		int p0 = MostrarPasos ();
+		int p00 = MostrarVidaJugador ();
+		int p000 = MostrarJugadorMuerto ();
+		int p0000 = MostrarPosicionMuerteDelJugador ();
+		int p1 = MostrarListadoEnemigos ();
+		int p11 = MostrarListadoGolpesEnemigosNiveles ();
+		int p2 = MostrarListadoitemsNiveles ();
+
+		texto.WriteLine (pasosDelJugador);
+		texto.WriteLine (vidaDelJugador);
+		texto.WriteLine (jugadorSeMurio);
+		texto.WriteLine (posicionMuerteDelJugador);
+		texto.WriteLine (listadoDeEnemigos);
+		texto.WriteLine (listadoDeGolpesDeEnemigosNiveles);
 
 		texto.Close ();
 
+	}
+
+	public void resetDatosStringAGuardar(){
+		pasosDelJugador = "";
+		vidaDelJugador = "";
+		jugadorSeMurio = "";
+		posicionMuerteDelJugador = "";
+		listadoDeEnemigos = "";
+		listadoDeGolpesDeEnemigosNiveles = "";
 	}
 
 }
