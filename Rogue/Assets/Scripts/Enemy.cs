@@ -63,7 +63,7 @@ public class Enemy : MovingObject {
 			} else if (tipoMovimiento == 1) {//Movimiento aleatorio
 				MoveEnemyRandom ();
 			} else if (tipoMovimiento == 2) {//movimiento esquivar obstaculos
-				esquivar ((Vector2)target.position, 0);
+				MoveEnemy();
 			} else if (tipoMovimiento == 3) {//movimiento ir a nodo
 				Debug.Log ("---------------------- valor goal: " + goalOk);
 				if (goalOk) {
