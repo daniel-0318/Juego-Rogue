@@ -142,9 +142,9 @@ public class SaveLoad {
 	}
 
 
-	public void GuardarParaExportar(){
+	public void GuardarParaExportar(int numeroArchivo ){
 		Debug.Log ("Entro a crear el archivo de texto");
-		StreamWriter texto = new StreamWriter ("Assets/Prueba.txt");
+		StreamWriter texto = new StreamWriter ("Assets/Prueba"+numeroArchivo+ ".txt");
 
 		resetDatosStringAGuardar (); //para que no se duplique la informacion en el archivo txt
 

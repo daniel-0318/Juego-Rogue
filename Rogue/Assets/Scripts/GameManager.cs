@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
 	public List<int> numeroPasosJugador = new List<int>();
 
 	private string rutaGuardarCargar;
+	private int numero_archivo_txt;
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
@@ -41,6 +42,8 @@ public class GameManager : MonoBehaviour {
 
 	private void Awake(){
 		rutaGuardarCargar =  Application.persistentDataPath + "/datos.dat";
+		numero_archivo_txt =  numero_de_guardado_libre ();
+		//Directorio donde se guarda el archivo serializado
 		Debug.Log (Application.persistentDataPath);
 		//esto es para volverlo singleton
 		if (GameManager.instance == null) {
@@ -285,7 +288,7 @@ public class GameManager : MonoBehaviour {
 		datos.ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
 		datos.ListadoitemsNiveles.Add (getListaItems ());
 
-		datos.GuardarParaExportar ();
+		datos.GuardarParaExportar (numero_archivo_txt);
 
 		bf.Serialize (file, datos);
 		file.Close ();
@@ -300,17 +303,24 @@ public class GameManager : MonoBehaviour {
 
 			SaveLoad datos = (SaveLoad)bf.Deserialize (file);
 
-
-			int p0 = datos.MostrarPasos ();
-			int p00 = datos.MostrarVidaJugador ();
-			int p000 = datos.MostrarJugadorMuerto ();
-			int p0000 = datos.MostrarPosicionMuerteDelJugador ();
-			int p1 = datos.MostrarListadoEnemigos ();
-			int p11 = datos.MostrarListadoGolpesEnemigosNiveles ();
-			int p2 = datos.MostrarListadoitemsNiveles ();
 			file.Close ();
 		}
 	}
 
+
+	/*Funcion que sirve para elegir el nombre del archivo que se va a guardar que este libre (ej: datos0, datos1, datos2*/
+	public int numero_de_guardado_libre(){
+		int numero = 0;
+		for (int i = 0; i < 100; i++) {
+			if (!File.Exists ("Assets/datos"+numero+".dat")) {
+				Debug.Log ("No existe el txt numero:" + i);
+				numero = i;
+				break;
+			}
+		}
+
+		return numero;
+
+	}
 		
 }
