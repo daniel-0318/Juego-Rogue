@@ -26,6 +26,14 @@ public class SaveLoad {
 	private string listadoDeGolpesDeEnemigosNiveles = "";
 	private string listadoDeItems = "";
 
+	//Matriz por cada tipo Guardado, cada fila es un archivo distinto y cada columna son los datos de cada nivel de un mismo txt
+	private List<List<int>> pasosJugadorTxt = new List<List<int>> ();
+	private List<List<int>> vidaJugadorTxt = new List<List<int>> ();
+	private List<int> jugadorMuertoTxt = new List<int> ();
+	private List<List<int>> posicionMuerteJugadorTxt = new List<List<int>> ();
+	private List<List<String>> listaEnemigosTxt = new List<List<String>> ();
+	private List<List<String>> ListaGolpesEnemigosTxt = new List<List<String>> ();
+
 
 	public string getPasosDelJugador(){
 		return pasosDelJugador;
@@ -116,6 +124,10 @@ public class SaveLoad {
 		Debug.Log ("####################  Listado Golpes Enemigos Niveles ################");
 		for(int i=0;i<ListadoGolpesEnemigosNiveles.Count;i++){
 			Debug.Log ("nivel " + (i + 1));
+
+			if(ListadoGolpesEnemigosNiveles [i].Count == 0)
+				listadoDeGolpesDeEnemigosNiveles += "#";
+			
 			for(int j=0;j<ListadoGolpesEnemigosNiveles[i].Count;j++){
 				for(int k=0;k<ListadoGolpesEnemigosNiveles[i][j].Count;k++){
 					Debug.Log (ListadoGolpesEnemigosNiveles[i][j][k]);
@@ -144,7 +156,7 @@ public class SaveLoad {
 
 	public void GuardarParaExportar(int numeroArchivo ){
 		Debug.Log ("Entro a crear el archivo de texto");
-		StreamWriter texto = new StreamWriter ("Assets/Prueba"+numeroArchivo+ ".txt");
+		StreamWriter texto = new StreamWriter ("Assets/datos"+numeroArchivo+ ".txt");
 
 		resetDatosStringAGuardar (); //para que no se duplique la informacion en el archivo txt
 
@@ -176,4 +188,37 @@ public class SaveLoad {
 		listadoDeGolpesDeEnemigosNiveles = "";
 	}
 
+	/*Funcion que sirve para leer todos los archivo txt generados hasta el numero antes de numMaximo(porque aun se esta ejecutando la actual partida) que se da.*/
+	public void leerArchivosTxt(int numMaximo){
+		for (int i = 0; i < numMaximo; i++) {
+			if (File.Exists ("Assets/datos" + i + ".txt")) {
+
+				pasosJugadorTxt.Add (new List<int>());
+				vidaJugadorTxt.Add (new List<int>());
+
+				posicionMuerteJugadorTxt.Add (new List<int>());
+				listaEnemigosTxt.Add (new List<string>());
+				ListaGolpesEnemigosTxt.Add (new List<string>());
+
+				StreamReader streamreader = new StreamReader ("Assets/datos" + i + ".txt");
+
+				String linea = "";
+				for(int j=0;j<4;j++){
+					linea = streamreader.ReadLine ();
+					Debug.Log ("Entro");
+					string[] splitString = linea.Split(new string[] { ";" }, StringSplitOptions.None);
+
+					for (int k = 0; k < splitString.Length; k++) {
+						pasosJugadorTxt [pasosJugadorTxt.Count - 1].Add (int.TryParse( splitString[k]));
+						//// AUN FALTA
+
+					}
+
+				}
+
+				streamreader.Close ();
+
+			}
+		}
+	}
 }

@@ -56,7 +56,6 @@ public class Enemy : MovingObject {
 	}
 
 	public void RealizarMovimiento(){
-		Debug.Log ("---------------------- valor de skip: " + skipmove);
 		if (!skipmove) {
 			if (tipoMovimiento == 0) { //movimiento normal del juego
 				movimientoNormal ();
@@ -65,9 +64,7 @@ public class Enemy : MovingObject {
 			} else if (tipoMovimiento == 2) {//movimiento esquivar obstaculos
 				MoveEnemy();
 			} else if (tipoMovimiento == 3) {//movimiento ir a nodo
-				Debug.Log ("---------------------- valor goal: " + goalOk);
 				if (goalOk) {
-					Debug.Log ("---------------------- se cambia a mov aleatorio ");
 					MoveEnemyRandom ();
 				} else {
 					MoveEnemyToNode ();

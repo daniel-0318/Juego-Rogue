@@ -94,11 +94,9 @@ public class GameManager : MonoBehaviour {
 		if (enemies.Count == 0) {
 			yield return new WaitForSeconds (turnDelay);
 		}
-		Debug.Log ("Cantidad de enemigos " + enemies.Count); 
+
 		for(int i=0;i<enemies.Count;i++){
-			Debug.Log ("Enemigo, Valor de los nodos esta en: " + moveToNode);
 			if (!enemies [i].gameObject.activeInHierarchy) {
-				Debug.Log ("************** Enemigo desactivado ***********");
 			}
 			if (enemies [i].gameObject.activeInHierarchy) {
 
@@ -178,9 +176,6 @@ public class GameManager : MonoBehaviour {
 		sodas = GameObject.FindGameObjectsWithTag ("Soda");
 		foods = GameObject.FindGameObjectsWithTag ("Food");
 		ammos = GameObject.FindGameObjectsWithTag ("Ammo");
-		Debug.Log ("Prueba de si esta activo el item: " + sodas.Length);
-		Debug.Log ("Prueba de si esta activo el item: " + foods.Length);
-		Debug.Log ("Prueba de si esta activo el item: " + ammos.Length);
 	}
 
 	/*Función que sirve para obtener la lista de items de cada nivel (posx, posy, adquiriojugador)*/
@@ -188,9 +183,6 @@ public class GameManager : MonoBehaviour {
 		
 		List<List<int>> listaItems = new List<List<int>> ();
 
-		Debug.Log ("Prueba de si esta activo el sodas: " + sodas.Length);
-		Debug.Log ("Prueba de si esta activo el foods: " + foods.Length);
-		Debug.Log ("Prueba de si esta activo el ammos: " + ammos.Length);
 		for (int i = 0; i < sodas.Length; i++) {
 			List <int> item = new List<int> (); //		SE PODRIA GUARDAR EL VECTOR POSICION PERO ASI SE PUEDE AÑADIR NUEVA INFORMACION A GUARDAR
 			item.Add ((int)sodas [i].transform.position.x);
@@ -200,7 +192,6 @@ public class GameManager : MonoBehaviour {
 			} else {
 				item.Add (0);
 			}
-			Debug.Log ("Prueba de si esta activo el item: "+ sodas.Length+" " +sodas[i].activeInHierarchy);
 			listaItems.Add (item);
 		}
 		for (int i = 0; i < foods.Length; i++) {
@@ -212,7 +203,6 @@ public class GameManager : MonoBehaviour {
 			} else {
 				item.Add (0);
 			}
-			Debug.Log ("Prueba de si esta activo el item: "+ foods.Length+" " +foods[i].activeInHierarchy);
 			listaItems.Add (item);
 		}
 		for (int i = 0; i < ammos.Length; i++) {
@@ -224,7 +214,6 @@ public class GameManager : MonoBehaviour {
 			} else {
 				item.Add (0);
 			}
-			Debug.Log ("Prueba de si esta activo el item: "+ ammos.Length+" " +ammos[i].activeInHierarchy);
 			listaItems.Add (item);
 		}
 
@@ -300,10 +289,11 @@ public class GameManager : MonoBehaviour {
 			Debug.Log ("cargando");
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
-
 			SaveLoad datos = (SaveLoad)bf.Deserialize (file);
-
 			file.Close ();
+
+			datos.leerArchivosTxt (numero_archivo_txt);
+
 		}
 	}
 
@@ -312,7 +302,7 @@ public class GameManager : MonoBehaviour {
 	public int numero_de_guardado_libre(){
 		int numero = 0;
 		for (int i = 0; i < 100; i++) {
-			if (!File.Exists ("Assets/datos"+numero+".dat")) {
+			if (!File.Exists ("Assets/datos"+i+".txt")) {
 				Debug.Log ("No existe el txt numero:" + i);
 				numero = i;
 				break;
