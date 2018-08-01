@@ -285,11 +285,14 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void cargar(){
+		if (datos == null) {
+			Debug.Log ("Si es el error que tenia");
+		}
 		if (File.Exists(rutaGuardarCargar)) {
 			Debug.Log ("cargando");
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
-			SaveLoad datos = (SaveLoad)bf.Deserialize (file);
+			SaveLoad datos1 = (SaveLoad)bf.Deserialize (file);
 			file.Close ();
 
 			datos.leerArchivosTxt (numero_archivo_txt);

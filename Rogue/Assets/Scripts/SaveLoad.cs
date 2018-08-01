@@ -63,64 +63,72 @@ public class SaveLoad {
 		return listadoDeItems;
 	}
 
-	public int MostrarPasos(){
+	public void MostrarPasos(){
 		Debug.Log ("####################  Pasos jugador ################");
 		for(int i=0;i<numeroPasosJugador.Count;i++){
 			Debug.Log ("nivel " + (i+1) + " " + numeroPasosJugador[i]);
-			pasosDelJugador = pasosDelJugador + numeroPasosJugador[i] + ";";
+			pasosDelJugador = pasosDelJugador + numeroPasosJugador[i];
+			if ((i + 1) < numeroPasosJugador.Count) {
+				pasosDelJugador += ";";
+			}
 		}
 		Debug.Log (pasosDelJugador);
-		return 1;
 	}
 
-	public int MostrarVidaJugador(){
+	public void MostrarVidaJugador(){
 		Debug.Log ("####################  Vida jugador ################");
 		for(int i=0;i<vidajugador.Count;i++){
 			Debug.Log ("nivel " + (i+1) + " " + vidajugador[i]);
-			vidaDelJugador = vidaDelJugador + vidajugador [i] + ";";
+			vidaDelJugador = vidaDelJugador + vidajugador [i];
+			if ((i + 1) < vidajugador.Count) {
+				vidaDelJugador += ";";
+			}
 		}
 		Debug.Log (vidaDelJugador);
-		return 1;
+
 	}
 
-	public int MostrarJugadorMuerto(){
+	public void MostrarJugadorMuerto(){
 		Debug.Log ("####################  Jugador Muerto ################");
 		Debug.Log (jugadorMuerto);
 		jugadorSeMurio = "" + jugadorMuerto;
 		Debug.Log (jugadorSeMurio);
-		return 1;
 
 	}
 
-	public int MostrarPosicionMuerteDelJugador(){
+	public void MostrarPosicionMuerteDelJugador(){
 		Debug.Log ("####################  PosicionMuerteJugador ################");
 		Debug.Log (posicionMuerteJugador[0] + " " + posicionMuerteJugador[1]);
 		posicionMuerteDelJugador = "" + posicionMuerteJugador [0] + ";" + posicionMuerteJugador [1];
 		Debug.Log (posicionMuerteDelJugador);
 
-		return 1;
 	}
 
-	public int MostrarListadoEnemigos(){
+	public void MostrarListadoEnemigos(){
 		Debug.Log ("####################  Listado Enemigos ################");
 		Debug.Log (listadoEnemigos.Count);
 		for(int i=0;i<listadoEnemigos.Count;i++){
 			Debug.Log ("nivel " + (i+1));
+
+			if (listadoEnemigos[i].Count==0) {
+				listadoDeEnemigos += "#";
+			}
+
 			for (int j = 0; j < listadoEnemigos [i].Count; j += 4) {
 				Debug.Log (listadoEnemigos [i] [j] + " " + listadoEnemigos [i] [j + 1] + " " + listadoEnemigos [i] [j + 2] + " " + listadoEnemigos [i] [j + 3]);
 				listadoDeEnemigos += listadoEnemigos [i] [j] + "," + listadoEnemigos [i] [j + 1] + "," + listadoEnemigos [i] [j + 2] + "," + listadoEnemigos [i] [j + 3];
 				if ((j + 4) < listadoEnemigos [i].Count)
 					listadoDeEnemigos += ",";
-				else
-					listadoDeEnemigos += ";";
+			}
+			if ((i + 1) < listadoEnemigos.Count) {
+				listadoDeEnemigos += ";";
 			}
 		}
 
 		Debug.Log (listadoDeEnemigos);
-		return 1;
 	}
 
-	public int MostrarListadoGolpesEnemigosNiveles(){
+	public void MostrarListadoGolpesEnemigosNiveles(){
 		Debug.Log ("####################  Listado Golpes Enemigos Niveles ################");
 		for(int i=0;i<ListadoGolpesEnemigosNiveles.Count;i++){
 			Debug.Log ("nivel " + (i + 1));
@@ -136,12 +144,13 @@ public class SaveLoad {
 				listadoDeGolpesDeEnemigosNiveles += "#";
 				Debug.Log ("Fin de un enemigo");
 			}
-			listadoDeGolpesDeEnemigosNiveles += ";";
+			if ((i + 1) < ListadoGolpesEnemigosNiveles.Count) {
+				listadoDeGolpesDeEnemigosNiveles += ";";
+			}
 		}
-		return 1;
 	}
 
-	public int MostrarListadoitemsNiveles(){
+	public void MostrarListadoitemsNiveles(){
 		Debug.Log ("####################  ListadoitemsNiveles ################");
 		for(int i=0;i<ListadoitemsNiveles.Count;i++){
 			for(int j=0;j<ListadoitemsNiveles[i].Count;j++){
@@ -150,7 +159,6 @@ public class SaveLoad {
 				}
 			}
 		}
-		return 1;
 	}
 
 
@@ -160,13 +168,13 @@ public class SaveLoad {
 
 		resetDatosStringAGuardar (); //para que no se duplique la informacion en el archivo txt
 
-		int p0 = MostrarPasos ();
-		int p00 = MostrarVidaJugador ();
-		int p000 = MostrarJugadorMuerto ();
-		int p0000 = MostrarPosicionMuerteDelJugador ();
-		int p1 = MostrarListadoEnemigos ();
-		int p11 = MostrarListadoGolpesEnemigosNiveles ();
-		int p2 = MostrarListadoitemsNiveles ();
+		MostrarPasos ();
+		MostrarVidaJugador ();
+		MostrarJugadorMuerto ();
+		MostrarPosicionMuerteDelJugador ();
+		MostrarListadoEnemigos ();
+		MostrarListadoGolpesEnemigosNiveles ();
+		MostrarListadoitemsNiveles ();
 
 		texto.WriteLine (pasosDelJugador);
 		texto.WriteLine (vidaDelJugador);
@@ -192,7 +200,6 @@ public class SaveLoad {
 	public void leerArchivosTxt(int numMaximo){
 		for (int i = 0; i < numMaximo; i++) {
 			if (File.Exists ("Assets/datos" + i + ".txt")) {
-
 				pasosJugadorTxt.Add (new List<int>());
 				vidaJugadorTxt.Add (new List<int>());
 
@@ -203,17 +210,11 @@ public class SaveLoad {
 				StreamReader streamreader = new StreamReader ("Assets/datos" + i + ".txt");
 
 				String linea = "";
-				for(int j=0;j<4;j++){
+
+				for (int j = 0; j < 6; j++) {
+					
 					linea = streamreader.ReadLine ();
-					Debug.Log ("Entro");
-					string[] splitString = linea.Split(new string[] { ";" }, StringSplitOptions.None);
-
-					for (int k = 0; k < splitString.Length; k++) {
-						pasosJugadorTxt [pasosJugadorTxt.Count - 1].Add (int.TryParse( splitString[k]));
-						//// AUN FALTA
-
-					}
-
+					IngresarDatosAMatrices (linea.Split (new string[] { ";" }, StringSplitOptions.None), j );
 				}
 
 				streamreader.Close ();
@@ -221,4 +222,31 @@ public class SaveLoad {
 			}
 		}
 	}
+
+	public void IngresarDatosAMatrices(string[] splitString, int matrizElegida){
+		for (int i = 0; i < splitString.Length; i++) {
+
+			if (matrizElegida == 0) {
+				Debug.Log ("Pasos jugador" + splitString[i]);
+				pasosJugadorTxt [pasosJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
+			} else if (matrizElegida == 1) {
+				Debug.Log ("vida jugador" + splitString[i]);
+				vidaJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
+			}else if (matrizElegida == 2) {
+				Debug.Log ("jugador muerto" + splitString[i]);
+				jugadorMuertoTxt.Add (int.Parse (splitString [i]));
+			}else if (matrizElegida == 3) {
+				Debug.Log ("posicion muerte jugador" + splitString[i]);
+				posicionMuerteJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
+			}else if (matrizElegida == 4) {
+				Debug.Log ("Lista enemigos" + splitString[i]);
+				listaEnemigosTxt [listaEnemigosTxt.Count - 1].Add (splitString [i]);
+			}else if (matrizElegida == 5) {
+				Debug.Log ("Lista golpes enemigo" + splitString[i]);
+				ListaGolpesEnemigosTxt [ListaGolpesEnemigosTxt.Count - 1].Add (splitString [i]);
+			}
+
+		}
+	}
+
 }
