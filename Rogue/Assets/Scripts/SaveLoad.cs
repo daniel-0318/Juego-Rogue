@@ -34,6 +34,9 @@ public class SaveLoad {
 	private List<List<String>> listaEnemigosTxt = new List<List<String>> ();
 	private List<List<String>> ListaGolpesEnemigosTxt = new List<List<String>> ();
 
+	private List<List<List<string>>> matrizPorNiveles = new List<List<List<string>>>();
+	private int nivelMasAltoEnTxt = 0;
+
 
 	public string getPasosDelJugador(){
 		return pasosDelJugador;
@@ -210,43 +213,109 @@ public class SaveLoad {
 				StreamReader streamreader = new StreamReader ("Assets/datos" + i + ".txt");
 
 				String linea = "";
+				bool controlCadaArchivo = true; //sirve para que solo intente agrandar la lista de matrices por nivel solo una vez cada que lee un archivo txt
 
 				for (int j = 0; j < 6; j++) {
 					
 					linea = streamreader.ReadLine ();
-					IngresarDatosAMatrices (linea.Split (new string[] { ";" }, StringSplitOptions.None), j );
+					string[] splitString = linea.Split (new string[] { ";" }, StringSplitOptions.None);
+					int difDeNiveles = Math.Abs (nivelMasAltoEnTxt - splitString.Length);
+
+					if (splitString.Length > nivelMasAltoEnTxt  & controlCadaArchivo) {
+						nivelMasAltoEnTxt = splitString.Length;
+						Debug.Log ("Entro a cambiar el valor del nivel mas alto con: " + nivelMasAltoEnTxt);
+						controlCadaArchivo = false;
+						for (int k = 0; k < difDeNiveles; k++) {
+							matrizPorNiveles.Add (new List<List<string>> ()); //Se crea una nueva lista para cada nivel.
+						}
+						for (int l = 0; l < matrizPorNiveles.Count; l++) {
+							matrizPorNiveles[l].Add(new List<string>());
+						}
+					}
+
+					Debug.Log ("El experimento salio para tener tamaño: " + matrizPorNiveles.Count);
+
+
+					IngresarDatosAMatrices (splitString, j );
 				}
 
 				streamreader.Close ();
 
 			}
 		}
+		revisarMatricestxt ();
 	}
 
 	public void IngresarDatosAMatrices(string[] splitString, int matrizElegida){
+
+
 		for (int i = 0; i < splitString.Length; i++) {
 
 			if (matrizElegida == 0) {
 				Debug.Log ("Pasos jugador" + splitString[i]);
 				pasosJugadorTxt [pasosJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
+				matrizPorNiveles [i] [matrizPorNiveles [i].Count - 1].Add (splitString [i]);
 			} else if (matrizElegida == 1) {
 				Debug.Log ("vida jugador" + splitString[i]);
 				vidaJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
+				matrizPorNiveles [i] [matrizPorNiveles [i].Count - 1].Add (splitString [i]);
 			}else if (matrizElegida == 2) {
 				Debug.Log ("jugador muerto" + splitString[i]);
 				jugadorMuertoTxt.Add (int.Parse (splitString [i]));
+				matrizPorNiveles [i] [matrizPorNiveles [i].Count - 1].Add (splitString [i]);
 			}else if (matrizElegida == 3) {
 				Debug.Log ("posicion muerte jugador" + splitString[i]);
 				posicionMuerteJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
+				matrizPorNiveles [i] [matrizPorNiveles [i].Count - 1].Add (splitString [i]);
 			}else if (matrizElegida == 4) {
 				Debug.Log ("Lista enemigos" + splitString[i]);
 				listaEnemigosTxt [listaEnemigosTxt.Count - 1].Add (splitString [i]);
+				matrizPorNiveles [i] [matrizPorNiveles [i].Count - 1].Add (splitString [i]);
 			}else if (matrizElegida == 5) {
 				Debug.Log ("Lista golpes enemigo" + splitString[i]);
 				ListaGolpesEnemigosTxt [ListaGolpesEnemigosTxt.Count - 1].Add (splitString [i]);
+				matrizPorNiveles [i] [matrizPorNiveles [i].Count - 1].Add (splitString [i]);
 			}
 
 		}
+	}
+
+	public void revisarMatricestxt(){
+		Debug.Log ("---------------------------------------------");
+		Debug.Log ("Pasos jugador");
+		for (int i = 0; i < pasosJugadorTxt.Count; i++) {
+			Debug.Log ("Archivo n°:" + (i+1));
+			for (int j = 0; j<pasosJugadorTxt [i].Count; j++) {
+				Debug.Log (pasosJugadorTxt [i][j]);
+			}
+		}
+		Debug.Log ("vida jugador");
+		for (int i = 0; i < vidaJugadorTxt.Count; i++) {
+			Debug.Log ("Archivo n°:" + (i+1));
+			for (int j = 0; j<vidaJugadorTxt [i].Count; j++) {
+				Debug.Log (vidaJugadorTxt [i][j]);
+			}
+		}
+		Debug.Log ("jugador muerto");
+		for (int i = 0; i < jugadorMuertoTxt.Count; i++) {
+			Debug.Log ("Archivo n°:" + (i+1));
+			Debug.Log (jugadorMuertoTxt[i]);
+		}
+		Debug.Log ("posicion muerte jugador");
+		for (int i = 0; i < posicionMuerteJugadorTxt.Count; i++) {
+			Debug.Log ("Archivo n°:" + (i+1));
+			for (int j = 0; j<posicionMuerteJugadorTxt [i].Count; j++) {
+				Debug.Log(posicionMuerteJugadorTxt [i] [j]);
+			}
+		}
+		Debug.Log ("listado enemigos");
+		for (int i = 0; i < listaEnemigosTxt.Count; i++) {
+			Debug.Log ("Archivo n°:" + (i+1));
+			for (int j = 0; j<listaEnemigosTxt [i].Count; j++) {
+				Debug.Log (listaEnemigosTxt [i][j]);
+			}
+		}
+		
 	}
 
 }
