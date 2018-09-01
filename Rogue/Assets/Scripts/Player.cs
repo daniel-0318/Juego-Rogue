@@ -82,6 +82,19 @@ public class Player : MovingObject {
 			GoalLook ();
 
 		}
+		if(Input.GetKeyDown(KeyCode.R)){
+			RedNeuronal rn = new RedNeuronal();
+			float[,] matrizz = new float [1, 5];
+			matrizz[0,0]=1f;
+			matrizz[0,1]=2f;
+			matrizz[0,2]=3f;
+			matrizz[0,3]=4f;
+			matrizz[0,4]=5f;
+			Debug.Log("Con Rank " + matrizz.GetLength(0));
+			Debug.Log ("Con GetLength " + matrizz.GetLength(1));
+
+			rn.Transpuesta (matrizz);
+		}
 
 		/////////////////////////
 		if(Input.GetKeyDown(KeyCode.C)){

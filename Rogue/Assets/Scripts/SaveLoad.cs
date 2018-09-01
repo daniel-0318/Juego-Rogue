@@ -315,7 +315,23 @@ public class SaveLoad {
 				Debug.Log (listaEnemigosTxt [i][j]);
 			}
 		}
-		
+		Debug.Log ("listado golpes enemigos");
+		for (int i = 0; i < ListaGolpesEnemigosTxt.Count; i++) {
+			Debug.Log ("Archivo n°:" + (i+1));
+			for (int j = 0; j<ListaGolpesEnemigosTxt [i].Count; j++) {
+				Debug.Log (ListaGolpesEnemigosTxt [i][j]);
+			}
+		}
+		Debug.Log ("listado por niveles");
+		for (int i = 0; i < matrizPorNiveles.Count; i++) {
+			Debug.Log ("nivel: " + (i+1));
+			for (int j = 0; j<matrizPorNiveles [i].Count; j++) {
+				Debug.Log ("archivo: " + (j+1));
+				for (int k = 0; k<matrizPorNiveles [i][j].Count; k++) {
+					Debug.Log (matrizPorNiveles [i][j][k]);
+				}
+			}
+		}
 	}
 
 }
