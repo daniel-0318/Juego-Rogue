@@ -84,16 +84,10 @@ public class Player : MovingObject {
 		}
 		if(Input.GetKeyDown(KeyCode.R)){
 			RedNeuronal rn = new RedNeuronal();
-			float[,] matrizz = new float [1, 5];
-			matrizz[0,0]=1f;
-			matrizz[0,1]=2f;
-			matrizz[0,2]=3f;
-			matrizz[0,3]=4f;
-			matrizz[0,4]=5f;
-			Debug.Log("Con Rank " + matrizz.GetLength(0));
-			Debug.Log ("Con GetLength " + matrizz.GetLength(1));
+			double[,] matriz1 = new double [2, 3]{{1f,2f,-3f},{4,0,-2}};
+			double[,] matriz2 = new double [3, 2]{{3f,1f},{2,4},{-1,5}};
 
-			rn.Transpuesta (matrizz);
+			rn.matrizRadom (2,2);
 		}
 
 		/////////////////////////

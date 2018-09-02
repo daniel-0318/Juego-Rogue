@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class RedNeuronal : MonoBehaviour {
 
+	private double[,] entrada;
+	private double[,] salidaCapaOculta;
+	private double[,] entradaNetaCapaOculta;
+	private double[,] salidaCapaOculta2;
+	private double[,] entradaNetaCapaOculta2;
+	private double[,] entradaNetaCapaSalida;
 
+	public double[,] Transpuesta(double [,] matriz){
 
-	public float[,] Transpuesta(float [,] matriz){
-
-		float[,] matrizTrans = new float[matriz.GetLength (1), matriz.GetLength(0)];
+		double[,] matrizTrans = new double[matriz.GetLength (1), matriz.GetLength(0)];
 		Debug.Log("matrizTrans Con Rank " + matrizTrans.GetLength(0));
 		Debug.Log ("matrizTrans Con GetLength " + matrizTrans.GetLength(1));
 
-		for (int i = 0; i < matriz.GetLength(0); i++) { //Rank da las filas
-			for (int j = 0; j < matriz.GetLength(1); j++) { // GetLength da las columnas
+		for (int i = 0; i < matriz.GetLength(0); i++) { //GetLength(0) da las filas
+			for (int j = 0; j < matriz.GetLength(1); j++) { // GetLength(1) da las columnas
 				matrizTrans [j, i] = matriz [i, j];
 			}
 		}
@@ -22,7 +27,48 @@ public class RedNeuronal : MonoBehaviour {
 	}
 
 
-	public void MultiMatrices(){
+	public double[,] MultiMatrices(double [,] matriz_1, double [,] matriz_2){
+
+		int filas1 = matriz_1.GetLength (0);
+		int columnas1 = matriz_1.GetLength (1);
+		int filas2 = matriz_2.GetLength (0);
+		int columnas2 = matriz_2.GetLength (1);
+
+		double[,] matrizResultante = new double[matriz_1.GetLength (0), matriz_2.GetLength(1)];
+
+		if (columnas1 == filas2) {
+			Debug.Log ("El tamaño de las matrices sera: " + matriz_1.GetLength (0) + " " + matriz_2.GetLength(1));
+			for (int i = 0; i < matriz_1.GetLength (0); i++) { //GetLength(0) da las filas
+				for (int j = 0; j < matriz_2.GetLength (1); j++) { // GetLength(1) da las columnas
+					for (int k = 0; k < matriz_1.GetLength (1); k++) { // GetLength(1) da las columnas
+						matrizResultante[i,j] += matriz_1[i,k] * matriz_2[k,j];
+					}
+				}
+			}
+
+
+		} else {
+			Debug.Log ("El tamaño de las matrices no es el adecuado");
+		}
+
+		return matrizResultante;
+	}
+
+	public void matrizRadom(int filas, int columnas){
+
+		double[,] matrizResultante = new double[filas, columnas];
+
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
+				matrizResultante [i, j] = (double)Random.value;
+			}
+		}
+
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
+				Debug.Log (matrizResultante [i, j]);
+			}
+		}
 	}
 		
 
