@@ -5,10 +5,10 @@ using UnityEngine;
 public class RedNeuronal : MonoBehaviour {
 
 	private double[,] entrada;
-	private double[,] salidaCapaOculta;
 	private double[,] entradaNetaCapaOculta;
-	private double[,] salidaCapaOculta2;
+	private double[,] salidaCapaOculta;
 	private double[,] entradaNetaCapaOculta2;
+	private double[,] salidaCapaOculta2;
 	private double[,] entradaNetaCapaSalida;
 
 	public double[,] Transpuesta(double [,] matriz){
@@ -54,7 +54,7 @@ public class RedNeuronal : MonoBehaviour {
 		return matrizResultante;
 	}
 
-	public void matrizRadom(int filas, int columnas){
+	public double[,] matrizRadom(int filas, int columnas){
 
 		double[,] matrizResultante = new double[filas, columnas];
 
@@ -64,11 +64,45 @@ public class RedNeuronal : MonoBehaviour {
 			}
 		}
 
-		for (int i = 0; i < filas; i++) {
-			for (int j = 0; j < columnas; j++) {
-				Debug.Log (matrizResultante [i, j]);
+		return matrizResultante;
+	}
+
+	public double[,] Suma_Escalar_a_Matriz (double numero, double[,] matriz){
+
+		double[,] matriz_resultante = new double[matriz.GetLength (0), matriz.GetLength (1)];
+
+		for (int i = 0; i < matriz.GetLength(0); i++) {
+			for (int j = 0; j < matriz.GetLength(1); j++) {
+				matriz_resultante [i, j] += numero;
 			}
 		}
+
+		return matriz_resultante;
+	}
+
+	public double sigmoidea(double numero){
+		///////////////  FALTA CODIGO //////////////////
+	}
+
+	public double derivadaSigmoidea(double numero){
+		///////////////  FALTA CODIGO //////////////////
+	}
+
+	public double funcionActivacion(int numero){
+		///////////////  FALTA CODIGO //////////////////
+	}
+
+	public void Red_neuronal(double[,] entrada, double[,] pesosCapa1, double[,] pesosCapa2,double[,] pesosCapaSalida){
+
+		//Capa de entrada
+		//No se realiza ningun procesamiento
+		//*************************************
+
+		//Capa oculta
+		double tendenciaCapa1 = 1;
+		double[,] entradaNetaCapaOculta = MultiMatrices(pesosCapa1, Transpuesta(entrada));
+		entradaNetaCapaOculta = Transpuesta (Suma_Escalar_a_Matriz (tendenciaCapa1, entradaNetaCapaOculta));
+		salidaCapaOculta = 1;
 	}
 		
 
