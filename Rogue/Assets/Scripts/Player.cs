@@ -84,10 +84,11 @@ public class Player : MovingObject {
 		}
 		if(Input.GetKeyDown(KeyCode.R)){
 			RedNeuronal rn = new RedNeuronal();
-			double[,] matriz1 = new double [2, 3]{{1f,2f,-3f},{4,0,-2}};
-			double[,] matriz2 = new double [3, 2]{{3f,1f},{2,4},{-1,5}};
+			double[,] matriz1 = new double [8, 3]{ {-1,-1,-1}, {-1,-1,1}, {-1,1,-1}, {-1,1,1}, {1,-1,-1}, {1,-1,1}, {1,1,-1}, {1,1,1} };
+			double[,] matriz2 = new double [1, 8]{{0,1,1,0,1,0,0,1}};
 
-			rn.matrizRadom (2,2);
+			rn.Backpropagation (matriz1, matriz2);
+
 		}
 
 		/////////////////////////
