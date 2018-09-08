@@ -87,7 +87,7 @@ public class Player : MovingObject {
 			double[,] matriz1 = new double [8, 3]{ {-1,-1,-1}, {-1,-1,1}, {-1,1,-1}, {-1,1,1}, {1,-1,-1}, {1,-1,1}, {1,1,-1}, {1,1,1} };
 			double[,] matriz2 = new double [1, 8]{{0,1,1,0,1,0,0,1}};
 
-			rn.Backpropagation (matriz1, matriz2);
+			rn.invocar_algoritmo_entrenamiento (matriz1, matriz2);
 
 		}
 

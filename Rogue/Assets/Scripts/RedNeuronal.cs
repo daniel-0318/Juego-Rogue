@@ -5,16 +5,20 @@ using UnityEngine;
 public class RedNeuronal {
 
 
-	private double factorEntrenamiento = 0.9;
-	private double errorPermitido = 0.1;
+	private double factorEntrenamiento = 0.1;
+	private double errorPermitido = 0.2;
+	private double p = 1.1;
+	private double a = 0.5;
 
-	private double[,] entrada;
 	private double[,] entradaNetaCapaOculta;
 	private double[,] salidaCapaOculta;
 	private double[,] entradaNetaCapaOculta2;
 	private double[,] salidaCapaOculta2;
 	private double[,] entradaNetaCapaSalida;
-	private double[,] salida;
+
+	double[,] pesosCapaOculta;
+	double[,] pesosCapaOculta2;
+	double[,] pesosCapaSalida;
 
 	public double[,] Transpuesta(double [,] matriz){
 
@@ -187,7 +191,7 @@ public class RedNeuronal {
 		double tendenciaCapa3 = 1;
 		entradaNetaCapaSalida = MultiMatrices(pesosCapaSalida, Transpuesta(salidaCapaOculta2));
 		entradaNetaCapaSalida = Transpuesta (Suma_Escalar_a_Matriz (tendenciaCapa3, entradaNetaCapaSalida));
-		salida = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaSalida);
+		double[,] salida = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaSalida);
 
 
 		return salida;  /////////// En si no es necesario devolverlo porque es una variable de la clase mirar como seria mejor /////////////////////////
@@ -197,13 +201,16 @@ public class RedNeuronal {
 	public void Backpropagation(double[,] entradaDeseada, double[,] salidaDeseada){
 
 		//Pesos Aleatorios
-		double[,] pesosCapaOculta = matrizRadom (3, 3);
-		double[,] pesosCapaOculta2 = matrizRadom (2, 3);
-		double[,] pesosCapaSalida = matrizRadom (1, 2);
+		pesosCapaOculta = matrizRadom (3, 3);
+		pesosCapaOculta2 = matrizRadom (2, 3);
+		pesosCapaSalida = matrizRadom (1, 2);
 
-		////// FALTARIA QUE SE COGAN PATRONES ALEATORIOS
+		double error_anterior = 0;
+
+		////// FALTARIA QUE SE COGAN PATRONES ALEATORIOS PARA ENTRENAMIENTO Y PARA PRUEBAS
 
 		int iteraciones = 0;
+		double error = 0;
 
 		for (int i = 0; i < entradaDeseada.GetLength (0); i++) {
 			iteraciones++;
@@ -212,7 +219,7 @@ public class RedNeuronal {
 			double[,] pesosCapaSalidaActual = Copiar_Matriz(pesosCapaSalida);
 
 
-			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradaDeseada), pesosCapaOcultaActual, pesosCapaOculta2, pesosCapaSalidaActual);
+			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradaDeseada), pesosCapaOcultaActual, pesosCapaOcultaActual2, pesosCapaSalidaActual);
 
 			Debug.Log ("-----------------------------------------------");
 			Debug.Log ("la salida fue: " + salida[0,0]);
@@ -275,8 +282,48 @@ public class RedNeuronal {
 			pesosCapaOculta [2, 1] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 1];
 			pesosCapaOculta [2, 2] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 2];
 
-			double error = 0;
+
+			error = 0;
+			for (int j = 0; j < entradaDeseada.GetLength (0); j++) {
+				double [,] salida_prueba = Red_neuronal (Sacar_fila_de_matriz (j, entradaDeseada), pesosCapaOculta, pesosCapaOculta2, pesosCapaSalida);
+				error += 0.5 * Mathf.Pow ((float)(salidaDeseada [0, j] - salida_prueba[0,0]), 2f);
+			}
+
+			Debug.Log ("Error global acumulado: " + error);
+
+			//Ajuste de entrenamiento
+			if (error < error_anterior)
+				factorEntrenamiento = p * factorEntrenamiento;
+			else {
+				factorEntrenamiento = a * factorEntrenamiento;
+			}
+			//Guardamos el error actual como el anterior para la sgte iteracion
+			error_anterior = error;
+
+			//Condicion de salida del ajuste de pesos
+			if (error < errorPermitido)
+				break;
 		}
+
+		Debug.Log ("Se necesito iterar el for: " + iteraciones + " veces");
+		Debug.Log ("Error global es: " + error);
+	}
+
+
+	public void invocar_algoritmo_entrenamiento(double[,] entradas, double[,] salidas){
+
+		Backpropagation (entradas, salidas);
+		Debug.Log ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Fin de entrenamiento ~~~~~~~~~~~~~~~~+");
+
+
+		for (int i = 0; i < entradas.GetLength (0); i++) {
+			Debug.Log ("=========================================");
+			Debug.Log ("Se desea: " + salidas [0, i]);
+			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradas), pesosCapaOculta, pesosCapaOculta2, pesosCapaSalida);
+			Debug.Log ("Se obtuvo: " + salida [0, 0]);
+			Debug.Log ("Un error de : " + (salida [0, 0] - salidas [0, i]));
+		}
+		
 	}
 
 }
