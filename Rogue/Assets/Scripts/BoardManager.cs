@@ -13,7 +13,7 @@ public class BoardManager : MonoBehaviour {
 	private Transform itemsHolder;
 
 	// Arrays donde estan los gameObjects que se generan en el juego como las paredes, el piso, la comida, enemigos y la salida.
-	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles, ammos, nodePoints;
+	public GameObject [] floorTiles, outerWallTiles, wallTiles, foodTiles, enemyTiles, ammos, nodePoints, coins;
 	public GameObject exit;
 
 	private List<Vector2> gridPositions = new List<Vector2>();//lista de casillas libres.
@@ -26,8 +26,9 @@ public class BoardManager : MonoBehaviour {
 		itemsHolder = new GameObject ("Items").transform;
 		LayoutObjectAtRandom (wallTiles,5,9);
 		LayoutObjectAtRandom (foodTiles,1,5);
-		randomAmmon ();
-		radomNodes (); //nodos para waypoint
+		RandomCoins ();
+		RandomAmmon ();
+		RadomNodes (); //nodos para waypoint
 		int enemyCount = (int)Mathf.Log (level, 2);// La cantidad de enemigos creceria logaritmicamente.
 		LayoutObjectAtRandom (enemyTiles,enemyCount,enemyCount);
 		GameObject objectInstan = Instantiate (exit, new Vector2(columnas-1, filas-1), Quaternion.identity ); //quaternion es la rotacion.
@@ -93,14 +94,18 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//Funcion que sirve para generar municion en el mapa con una probabilidad del 30%
-	public void randomAmmon(){
+	public void RandomAmmon(){
 		int probabilidad = Random.Range (1, 10);
 		if (probabilidad >= 7)
 			LayoutObjectAtRandom (ammos, 1, 3);
 
 	}
 
-	public void radomNodes(){
+	public void RadomNodes(){
 		LayoutObjectAtRandom (nodePoints, 3, 6);
+	}
+
+	public void RandomCoins(){
+		LayoutObjectAtRandom (coins, 1, 5);
 	}
 }
