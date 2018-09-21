@@ -7,7 +7,6 @@ public class Enemy : MovingObject {
 	public AudioClip enemyAttack1, enemyAttack2;
 
 	public int playerDamage;
-
 	private Animator animator;
 	private Transform target; //el jugador que es el objetivo del enemigo
 	private bool skipmove;

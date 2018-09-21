@@ -8,17 +8,24 @@ public class Player : MovingObject {
 	public AudioClip moveSound1, moveSound2, eatSound1, eatSound2, drinkSound1, drinkSound2, gameOverSound;
 
 	public int wallDamage = 1;
+	public int enemyDamage = 1;
 	public int pointPerfood = 10;
 	public int pointPerSoda = 20;
 	public int pointPerAmmo = 2;
+	public int pointPerCoin = 1;
+	public int pointPerKillEnemy = 1;
 	public float restartLEvelDelay = 1f;
 	public Text healthText;
 	public Text ammoText;
+	public Text scoreText;
+	public Text killsEnemiesText;
 	bool disparo = false;
 
 	private Animator animator;
 	private int health;
 	private int ammo;
+	private int score;
+	private int killsEnemies;
 
 	public int cantidadPasos = 0;
 
@@ -90,11 +97,6 @@ public class Player : MovingObject {
 			rn.invocar_algoritmo_entrenamiento (matriz1, matriz2);
 
 		}
-
-		/////////////////////////
-		if(Input.GetKeyDown(KeyCode.C)){
-			GameManager.instance.cargar();
-		}
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			vertical = 1;
 		}else if (Input.GetKeyDown (KeyCode.DownArrow)) {
@@ -159,13 +161,18 @@ public class Player : MovingObject {
 	}
 
 	/*Se encarga de ver si el objeto que no a dejado mover el jugador es un muro
-	 * y si es un muro interno entonces le restara vida al muro y si puede dañarlo
+	 * y si es un muro interno entonces le restara vida al muro si puede dañarlo
 	 * entonces se ejecuta la animacion del jugador
 	*/
 	protected override void OnCantMove(GameObject go){
 		Wall hitWall = go.GetComponent<Wall> ();
 		if(hitWall != null){
 			hitWall.DamageWall (wallDamage);
+			animator.SetTrigger ("playerChop");
+		}
+		Enemy hitEnemy = go.GetComponent<Enemy> ();
+		if (hitEnemy != null) {
+			hitEnemy.LoseHealth (enemyDamage);
 			animator.SetTrigger ("playerChop");
 		}
 
@@ -196,22 +203,28 @@ public class Player : MovingObject {
 
 			health += pointPerfood;
 			SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
-			healthText.text = "+" + pointPerfood + " Health Points: " + health;
+			healthText.text = " Health Points: " + health;
 			other.gameObject.SetActive (false);
 			
 		} else if (other.CompareTag ("Soda")) {
 
 			health += pointPerSoda;
 			SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
-			healthText.text = "+" + pointPerSoda + " Health Points: " + health;
+			healthText.text = " Health Points: " + health;
 			other.gameObject.SetActive (false);
 		} else if (other.CompareTag ("Ammo")) {
 
 			ammo += pointPerAmmo;
-			SoundManager.instance.RandomizeSfx (drinkSound1,drinkSound2);
-			ammoText.text = "+" + pointPerAmmo + " Ammo: " + ammo;
+			SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
+			ammoText.text = " Ammo: " + ammo;
 			other.gameObject.SetActive (false);
 
+		} else if (other.CompareTag ("Coin")) {
+			Debug.Log ("Coin");
+			score += pointPerCoin;
+			scoreText.text = "Score: " + score;
+			other.gameObject.SetActive (false);
+			
 		}else if (other.CompareTag ("Node")) {
 			Debug.Log ("Funciono =) (/&%$#");
 			GameManager.instance.setCoordeNode ((Vector2)other.gameObject.transform.position);
