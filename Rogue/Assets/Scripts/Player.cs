@@ -8,11 +8,11 @@ public class Player : MovingObject {
 	public AudioClip moveSound1, moveSound2, eatSound1, eatSound2, drinkSound1, drinkSound2, gameOverSound;
 
 	public int wallDamage = 1;
-	public int enemyDamage = 1;
+	public int enemyDamage = 2;
 	public int pointPerfood = 10;
 	public int pointPerSoda = 20;
 	public int pointPerAmmo = 2;
-	public int pointPerCoin = 1;
+	public int pointPerCoin = 2;
 	public int pointPerKillEnemy = 1;
 	public float restartLEvelDelay = 1f;
 	public Text healthText;
@@ -39,10 +39,14 @@ public class Player : MovingObject {
 
 	protected override void Start(){
 		
-		health = GameManager.instance.PlayerHealthtPoints;
-		ammo = GameManager.instance.PlayerammoPoints;
+		health = GameManager.instance.playerHealthtPoints;
+		ammo = GameManager.instance.playerammoPoints;
+		score = GameManager.instance.playerScorePoints;
+		killsEnemies = GameManager.instance.playerKillsPoints;
 		healthText.text = "Health Point: " + health;
 		ammoText.text = "Ammo: " + ammo;
+		scoreText.text = "Score : " + score;
+		killsEnemiesText.text = "Kills: " + killsEnemies;
 		base.Start ();
 	}
 
@@ -76,8 +80,14 @@ public class Player : MovingObject {
 	// Update is called once per frame
 	void Update () {
 		//Si no es turno del jugador
-		if(!GameManager.instance.PlayerTurn || GameManager.instance.doingSetup){
+		if(!GameManager.instance.PlayerTurn || GameManager.instance.doingSetup || disparo){
 			return;
+		}
+		if (GameManager.instance.enemigoMuerto) {
+			Debug.Log ("Tentativamente funciono");
+			killsEnemies += 1;
+			killsEnemiesText.text = "kills: " + killsEnemies;
+			GameManager.instance.enemigoMuerto = false;
 		}
 
 		int horizontal=0;
@@ -116,34 +126,34 @@ public class Player : MovingObject {
 			if (Input.GetKeyDown (KeyCode.W)) {//Ataque hacia arriba
 				Debug.Log ("W");
 				Scriptbullet.direccionArma = Direccion.Vertical;
-				Scriptbullet.velocidad = Math.Abs (Scriptbullet.velocidad);
+				Scriptbullet.velocidad = 50;
 				disparo = true;
-				GameManager.instance.PlayerTurn = false;
+				//GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.S)) {
 				Debug.Log ("S");
 				Scriptbullet.direccionArma = Direccion.Vertical;
-				Scriptbullet.velocidad = -Math.Abs (Scriptbullet.velocidad);
+				Scriptbullet.velocidad = -50;
 				disparo = true;
-				GameManager.instance.PlayerTurn = false;
+				//GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.A)) {
 				Debug.Log ("A");
 				Scriptbullet.direccionArma = Direccion.Horizontal;
-				Scriptbullet.velocidad = -Math.Abs (Scriptbullet.velocidad);
+				Scriptbullet.velocidad = -50;
 				disparo = true;
-				GameManager.instance.PlayerTurn = false;
+				//GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.D)) {
 				Debug.Log ("D");
 				Scriptbullet.direccionArma = Direccion.Horizontal;
-				Scriptbullet.velocidad = Math.Abs (Scriptbullet.velocidad);
+				Scriptbullet.velocidad = 50;
 				disparo = true;
-				GameManager.instance.PlayerTurn = false;
+				//GameManager.instance.PlayerTurn = false;
 			}
 			ammo--;
 			ammoText.text = " Ammo: " + ammo;
 			//Se crea la bala en la escena, en la posicion del jugador
 			Instantiate (bulletObject, transform.position, Quaternion.identity);
 
-
+			disparo = false;
 		}
 			
 		if(horizontal !=0){
@@ -155,9 +165,10 @@ public class Player : MovingObject {
 			if (canMove) {
 				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 			}
+			Debug.Log ("Cambio aqui");
 			GameManager.instance.PlayerTurn = false;
 		}
-		disparo = false;
+		//disparo = false;
 	}
 
 	/*Se encarga de ver si el objeto que no a dejado mover el jugador es un muro
@@ -172,8 +183,12 @@ public class Player : MovingObject {
 		}
 		Enemy hitEnemy = go.GetComponent<Enemy> ();
 		if (hitEnemy != null) {
-			hitEnemy.LoseHealth (enemyDamage);
+			bool respuesta = hitEnemy.LoseHealth (enemyDamage);
 			animator.SetTrigger ("playerChop");
+			if (respuesta) {
+				killsEnemies += pointPerKillEnemy;
+				killsEnemiesText.text = "kills: " + killsEnemies;
+			}
 		}
 
 	}
@@ -192,8 +207,10 @@ public class Player : MovingObject {
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Exit")) {
 			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
-			GameManager.instance.PlayerHealthtPoints = health;
-			GameManager.instance.PlayerammoPoints = ammo;
+			GameManager.instance.playerHealthtPoints = health;
+			GameManager.instance.playerammoPoints = ammo;
+			GameManager.instance.playerScorePoints = score;
+			GameManager.instance.playerKillsPoints = killsEnemies;
 			cantidadPasos = 0;
 			GameManager.instance.guardar (0);
 			Invoke ("Restart", restartLEvelDelay);

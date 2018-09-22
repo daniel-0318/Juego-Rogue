@@ -198,12 +198,14 @@ public class Enemy : MovingObject {
 	}
 
 	/**Metodo que sirve para disminuir los puntos de vida de los enemigos y de llegar esta a cero, destruirlo	*/
-	public void LoseHealth(int damage){
+	public bool LoseHealth(int damage){
 		healthPoints -= damage;
 		Debug.Log (healthPoints <= 0);
 		if (healthPoints <= 0) {
 			gameObject.SetActive(false);
+			return true;
 		}
+		return false;
 	}
 
 

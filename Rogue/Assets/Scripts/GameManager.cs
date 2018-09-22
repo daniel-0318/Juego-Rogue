@@ -16,8 +16,11 @@ public class GameManager : MonoBehaviour {
 
 	public BoardManager boardScript;
 
-	public int PlayerHealthtPoints = 100;
-	public int PlayerammoPoints = 10;
+	public int playerHealthtPoints = 100;
+	public int playerammoPoints = 10;
+	public int playerScorePoints = 0;
+	public int playerKillsPoints = 0;
+	public bool enemigoMuerto = false;
  	public bool PlayerTurn = true; //Por defecto comienza moviendo el player
 	public List<int> numeroPasosJugador = new List<int>();
 
@@ -260,7 +263,7 @@ public class GameManager : MonoBehaviour {
 		//datos a guardar
 
 		datos.numeroPasosJugador = numeroPasosJugador;
-		datos.vidajugador.Add (PlayerHealthtPoints);
+		datos.vidajugador.Add (playerHealthtPoints);
 		if (playerDead == 1) {
 			Debug.Log ("Se murio------------------------------------------------");
 			List<int> posicion = enemies [0].getTargetPosition ();

@@ -7,8 +7,8 @@ public enum Direccion{Horizontal, Vertical}
 public class Bullet : MonoBehaviour {
 
 	public Direccion direccionArma = Direccion.Horizontal;
-	public float velocidad = 40.0f;
-	public int enemyDamage= 2;
+	public int velocidad = 50;
+	public int enemyDamage= 4;
 
 	private Rigidbody2D rb2D;
 
@@ -31,20 +31,30 @@ public class Bullet : MonoBehaviour {
 		if (other.CompareTag ("Enemy")) {
 			Enemy hit = other.gameObject.GetComponent<Enemy> ();
 			if (hit != null) {
-				hit.LoseHealth (enemyDamage);
+				Debug.Log ("--------------------------------Toco al enemigo");
+				bool respuesta = hit.LoseHealth (enemyDamage);
 				Destroy (gameObject);
+				if (respuesta) {
+					Debug.Log ("La bala balio :v");
+					GameManager.instance.enemigoMuerto = true;
+				}
+				GameManager.instance.PlayerTurn = false;
 			}
 		} else if (other.CompareTag ("Wall")) {
 			Wall hit = other.gameObject.GetComponent<Wall> ();
 			if (hit != null) {
 				hit.DamageWall (enemyDamage);
 				Destroy (gameObject);
+				GameManager.instance.PlayerTurn = false;
 			}
 		} else if (other.CompareTag ("OuterWall")) {
 			Destroy (gameObject);
+			GameManager.instance.PlayerTurn = false;
 		}
 
+	}
 
-		
+	public void SetDamage(int damage){
+		enemyDamage = damage;
 	}
 }
