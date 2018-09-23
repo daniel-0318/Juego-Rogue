@@ -1,7 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Player : MovingObject {
 
@@ -178,7 +178,11 @@ public class Player : MovingObject {
 	protected override void OnCantMove(GameObject go){
 		Wall hitWall = go.GetComponent<Wall> ();
 		if(hitWall != null){
-			hitWall.DamageWall (wallDamage);
+			//solo si el muro es golpeado con las manos puede dar alguna bonificacion.
+			bool respuesta  = hitWall.DamageWall (wallDamage);
+			if (respuesta) {
+				probar_suerte_premio ();
+			}
 			animator.SetTrigger ("playerChop");
 		}
 		Enemy hitEnemy = go.GetComponent<Enemy> ();
@@ -191,6 +195,34 @@ public class Player : MovingObject {
 			}
 		}
 
+	}
+
+	public void probar_suerte_premio (){
+		float probabilidad_de_dar_premio = Random.Range (0.0f, 1f);
+		Debug.Log ("La suerte es de: " + probabilidad_de_dar_premio);
+		if (probabilidad_de_dar_premio >= 0.5f) {
+			Debug.Log("Tuvo suerte!!!!!!");
+			float premio = Random.Range (0.0f, 4.0f);
+			if (premio < 1) {
+				health += pointPerfood;
+				SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
+				healthText.text = " Health Points: " + health;
+			} else if (premio >= 1 && premio < 2) {
+				health += pointPerSoda;
+				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
+				healthText.text = " Health Points: " + health;
+			} else if (premio >= 2 && premio < 3) {
+				ammo += pointPerAmmo;
+				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
+				ammoText.text = " Ammo: " + ammo;
+			} else if (premio >= 3 && premio <= 4) {
+				score += pointPerCoin;
+				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
+				scoreText.text = "Score: " + score;
+			}
+				
+		}
+	
 	}
 
 	void Restart (){
@@ -239,6 +271,7 @@ public class Player : MovingObject {
 		} else if (other.CompareTag ("Coin")) {
 			Debug.Log ("Coin");
 			score += pointPerCoin;
+			SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
 			scoreText.text = "Score: " + score;
 			other.gameObject.SetActive (false);
 			
