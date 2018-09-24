@@ -19,6 +19,7 @@ public class Player : MovingObject {
 	public Text ammoText;
 	public Text scoreText;
 	public Text killsEnemiesText;
+	public int secretosEncontrados = 0; // por ahora si es mas de 2 veces que encuentra es porque si esta buscando en los muros
 	bool disparo = false;
 
 	private Animator animator;
@@ -220,6 +221,7 @@ public class Player : MovingObject {
 				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
 				scoreText.text = "Score: " + score;
 			}
+			secretosEncontrados += 1;
 				
 		}
 	
@@ -243,8 +245,10 @@ public class Player : MovingObject {
 			GameManager.instance.playerammoPoints = ammo;
 			GameManager.instance.playerScorePoints = score;
 			GameManager.instance.playerKillsPoints = killsEnemies;
+			GameManager.instance.secretosEncontrados = secretosEncontrados;
 			cantidadPasos = 0;
 			GameManager.instance.guardar (0);
+			secretosEncontrados = 0;
 			Invoke ("Restart", restartLEvelDelay);
 			enabled = false; // para que no se pueda seguir moviendo el jugador
 			

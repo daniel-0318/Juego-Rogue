@@ -17,6 +17,9 @@ public class SaveLoad {
 	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 4 num son vecesGolpeJugador, IA, Px y posY de cada enemigo en cada nivel (de lista interna)
 	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
 	public List<List<List<int>>> ListadoitemsNiveles = new List<List<List<int>>> ();
+	public List<int> score = new List<int> ();
+	public List<int> killsEnemies = new List<int> ();
+	public List<int> secretosEncontrados = new List<int> ();
 
 	private string pasosDelJugador = "";
 	private string vidaDelJugador = "";
@@ -25,6 +28,9 @@ public class SaveLoad {
 	private string listadoDeEnemigos = "";
 	private string listadoDeGolpesDeEnemigosNiveles = "";
 	private string listadoDeItems = "";
+	private string puntaje = "";
+	private string muertes =  "";
+	private string encontroSecretos = "";
 
 	//Matriz por cada tipo Guardado, cada fila es un archivo distinto y cada columna son los datos de cada nivel de un mismo txt
 	private List<List<int>> pasosJugadorTxt = new List<List<int>> ();
@@ -163,8 +169,36 @@ public class SaveLoad {
 			}
 		}
 	}
+	public void MostrarPuntajes(){
+		for (int i = 0; i < score.Count; i++) {
+			puntaje += score [i];
 
+			if ((i + 1) < score.Count) {
+				puntaje += ";";
+			}
+		}
+	}
 
+	public void MostrarMuertes(){
+		for (int i = 0; i < killsEnemies.Count; i++) {
+			muertes += killsEnemies [i];
+
+			if ((i + 1) < killsEnemies.Count) {
+				muertes += ";";
+			}
+		}
+	}
+
+	public void MostrarSecretosEncontrados(){
+		for (int i = 0; i < secretosEncontrados.Count; i++) {
+			encontroSecretos += secretosEncontrados [i];
+
+			if ((i + 1) < secretosEncontrados.Count) {
+				encontroSecretos += ";";
+			}
+		}
+	}
+		
 	public void GuardarParaExportar(int numeroArchivo ){
 		Debug.Log ("Entro a crear el archivo de texto");
 		StreamWriter texto = new StreamWriter ("Assets/datos"+numeroArchivo+ ".txt");
@@ -178,6 +212,9 @@ public class SaveLoad {
 		MostrarListadoEnemigos ();
 		MostrarListadoGolpesEnemigosNiveles ();
 		MostrarListadoitemsNiveles ();
+		MostrarPuntajes ();
+		MostrarMuertes ();
+		MostrarSecretosEncontrados ();
 
 		texto.WriteLine (pasosDelJugador);
 		texto.WriteLine (vidaDelJugador);
@@ -185,6 +222,9 @@ public class SaveLoad {
 		texto.WriteLine (posicionMuerteDelJugador);
 		texto.WriteLine (listadoDeEnemigos);
 		texto.WriteLine (listadoDeGolpesDeEnemigosNiveles);
+		texto.WriteLine (puntaje);
+		texto.WriteLine (muertes);
+		texto.WriteLine (encontroSecretos);
 
 		texto.Close ();
 
@@ -197,6 +237,9 @@ public class SaveLoad {
 		posicionMuerteDelJugador = "";
 		listadoDeEnemigos = "";
 		listadoDeGolpesDeEnemigosNiveles = "";
+		puntaje = "";
+		muertes = "";
+		encontroSecretos = "";
 	}
 
 	/*Funcion que sirve para leer todos los archivo txt generados hasta el numero antes de numMaximo(porque aun se esta ejecutando la actual partida) que se da.*/

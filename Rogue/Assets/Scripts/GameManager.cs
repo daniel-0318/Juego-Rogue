@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 	public int playerScorePoints = 0;
 	public int playerKillsPoints = 0;
 	public bool enemigoMuerto = false;
+	public int secretosEncontrados = 0;
  	public bool PlayerTurn = true; //Por defecto comienza moviendo el player
 	public List<int> numeroPasosJugador = new List<int>();
 
@@ -250,8 +251,6 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("Guardando");
 		List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
 		List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>>();
-		BinaryFormatter bf = new BinaryFormatter ();
-		FileStream file = File.Create (rutaGuardarCargar);
 		for (int i = 0;i<enemies.Count;i++) {
 			enemigosNivelActual.Add (enemies [i].vecesGolepandoJugador);
 			enemigosNivelActual.Add (enemies [i].tipoMovimiento);
@@ -280,10 +279,17 @@ public class GameManager : MonoBehaviour {
 		datos.ListadoGolpesEnemigosNiveles.Add (listaGolpesEnemigosNivelActual);
 		datos.ListadoitemsNiveles.Add (getListaItems ());
 
-		datos.GuardarParaExportar (numero_archivo_txt);
+		datos.score.Add (playerScorePoints);
+		datos.killsEnemies.Add (playerKillsPoints);
+		Debug.Log ("||||||||||||||||||||||||||||||| valor de secreto es: " + secretosEncontrados);
+		if (secretosEncontrados >= 2) {
+			datos.secretosEncontrados.Add (secretosEncontrados);
+		} else {
+			datos.secretosEncontrados.Add (0);
+		}
 
-		bf.Serialize (file, datos);
-		file.Close ();
+
+		datos.GuardarParaExportar (numero_archivo_txt);
 
 	}
 
