@@ -129,25 +129,21 @@ public class Player : MovingObject {
 				Scriptbullet.direccionArma = Direccion.Vertical;
 				Scriptbullet.velocidad = 50;
 				disparo = true;
-				//GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.S)) {
 				Debug.Log ("S");
 				Scriptbullet.direccionArma = Direccion.Vertical;
 				Scriptbullet.velocidad = -50;
 				disparo = true;
-				//GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.A)) {
 				Debug.Log ("A");
 				Scriptbullet.direccionArma = Direccion.Horizontal;
 				Scriptbullet.velocidad = -50;
 				disparo = true;
-				//GameManager.instance.PlayerTurn = false;
 			}else if (Input.GetKeyDown (KeyCode.D)) {
 				Debug.Log ("D");
 				Scriptbullet.direccionArma = Direccion.Horizontal;
 				Scriptbullet.velocidad = 50;
 				disparo = true;
-				//GameManager.instance.PlayerTurn = false;
 			}
 			ammo--;
 			ammoText.text = " Ammo: " + ammo;
@@ -166,7 +162,6 @@ public class Player : MovingObject {
 			if (canMove) {
 				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 			}
-			Debug.Log ("Cambio aqui");
 			GameManager.instance.PlayerTurn = false;
 		}
 		//disparo = false;
@@ -181,6 +176,7 @@ public class Player : MovingObject {
 		if(hitWall != null){
 			//solo si el muro es golpeado con las manos puede dar alguna bonificacion.
 			bool respuesta  = hitWall.DamageWall (wallDamage);
+			cantidadPasos -= 1;
 			if (respuesta) {
 				probar_suerte_premio ();
 			}
@@ -189,6 +185,7 @@ public class Player : MovingObject {
 		Enemy hitEnemy = go.GetComponent<Enemy> ();
 		if (hitEnemy != null) {
 			bool respuesta = hitEnemy.LoseHealth (enemyDamage);
+			cantidadPasos -= 1;
 			animator.SetTrigger ("playerChop");
 			if (respuesta) {
 				killsEnemies += pointPerKillEnemy;
