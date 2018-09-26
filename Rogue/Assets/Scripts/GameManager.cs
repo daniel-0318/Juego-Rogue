@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour {
 	public int playerammoPoints = 10;
 	public int playerScorePoints = 0;
 	public int playerKillsPoints = 0;
+
+	public int comida_adquirida = 0;  // VARIABLE DE PRUEBA por si sale mas rentable contar cuantos items adquirio que almacenar la vida (numero grande)
+	public int modenas_aquiridas = 0;
+
 	public bool enemigoMuerto = false;
 	public int secretosEncontrados = 0;
  	public bool PlayerTurn = true; //Por defecto comienza moviendo el player

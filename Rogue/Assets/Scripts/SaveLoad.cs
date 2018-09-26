@@ -91,7 +91,18 @@ public class SaveLoad {
 		//Debug.Log ("####################  Vida jugador ################");
 		for(int i=0;i<vidajugador.Count;i++){
 			Debug.Log ("nivel " + (i+1) + " " + vidajugador[i]);
-			vidaDelJugador = vidaDelJugador + vidajugador [i];
+			int vida;
+			if (i == 0) {
+				vida = (vidajugador [i] - 100);
+
+			} else {
+				vida = (vidajugador [i] - vidajugador [i - 1]);
+			}
+			if (vida > 0) {
+				vidaDelJugador += vida;
+			} else {
+				vidaDelJugador += 0;
+			}
 			if ((i + 1) < vidajugador.Count) {
 				vidaDelJugador += ";";
 			}
@@ -174,7 +185,11 @@ public class SaveLoad {
 	}
 	public void MostrarPuntajes(){
 		for (int i = 0; i < score.Count; i++) {
-			puntaje += score [i];
+			if (i == 0) {
+				puntaje += score [i];
+			} else {
+				puntaje += (score [i] - score[i-1]);
+			}
 
 			if ((i + 1) < score.Count) {
 				puntaje += ";";
@@ -184,7 +199,11 @@ public class SaveLoad {
 
 	public void MostrarMuertes(){
 		for (int i = 0; i < killsEnemies.Count; i++) {
-			muertes += killsEnemies [i];
+			if (i == 0) {
+				muertes += killsEnemies [i];
+			} else {
+				muertes += (killsEnemies [i] - killsEnemies[i-1]);
+			}
 
 			if ((i + 1) < killsEnemies.Count) {
 				muertes += ";";
@@ -194,7 +213,7 @@ public class SaveLoad {
 
 	public void MostrarSecretosEncontrados(){
 		for (int i = 0; i < secretosEncontrados.Count; i++) {
-			encontroSecretos += secretosEncontrados [i];
+			encontroSecretos += secretosEncontrados [i]; // no hay necesidad de restar con el nivel anterior ya que este es como un booleano (encontro o no)
 
 			if ((i + 1) < secretosEncontrados.Count) {
 				encontroSecretos += ";";

@@ -12,7 +12,7 @@ public class Player : MovingObject {
 	public int pointPerfood = 10;
 	public int pointPerSoda = 20;
 	public int pointPerAmmo = 2;
-	public int pointPerCoin = 2;
+	public int pointPerCoin = 1;
 	public int pointPerKillEnemy = 1;
 	public float restartLEvelDelay = 1f;
 	public Text healthText;
@@ -250,14 +250,14 @@ public class Player : MovingObject {
 			enabled = false; // para que no se pueda seguir moviendo el jugador
 			
 		} else if (other.CompareTag ("Food")) {
-
+			GameManager.instance.comida_adquirida += 1;
 			health += pointPerfood;
 			SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
 			healthText.text = " Health Points: " + health;
 			other.gameObject.SetActive (false);
 			
 		} else if (other.CompareTag ("Soda")) {
-
+			GameManager.instance.comida_adquirida += 1;
 			health += pointPerSoda;
 			SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
 			healthText.text = " Health Points: " + health;
