@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour {
 	private int level = 0;
 	private GameObject levelImage;
 	private Text levelText;
+	private Text dayText;
 
 	private bool moveToNode = false;
 	private Vector2 coordeNode;
@@ -75,6 +76,8 @@ public class GameManager : MonoBehaviour {
 		moveToNode = false;
 		levelImage = GameObject.Find ("LevelImage");
 		levelText = GameObject.Find ("LevelText").GetComponent<Text>();
+		dayText = GameObject.Find ("DayText").GetComponent<Text>();
+		dayText.text = "Day " + level;
 		levelText.text = "Day " + level;
 		levelImage.SetActive (true);
 		enemies.Clear ();
@@ -252,6 +255,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void guardar(int playerDead){
+
 		Debug.Log ("Guardando");
 		List<int> enemigosNivelActual = new List<int> (); //Guada de cada enemigo cantidadGolpes, IA, posFinalEnemigo(x,y) cada 4 posiones es un enemigo.
 		List<List<int>> listaGolpesEnemigosNivelActual = new List<List<int>>();
@@ -285,7 +289,7 @@ public class GameManager : MonoBehaviour {
 
 		datos.score.Add (playerScorePoints);
 		datos.killsEnemies.Add (playerKillsPoints);
-		Debug.Log ("||||||||||||||||||||||||||||||| valor de secreto es: " + secretosEncontrados);
+
 		if (secretosEncontrados >= 2) {
 			datos.secretosEncontrados.Add (secretosEncontrados);
 		} else {
@@ -298,19 +302,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void cargar(){
-		if (datos == null) {
-			Debug.Log ("Si es el error que tenia");
-		}
-		if (File.Exists(rutaGuardarCargar)) {
-			Debug.Log ("cargando");
-			BinaryFormatter bf = new BinaryFormatter ();
-			FileStream file = File.Open (rutaGuardarCargar, FileMode.Open);
-			SaveLoad datos1 = (SaveLoad)bf.Deserialize (file);
-			file.Close ();
-
+		
 			datos.leerArchivosTxt (numero_archivo_txt);
-
-		}
 	}
 
 

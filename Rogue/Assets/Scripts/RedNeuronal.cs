@@ -245,7 +245,7 @@ public class RedNeuronal {
 			pesosCapaSalida[0,0] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,0];
 			pesosCapaSalida[0,0] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,1];
 
-			//Dos memorias en la segunda capa oculta, entonces actualizamos pesos
+			//Dos neuronas en la segunda capa oculta, entonces actualizamos pesos
 			//El error total de la capa oculta, es el error de la cada de salida
 			//propagamos hacia atras el error de saliida utilizando el peso
 			double errorNeurona1CapaOculta2 = DerivadaSigmoidea(entradaNetaCapaOculta2[0,0])*pesosCapaSalidaActual[0,0]*errorCapaDeSalida;
@@ -324,6 +324,27 @@ public class RedNeuronal {
 			Debug.Log ("Un error de : " + (salida [0, 0] - salidas [0, i]));
 		}
 		
+	}
+
+	public string decimalABinario(int numero){
+
+		string cadena = "";
+		if (numero > 0) {
+
+			while (numero > 0) {
+				if (numero % 2 == 0) {
+					cadena = "0" + cadena;
+				} else {
+					cadena = "1" + cadena;
+				}
+				numero = (int)(numero / 2);
+			}
+
+		} else if (numero == 0) {
+
+			cadena = "0";
+		}
+		return cadena;
 	}
 
 }

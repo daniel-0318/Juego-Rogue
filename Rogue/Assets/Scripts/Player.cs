@@ -9,8 +9,8 @@ public class Player : MovingObject {
 
 	public int wallDamage = 1;
 	public int enemyDamage = 2;
-	public int pointPerfood = 10;
-	public int pointPerSoda = 20;
+	public int pointPerfood = 5;
+	public int pointPerSoda = 10;
 	public int pointPerAmmo = 2;
 	public int pointPerCoin = 1;
 	public int pointPerKillEnemy = 1;
@@ -101,11 +101,13 @@ public class Player : MovingObject {
 
 		}
 		if(Input.GetKeyDown(KeyCode.R)){
+			GameManager.instance.cargar ();
 			RedNeuronal rn = new RedNeuronal();
+
 			double[,] matriz1 = new double [8, 3]{ {-1,-1,-1}, {-1,-1,1}, {-1,1,-1}, {-1,1,1}, {1,-1,-1}, {1,-1,1}, {1,1,-1}, {1,1,1} };
 			double[,] matriz2 = new double [1, 8]{{0,1,1,0,1,0,0,1}};
 
-			rn.invocar_algoritmo_entrenamiento (matriz1, matriz2);
+			//rn.invocar_algoritmo_entrenamiento (matriz1, matriz2);
 
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
