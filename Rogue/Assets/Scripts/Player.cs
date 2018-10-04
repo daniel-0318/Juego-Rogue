@@ -9,8 +9,8 @@ public class Player : MovingObject {
 
 	public int wallDamage = 1;
 	public int enemyDamage = 2;
-	public int pointPerfood = 5;
-	public int pointPerSoda = 10;
+	public int pointPerfood = 10;
+	public int pointPerSoda = 20;
 	public int pointPerAmmo = 2;
 	public int pointPerCoin = 1;
 	public int pointPerKillEnemy = 1;
@@ -102,7 +102,7 @@ public class Player : MovingObject {
 		}
 		if(Input.GetKeyDown(KeyCode.R)){
 			GameManager.instance.cargar ();
-			RedNeuronal rn = new RedNeuronal();
+
 
 			double[,] matriz1 = new double [8, 3]{ {-1,-1,-1}, {-1,-1,1}, {-1,1,-1}, {-1,1,1}, {1,-1,-1}, {1,-1,1}, {1,1,-1}, {1,1,1} };
 			double[,] matriz2 = new double [1, 8]{{0,1,1,0,1,0,0,1}};
@@ -239,6 +239,9 @@ public class Player : MovingObject {
 
 	private void OnTriggerEnter2D(Collider2D other){
 		if (other.CompareTag ("Exit")) {
+			if (cantidadPasos > 256) {
+				cantidadPasos = 256;
+			}
 			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
 			GameManager.instance.playerHealthtPoints = health;
 			GameManager.instance.playerammoPoints = ammo;

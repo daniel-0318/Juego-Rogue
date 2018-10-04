@@ -321,7 +321,7 @@ public class SaveLoad {
 
 			}
 		}
-		revisarMatricestxt ();
+		//revisarMatricestxt ();
 	}
 
 	public void IngresarDatosAMatrices(string[] splitString, int matrizElegida, int tipo, bool yaLeyoPrimeraLinea){
@@ -340,19 +340,19 @@ public class SaveLoad {
 			} else if (matrizElegida == 2) {
 				//Debug.Log ("jugador muerto" + splitString [i]);
 				jugadorMuertoTxt.Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
+				//matrizPorNiveles [i].Add (splitString [i]);
 			} else if (matrizElegida == 3) {
 				//Debug.Log ("posicion muerte jugador" + splitString [i]);
 				posicionMuerteJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
+				//matrizPorNiveles [i].Add (splitString [i]);
 			} else if (matrizElegida == 4) {
 				//Debug.Log ("Lista enemigos" + splitString [i]);
 				listaEnemigosTxt [listaEnemigosTxt.Count - 1].Add (splitString [i]);
-				matrizPorNiveles [i].Add (splitString [i]);
+				//matrizPorNiveles [i].Add (splitString [i]);
 			} else if (matrizElegida == 5) {
 				//Debug.Log ("Lista golpes enemigo" + splitString [i]);
 				listaGolpesEnemigosTxt [listaGolpesEnemigosTxt.Count - 1].Add (splitString [i]);
-				matrizPorNiveles [i].Add (splitString [i]);
+				//matrizPorNiveles [i].Add (splitString [i]);
 			} else if (matrizElegida == 6) {
 				//Debug.Log ("Lista puntaje" + splitString [i]);
 				listaPuntajeTxt [listaPuntajeTxt.Count - 1].Add (int.Parse (splitString [i]));
@@ -368,7 +368,7 @@ public class SaveLoad {
 			}
 				
 			if (yaLeyoPrimeraLinea == false) {
-				Debug.Log ("guarda solo 3 veces y no mas");
+				//Debug.Log ("guarda solo 3 veces y no mas");
 				matrizPorNivelesTipo[i].Add ("" + tipo);
 			}
 

@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class RedNeuronal {
 
@@ -9,6 +11,12 @@ public class RedNeuronal {
 	private double errorPermitido = 0.2;
 	private double p = 1.1;
 	private double a = 0.5;
+
+	private List<List<string>> matrizPorNiveles = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
+	private List<List<string>> matrizPorNivelesTipo = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
+
+	private double[,] entradas;
+	private double[] salidas;
 
 	private double[,] entradaNetaCapaOculta;
 	private double[,] salidaCapaOculta;
@@ -66,7 +74,7 @@ public class RedNeuronal {
 
 		for (int i = 0; i < filas; i++) {
 			for (int j = 0; j < columnas; j++) {
-				matrizResultante [i, j] = (double)Random.value;
+				matrizResultante [i, j] = (double) UnityEngine.Random.value;
 			}
 		}
 
@@ -132,6 +140,31 @@ public class RedNeuronal {
 
 		return matriz_resultante;
 		
+	}
+
+	public void Copiar_datos_salidas(List<List<string>> salida){
+		//Debug.Log ("Prueba: " + salida.Count + " y " + salida [0].Count);
+		for (int i = 0; i < salida.Count; i++) {
+			matrizPorNivelesTipo.Add(new List<string>());
+			for (int j = 0; j < salida[i].Count; j++) {
+				matrizPorNivelesTipo [i].Add (salida [i] [j]);
+			}
+		}
+		//Debug.Log ("matrizPorNivelesTipo: " + matrizPorNivelesTipo.Count + " y " + matrizPorNivelesTipo [0].Count);
+	}
+
+	public void Copiar_datos_entrada(List<List<string>> entrada){
+		//Debug.Log ("Prueba: " + entrada.Count + " y " + entrada [0].Count);
+
+		for (int i = 0; i < entrada.Count; i++) { // por prueba solo  copiare los que voy a usar.
+				matrizPorNiveles.Add (new List<string> ());
+				for (int j = 0; j < entrada [i].Count; j++) {
+					matrizPorNiveles [matrizPorNiveles.Count-1].Add (entrada [i] [j]);
+				}
+		}
+		//Debug.Log ("matrizPorNiveles: " + matrizPorNiveles.Count + " y " + matrizPorNiveles [0].Count);
+			
+
 	}
 
 	public double[,] Aplicar_funcion_activacion_a_matriz (double[,] matriz){
@@ -326,16 +359,19 @@ public class RedNeuronal {
 		
 	}
 
-	public string decimalABinario(int numero){
+	public string Decimal_a_binario(int numero, int tamañoRequerido){
 
 		string cadena = "";
+		int tamaño = 0;
 		if (numero > 0) {
 
 			while (numero > 0) {
 				if (numero % 2 == 0) {
-					cadena = "0" + cadena;
+					cadena = "0 " + cadena;
+					tamaño++;
 				} else {
-					cadena = "1" + cadena;
+					cadena = "1 " + cadena;
+					tamaño++;
 				}
 				numero = (int)(numero / 2);
 			}
@@ -343,8 +379,47 @@ public class RedNeuronal {
 		} else if (numero == 0) {
 
 			cadena = "0";
+			tamaño++;
 		}
-		return cadena;
+
+		if (tamaño >= tamañoRequerido) {
+			return cadena;
+		} else {
+			int diferencia = Mathf.Abs (tamaño - tamañoRequerido);
+			for (int i = 0; i < diferencia; i++) {
+				cadena = "0 " + cadena;
+			}
+			return cadena;
+		}
+	}
+
+	public void Matriz_decimal_a_binaria(){
+		entradas = new double[matrizPorNiveles.Count * (matrizPorNiveles [0] / 5), 25];
+		for (int i = 0; i < matrizPorNiveles.Count; i++) {
+			for (int j = 0; j < matrizPorNiveles[i].Count; j+=5) {
+				Debug.Log ("primer dato: " + matrizPorNiveles [i] [j]);
+				string dato1 = Decimal_a_binario (matrizPorNiveles [i] [j], 9);
+				string dato2 = Decimal_a_binario (matrizPorNiveles [i] [j+1], 9);
+				string dato3 = Decimal_a_binario (matrizPorNiveles [i] [j+2], 3);
+				string dato4 = Decimal_a_binario (matrizPorNiveles [i] [j+3], 3);
+				string dato5 = Decimal_a_binario (matrizPorNiveles [i] [j+4], 1);
+
+				string[] splitDato1 = dato1.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				string[] splitDato2 = dato2.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				string[] splitDato3 = dato3.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				string[] splitDato4 = dato4.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				string[] splitDato5 = dato5.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+			}
+		}
+	}
+
+	public void Ingresar_matriz_entrada_y_salida(String[] m1, String[] m2, String[] m3, String[] m4, String[] m5, int tipo){
+		for (int i = 0; i < entradas.GetLength (0); i++) {
+			for (int j = 0; j < m1.GetLength (0); j++) {
+			}
+		}
+
 	}
 
 }

@@ -252,8 +252,8 @@ MonoBehaviour:
     y: 0
     width: 750
     height: 364
-  m_MinSize: {x: 204, y: 221}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -332,7 +332,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 1366
     y: 456
-    width: 1079
+    width: 1078
     height: 250
   m_SearchFilter:
     m_NameFilter: 
@@ -410,8 +410,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 64060000
-    m_LastClickedInstanceID: 1636
+    m_SelectedInstanceIDs: 92060000
+    m_LastClickedInstanceID: 1682
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000ae250000ac250000ca250000cc250000f4270000f0270000000000003e2f0000
     m_RenameOverlay:
@@ -503,7 +503,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: e6fbffff00000000f6260000
+    m_ExpandedIDs: e6fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
