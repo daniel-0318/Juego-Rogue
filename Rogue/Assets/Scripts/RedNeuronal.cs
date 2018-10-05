@@ -15,8 +15,8 @@ public class RedNeuronal {
 	private List<List<string>> matrizPorNiveles = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
 	private List<List<string>> matrizPorNivelesTipo = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
 
-	private double[,] entradas;
-	private double[] salidas;
+	private int[,] entradas;
+	private int[] salidas;
 
 	private double[,] entradaNetaCapaOculta;
 	private double[,] salidaCapaOculta;
@@ -394,15 +394,22 @@ public class RedNeuronal {
 	}
 
 	public void Matriz_decimal_a_binaria(){
-		entradas = new double[matrizPorNiveles.Count * (matrizPorNiveles [0] / 5), 25];
+		int tamaño = matrizPorNiveles.Count * (matrizPorNiveles [0].Count / 5);
+		entradas = new int[tamaño, 25];
+		int posicion = 0; // es la posicion donde debe ir cada nivel en la lista binarizada.
 		for (int i = 0; i < matrizPorNiveles.Count; i++) {
 			for (int j = 0; j < matrizPorNiveles[i].Count; j+=5) {
+				/*
 				Debug.Log ("primer dato: " + matrizPorNiveles [i] [j]);
-				string dato1 = Decimal_a_binario (matrizPorNiveles [i] [j], 9);
-				string dato2 = Decimal_a_binario (matrizPorNiveles [i] [j+1], 9);
-				string dato3 = Decimal_a_binario (matrizPorNiveles [i] [j+2], 3);
-				string dato4 = Decimal_a_binario (matrizPorNiveles [i] [j+3], 3);
-				string dato5 = Decimal_a_binario (matrizPorNiveles [i] [j+4], 1);
+				Debug.Log ("second dato: " + matrizPorNiveles [i] [j+1]);
+				Debug.Log ("tercero dato: " + matrizPorNiveles [i] [j+2]);
+				Debug.Log ("cuatro dato: " + matrizPorNiveles [i] [j+3]);
+				Debug.Log ("quinto dato: " + matrizPorNiveles [i] [j+4]);*/
+				string dato1 = Decimal_a_binario (int.Parse(matrizPorNiveles [i] [j]), 9);
+				string dato2 = Decimal_a_binario (int.Parse(matrizPorNiveles [i] [j+1]), 9);
+				string dato3 = Decimal_a_binario (int.Parse(matrizPorNiveles [i] [j+2]), 3);
+				string dato4 = Decimal_a_binario (int.Parse(matrizPorNiveles [i] [j+3]), 3);
+				string dato5 = Decimal_a_binario (int.Parse(matrizPorNiveles [i] [j+4]), 1);
 
 				string[] splitDato1 = dato1.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 				string[] splitDato2 = dato2.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
@@ -410,15 +417,44 @@ public class RedNeuronal {
 				string[] splitDato4 = dato4.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 				string[] splitDato5 = dato5.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
+				Ingresar_matriz_entrada_y_salida (splitDato1, 0, posicion);
+				Ingresar_matriz_entrada_y_salida (splitDato2, 1, posicion);
+				Ingresar_matriz_entrada_y_salida (splitDato3, 2, posicion);
+				Ingresar_matriz_entrada_y_salida (splitDato4, 3, posicion);
+				Ingresar_matriz_entrada_y_salida (splitDato5, 4, posicion);
+				posicion++;
+
 			}
 		}
+		Debug.Log ("Tamaño de entradas: " + entradas.GetLength (0) + " " + entradas.GetLength (1));
 	}
 
-	public void Ingresar_matriz_entrada_y_salida(String[] m1, String[] m2, String[] m3, String[] m4, String[] m5, int tipo){
-		for (int i = 0; i < entradas.GetLength (0); i++) {
-			for (int j = 0; j < m1.GetLength (0); j++) {
+	public void Ingresar_matriz_entrada_y_salida(String[] matriz, int tipo, int posicion){
+
+		if(tipo ==0){
+			for (int i = 0; i < 9; i++) {
+				entradas [posicion,i] = int.Parse(matriz [i]);
 			}
-		}
+		}else if(tipo ==1){
+			int j = 0;
+			for (int i = 9; i < 18; i++) {
+				entradas [posicion,i] = int.Parse(matriz [j]);
+				j++;
+			}
+		}else if(tipo ==2){
+			int j = 0;
+			for (int i = 18; i < 21; i++) {
+				entradas [posicion,i] = int.Parse(matriz [j]);
+				j++;
+			}
+		}else if(tipo ==3){
+			int j = 0;
+			for (int i = 21; i < 24; i++) {
+				entradas [posicion,i] = int.Parse(matriz [j]);
+				j++;
+			}
+		}else if(tipo==4)
+			entradas [posicion,24] = int.Parse(matriz [0]);
 
 	}
 

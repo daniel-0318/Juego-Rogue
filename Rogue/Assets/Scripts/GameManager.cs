@@ -308,6 +308,7 @@ public class GameManager : MonoBehaviour {
 		RedNeuronal rn = new RedNeuronal();
 		rn.Copiar_datos_entrada(datos.getMatrizPorNiveles());
 		rn.Copiar_datos_salidas (datos.getMatrizPorNivelesTipo ());
+		rn.Matriz_decimal_a_binaria ();
 		Debug.Log ("matrices copiadas");
 	}
 
