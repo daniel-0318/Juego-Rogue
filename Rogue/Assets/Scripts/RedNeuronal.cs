@@ -16,7 +16,7 @@ public class RedNeuronal {
 	private List<List<string>> matrizPorNivelesTipo = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
 
 	private int[,] entradas;
-	private int[] salidas;
+	private int[,] salidas;
 
 	private double[,] entradaNetaCapaOculta;
 	private double[,] salidaCapaOculta;
@@ -417,19 +417,32 @@ public class RedNeuronal {
 				string[] splitDato4 = dato4.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 				string[] splitDato5 = dato5.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-				Ingresar_matriz_entrada_y_salida (splitDato1, 0, posicion);
-				Ingresar_matriz_entrada_y_salida (splitDato2, 1, posicion);
-				Ingresar_matriz_entrada_y_salida (splitDato3, 2, posicion);
-				Ingresar_matriz_entrada_y_salida (splitDato4, 3, posicion);
-				Ingresar_matriz_entrada_y_salida (splitDato5, 4, posicion);
+				Ingresar_matriz_entrada (splitDato1, 0, posicion);
+				Ingresar_matriz_entrada (splitDato2, 1, posicion);
+				Ingresar_matriz_entrada (splitDato3, 2, posicion);
+				Ingresar_matriz_entrada (splitDato4, 3, posicion);
+				Ingresar_matriz_entrada (splitDato5, 4, posicion);
 				posicion++;
 
 			}
 		}
+
+		int posicionEnSalida = 0;
+		int tamañoSalidas = matrizPorNivelesTipo.Count * matrizPorNivelesTipo [0].Count;
+		salidas = new int[tamañoSalidas,2];
+		for (int i = 0; i < matrizPorNivelesTipo.Count; i++) {
+			for (int j = 0; j < matrizPorNivelesTipo [i].Count; j++) {
+				string dato = Decimal_a_binario(int.Parse(matrizPorNivelesTipo [i] [j]),2);
+				salidas [posicionEnSalida, 0] = dato [0];
+				salidas [posicionEnSalida, 1] = dato [1];
+				posicionEnSalida++;
+			}
+		}
 		Debug.Log ("Tamaño de entradas: " + entradas.GetLength (0) + " " + entradas.GetLength (1));
+		Debug.Log ("Tamaño de salidas: " + salidas.GetLength(0));
 	}
 
-	public void Ingresar_matriz_entrada_y_salida(String[] matriz, int tipo, int posicion){
+	public void Ingresar_matriz_entrada(String[] matriz, int tipo, int posicion){
 
 		if(tipo ==0){
 			for (int i = 0; i < 9; i++) {
