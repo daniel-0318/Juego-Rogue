@@ -15,8 +15,8 @@ public class RedNeuronal {
 	private List<List<string>> matrizPorNiveles = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
 	private List<List<string>> matrizPorNivelesTipo = new List<List<string>>();// El que le pasan antes de convertir los valores a binarios
 
-	private int[,] entradas;
-	private int[,] salidas;
+	private double[,] entradas;
+	private double[,] salidas;
 
 	private double[,] entradaNetaCapaOculta;
 	private double[,] salidaCapaOculta;
@@ -234,9 +234,9 @@ public class RedNeuronal {
 	public void Backpropagation(double[,] entradaDeseada, double[,] salidaDeseada){
 
 		//Pesos Aleatorios
-		pesosCapaOculta = matrizRadom (3, 3);
+		pesosCapaOculta = matrizRadom (3, 25);
 		pesosCapaOculta2 = matrizRadom (2, 3);
-		pesosCapaSalida = matrizRadom (1, 2);
+		pesosCapaSalida = matrizRadom (2, 2);
 
 		double error_anterior = 0;
 
@@ -255,41 +255,52 @@ public class RedNeuronal {
 			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradaDeseada), pesosCapaOcultaActual, pesosCapaOcultaActual2, pesosCapaSalidaActual);
 
 			Debug.Log ("-----------------------------------------------");
-			Debug.Log ("la salida fue: " + salida[0,0]);
+
 			Debug.Log ("Tamaño de la matriz: filas: " + salida.GetLength(0) + " columnas: " + salida.GetLength(1) );
-
-			Debug.Log ("Valor antes de modificiar: " + pesosCapaOculta[0,0]);
-			pesosCapaOculta [0, 0] = 18;
-			Debug.Log ("Valor despues de modificar: " + pesosCapaOculta[0,0]);
-			Debug.Log ("El valor que no devio de modificarse: " + pesosCapaOcultaActual[0,0]);
+			Debug.Log ("la salida 1 fue: " + salida[0,0]);
+			Debug.Log ("la salida 2 fue: " + salida[0,1]);
 
 
-			//Miramos la neurona de la capa de salida para ir corrigiendo pesos. Como es una una sola la miramos a ella.
+			//Miramos la neurona de la capa de salida para ir corrigiendo pesos.
 
-			double errorCapaDeSalida = (salidaDeseada[0,i] - salida[0,0])*DerivadaSigmoidea (entradaNetaCapaSalida [0, 0]);
-			Debug.Log ("salidaDeseada: " + salidaDeseada [0, i]); 
+			double errorCapaDeSalida = (salidaDeseada[i,0] - salida[0,0])*DerivadaSigmoidea (entradaNetaCapaSalida [0, 0]);
+			Debug.Log ("salidaDeseada: " + salidaDeseada [0, i]);
 			Debug.Log ("salida: " + salida [0, 0]);
 			Debug.Log ("resta: " +(salidaDeseada[0,i] - salida[0,0]));
-			Debug.Log ("entradaNetaCapaSalida: " + entradaNetaCapaSalida [0, 0]);
+			Debug.Log ("entradaNetaCapaSalida tamaño: " + entradaNetaCapaSalida.GetLength(0) + " " + entradaNetaCapaSalida.GetLength(1));
+			Debug.Log ("entradaNetaCapaSalida: " + entradaNetaCapaSalida [0, 0] + " " + entradaNetaCapaSalida[0,1]);
+			Debug.Log ("----salidaCapaOculta tamaño: " + salidaCapaOculta.GetLength(0) + " " + salidaCapaOculta.GetLength(1));
+
 			Debug.Log ("Error en la salida: " + errorCapaDeSalida);
 
 			//Actualizamos pesos de la capa de salida
 			Debug.Log("salidaCapaOculta2 tamaño: " + salidaCapaOculta2.GetLength(0) + " y " + salidaCapaOculta2.GetLength(1));
 			pesosCapaSalida[0,0] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,0];
-			pesosCapaSalida[0,0] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,1];
+			pesosCapaSalida[0,1] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,1];
+
+
+			//Neurona 2 capa de salida.
+
+			double errorCapaDeSalida2 = (salidaDeseada[i,1] - salida[0,1])*DerivadaSigmoidea (entradaNetaCapaSalida [0, 1]);
+			pesosCapaSalida[1,0] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,0];
+			pesosCapaSalida[1,1] += factorEntrenamiento*errorCapaDeSalida*salidaCapaOculta2[0,1];
+
+
 
 			//Dos neuronas en la segunda capa oculta, entonces actualizamos pesos
 			//El error total de la capa oculta, es el error de la cada de salida
 			//propagamos hacia atras el error de saliida utilizando el peso
-			double errorNeurona1CapaOculta2 = DerivadaSigmoidea(entradaNetaCapaOculta2[0,0])*pesosCapaSalidaActual[0,0]*errorCapaDeSalida;
-			pesosCapaOculta2 [0, 0] += factorEntrenamiento * errorNeurona1CapaOculta2 * entradaDeseada [i, 0];
-			pesosCapaOculta2 [0, 1] += factorEntrenamiento * errorNeurona1CapaOculta2 * entradaDeseada [i, 1];
-			pesosCapaOculta2 [0, 2] += factorEntrenamiento * errorNeurona1CapaOculta2 * entradaDeseada [i, 2];
+			double errorNeurona1CapaOculta2 = DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 0]) * pesosCapaSalidaActual [0, 0] * errorCapaDeSalida +
+			                                  DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 0]) * pesosCapaSalidaActual [1, 0] * errorCapaDeSalida2;
+			pesosCapaOculta2 [0, 0] += factorEntrenamiento * errorNeurona1CapaOculta2 * salidaCapaOculta [0, 0];
+			pesosCapaOculta2 [0, 1] += factorEntrenamiento * errorNeurona1CapaOculta2 * salidaCapaOculta [0, 1];
+			pesosCapaOculta2 [0, 2] += factorEntrenamiento * errorNeurona1CapaOculta2 * salidaCapaOculta [0, 2];
 
-			double errorNeurona2CapaOculta2 = DerivadaSigmoidea(entradaNetaCapaOculta2[0,1])*pesosCapaSalidaActual[0,1]*errorCapaDeSalida;
-			pesosCapaOculta2 [1, 0] += factorEntrenamiento * errorNeurona2CapaOculta2 * entradaDeseada [i, 0];
-			pesosCapaOculta2 [1, 1] += factorEntrenamiento * errorNeurona2CapaOculta2 * entradaDeseada [i, 1];
-			pesosCapaOculta2 [1, 2] += factorEntrenamiento * errorNeurona2CapaOculta2 * entradaDeseada [i, 2];
+			double errorNeurona2CapaOculta2 = DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 1]) * pesosCapaSalidaActual [0, 1] * errorCapaDeSalida +
+			                                  DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 1]) * pesosCapaSalidaActual [1, 1] * errorCapaDeSalida2;
+			pesosCapaOculta2 [1, 0] += factorEntrenamiento * errorNeurona2CapaOculta2 * salidaCapaOculta [0, 0];
+			pesosCapaOculta2 [1, 1] += factorEntrenamiento * errorNeurona2CapaOculta2 * salidaCapaOculta [0, 1];
+			pesosCapaOculta2 [1, 2] += factorEntrenamiento * errorNeurona2CapaOculta2 * salidaCapaOculta [0, 2];
 
 
 			//Tres neuronas en la primera capa oculta, entonces actualizamos pesos
@@ -299,22 +310,33 @@ public class RedNeuronal {
 
 			double errorNeurona1CapaOculta = DerivadaSigmoidea (entradaNetaCapaOculta [0, 0]) * pesosCapaOcultaActual2 [0, 0] * errorNeurona1CapaOculta2 +
 			                                 DerivadaSigmoidea (entradaNetaCapaOculta [0, 0]) * pesosCapaOcultaActual2 [1, 0] * errorNeurona2CapaOculta2;
-			pesosCapaOculta [0, 0] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 0];
+			/*pesosCapaOculta [0, 0] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 0];
 			pesosCapaOculta [0, 1] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 1];
-			pesosCapaOculta [0, 2] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 2];
+			pesosCapaOculta [0, 2] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 2];*/
+
+			for (int j = 0; j < pesosCapaOculta.GetLength (1); j++) {
+				pesosCapaOculta [0, j] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, j];
+			}
 
 			double errorNeurona2CapaOculta = DerivadaSigmoidea (entradaNetaCapaOculta [0, 1]) * pesosCapaOcultaActual2 [0, 1] * errorNeurona1CapaOculta2 +
 			                                 DerivadaSigmoidea (entradaNetaCapaOculta [0, 1]) * pesosCapaOcultaActual2 [1, 1] * errorNeurona2CapaOculta2;
-			pesosCapaOculta [1, 0] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 0];
+			/*pesosCapaOculta [1, 0] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 0];
 			pesosCapaOculta [1, 1] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 1];
-			pesosCapaOculta [1, 2] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 2];
+			pesosCapaOculta [1, 2] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 2];*/
+
+			for (int j = 0; j < pesosCapaOculta.GetLength (1); j++) {
+				pesosCapaOculta [1, j] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, j];
+			}
 
 			double errorNeurona3CapaOculta = DerivadaSigmoidea (entradaNetaCapaOculta [0, 2]) * pesosCapaOcultaActual2 [0, 2] * errorNeurona1CapaOculta2 +
 			                                 DerivadaSigmoidea (entradaNetaCapaOculta [0, 2]) * pesosCapaOcultaActual2 [1, 2] * errorNeurona2CapaOculta2;
-			pesosCapaOculta [2, 0] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 0];
+			/*pesosCapaOculta [2, 0] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 0];
 			pesosCapaOculta [2, 1] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 1];
-			pesosCapaOculta [2, 2] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 2];
+			pesosCapaOculta [2, 2] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 2];*/
 
+			for (int j = 0; j < pesosCapaOculta.GetLength (1); j++) {
+				pesosCapaOculta [2, j] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, j];
+			}
 
 			error = 0;
 			for (int j = 0; j < entradaDeseada.GetLength (0); j++) {
@@ -343,18 +365,17 @@ public class RedNeuronal {
 	}
 
 
-	public void invocar_algoritmo_entrenamiento(double[,] entradas, double[,] salidas){
-
+	public void invocar_algoritmo_entrenamiento(){
 		Backpropagation (entradas, salidas);
 		Debug.Log ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Fin de entrenamiento ~~~~~~~~~~~~~~~~+");
 
 
 		for (int i = 0; i < entradas.GetLength (0); i++) {
 			Debug.Log ("=========================================");
-			Debug.Log ("Se desea: " + salidas [0, i]);
+			Debug.Log ("Se desea: " + salidas [i, 0] + " " + salidas[i,1]);
 			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradas), pesosCapaOculta, pesosCapaOculta2, pesosCapaSalida);
-			Debug.Log ("Se obtuvo: " + salida [0, 0]);
-			Debug.Log ("Un error de : " + (salida [0, 0] - salidas [0, i]));
+			Debug.Log ("Se obtuvo: " + salida [0, 0] + " " + salida[0,1]);
+			Debug.Log ("Un error de : " + (salida [0, 0] - salidas [i, 0]) + " y " + (salida [0, 1] - salidas [i, 1]));
 		}
 		
 	}
@@ -395,7 +416,7 @@ public class RedNeuronal {
 
 	public void Matriz_decimal_a_binaria(){
 		int tamaño = matrizPorNiveles.Count * (matrizPorNiveles [0].Count / 5);
-		entradas = new int[tamaño, 25];
+		entradas = new double[tamaño, 25];
 		int posicion = 0; // es la posicion donde debe ir cada nivel en la lista binarizada.
 		for (int i = 0; i < matrizPorNiveles.Count; i++) {
 			for (int j = 0; j < matrizPorNiveles[i].Count; j+=5) {
@@ -429,17 +450,18 @@ public class RedNeuronal {
 
 		int posicionEnSalida = 0;
 		int tamañoSalidas = matrizPorNivelesTipo.Count * matrizPorNivelesTipo [0].Count;
-		salidas = new int[tamañoSalidas,2];
+		salidas = new double[tamañoSalidas,2];
 		for (int i = 0; i < matrizPorNivelesTipo.Count; i++) {
 			for (int j = 0; j < matrizPorNivelesTipo [i].Count; j++) {
 				string dato = Decimal_a_binario(int.Parse(matrizPorNivelesTipo [i] [j]),2);
-				salidas [posicionEnSalida, 0] = dato [0];
-				salidas [posicionEnSalida, 1] = dato [1];
+				string[] splitdato = dato.Split (new String[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				salidas [posicionEnSalida, 0] = int.Parse (splitdato [0]);
+				salidas [posicionEnSalida, 1] = int.Parse(splitdato [1]);
 				posicionEnSalida++;
 			}
 		}
 		Debug.Log ("Tamaño de entradas: " + entradas.GetLength (0) + " " + entradas.GetLength (1));
-		Debug.Log ("Tamaño de salidas: " + salidas.GetLength(0));
+		Debug.Log ("Tamaño de salidas: " + salidas.GetLength(0) + " " + salidas.GetLength(1));
 	}
 
 	public void Ingresar_matriz_entrada(String[] matriz, int tipo, int posicion){

@@ -309,6 +309,7 @@ public class GameManager : MonoBehaviour {
 		rn.Copiar_datos_entrada(datos.getMatrizPorNiveles());
 		rn.Copiar_datos_salidas (datos.getMatrizPorNivelesTipo ());
 		rn.Matriz_decimal_a_binaria ();
+		rn.invocar_algoritmo_entrenamiento ();
 		Debug.Log ("matrices copiadas");
 	}
 
