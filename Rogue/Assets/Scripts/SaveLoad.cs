@@ -90,7 +90,7 @@ public class SaveLoad {
 			//Debug.Log ("nivel " + (i+1) + " " + numeroPasosJugador[i]);
 			pasosDelJugador = pasosDelJugador + numeroPasosJugador[i];
 			if ((i + 1) < numeroPasosJugador.Count) {
-				pasosDelJugador += ";";
+				pasosDelJugador += ",";
 			}
 		}
 		//Debug.Log (pasosDelJugador);
@@ -113,7 +113,7 @@ public class SaveLoad {
 				vidaDelJugador += 0;
 			}
 			if ((i + 1) < vidajugador.Count) {
-				vidaDelJugador += ";";
+				vidaDelJugador += ",";
 			}
 		}
 		//Debug.Log (vidaDelJugador);
@@ -201,7 +201,7 @@ public class SaveLoad {
 			}
 
 			if ((i + 1) < score.Count) {
-				puntaje += ";";
+				puntaje += ",";
 			}
 		}
 	}
@@ -215,7 +215,7 @@ public class SaveLoad {
 			}
 
 			if ((i + 1) < killsEnemies.Count) {
-				muertes += ";";
+				muertes += ",";
 			}
 		}
 	}
@@ -225,7 +225,7 @@ public class SaveLoad {
 			encontroSecretos += secretosEncontrados [i]; // no hay necesidad de restar con el nivel anterior ya que este es como un booleano (encontro o no)
 
 			if ((i + 1) < secretosEncontrados.Count) {
-				encontroSecretos += ";";
+				encontroSecretos += ",";
 			}
 		}
 	}
@@ -238,21 +238,21 @@ public class SaveLoad {
 
 		MostrarPasos ();
 		MostrarVidaJugador ();
-		MostrarJugadorMuerto ();
-		MostrarPosicionMuerteDelJugador ();
-		MostrarListadoEnemigos ();
-		MostrarListadoGolpesEnemigosNiveles ();
-		MostrarListadoitemsNiveles ();
+		//MostrarJugadorMuerto ();
+		//MostrarPosicionMuerteDelJugador ();
+		//MostrarListadoEnemigos ();
+		//MostrarListadoGolpesEnemigosNiveles ();
+		//MostrarListadoitemsNiveles ();
 		MostrarPuntajes ();
 		MostrarMuertes ();
 		MostrarSecretosEncontrados ();
 
 		texto.WriteLine (pasosDelJugador);
 		texto.WriteLine (vidaDelJugador);
-		texto.WriteLine (jugadorSeMurio);
-		texto.WriteLine (posicionMuerteDelJugador);
-		texto.WriteLine (listadoDeEnemigos);
-		texto.WriteLine (listadoDeGolpesDeEnemigosNiveles);
+		//texto.WriteLine (jugadorSeMurio);
+		//texto.WriteLine (posicionMuerteDelJugador);
+		//texto.WriteLine (listadoDeEnemigos);
+		//texto.WriteLine (listadoDeGolpesDeEnemigosNiveles);
 		texto.WriteLine (puntaje);
 		texto.WriteLine (muertes);
 		texto.WriteLine (encontroSecretos);
