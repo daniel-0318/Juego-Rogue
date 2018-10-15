@@ -306,9 +306,9 @@ public class GameManager : MonoBehaviour {
 		datos.leerArchivosTxt (numero_archivo_txt);
 
 		RedNeuronal rn = new RedNeuronal();
-		rn.Copiar_datos_entrada(datos.getMatrizPorNiveles());
-		rn.Copiar_datos_salidas (datos.getMatrizPorNivelesTipo ());
-		rn.Matriz_decimal_a_binaria ();
+		//rn.Copiar_datos_entrada(datos.getMatrizPorNiveles());
+		//rn.Copiar_datos_salidas (datos.getMatrizPorNivelesTipo ());
+		//rn.Matriz_decimal_a_binaria ();
 		rn.invocar_algoritmo_entrenamiento ();
 		Debug.Log ("matrices copiadas");
 	}

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 
 public class RedNeuronal {
@@ -22,10 +23,13 @@ public class RedNeuronal {
 	private double[,] salidaCapaOculta;
 	private double[,] entradaNetaCapaOculta2;
 	private double[,] salidaCapaOculta2;
+	private double[,] entradaNetaCapaOculta3;
+	private double[,] salidaCapaOculta3;
 	private double[,] entradaNetaCapaSalida;
 
 	double[,] pesosCapaOculta;
 	double[,] pesosCapaOculta2;
+	double[,] pesosCapaOculta3;
 	double[,] pesosCapaSalida;
 
 	public double[,] Transpuesta(double [,] matriz){
@@ -250,13 +254,13 @@ public class RedNeuronal {
 	public void Backpropagation(double[,] entradaDeseada, double[,] salidaDeseada){
 
 		//Pesos Aleatorios
-		pesosCapaOculta = matrizRadom (3, 25);
-		pesosCapaOculta2 = matrizRadom (2, 3);
-		pesosCapaSalida = matrizRadom (2, 2);
+		pesosCapaOculta = matrizRadom (10, 5);
+		pesosCapaOculta2 = matrizRadom (8, 10);
+		pesosCapaOculta3 = matrizRadom (8, 8);
+		pesosCapaSalida = matrizRadom (3, 8);
 		ImprimirMatriz (pesosCapaOculta);
 		ImprimirMatriz (pesosCapaOculta2);
 		ImprimirMatriz (pesosCapaSalida);
-
 		double error_anterior = 0;
 
 		////// FALTARIA QUE SE COGAN PATRONES ALEATORIOS PARA ENTRENAMIENTO Y PARA PRUEBAS
@@ -388,7 +392,8 @@ public class RedNeuronal {
 
 
 	public void invocar_algoritmo_entrenamiento(){
-		Backpropagation (entradas, salidas);
+		//Backpropagation (entradas, salidas);
+		Cargar_pesos();
 		Debug.Log ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Fin de entrenamiento ~~~~~~~~~~~~~~~~+");
 
 
@@ -400,6 +405,45 @@ public class RedNeuronal {
 			Debug.Log ("Un error de : " + (salida [0, 0] - salidas [i, 0]) + " y " + (salida [0, 1] - salidas [i, 1]));
 		}
 		
+	}
+
+	public void Cargar_pesos(){
+		if (File.Exists ("Assets/pesos.csv")) {
+			pesosCapaOculta = new double[10,5];
+			pesosCapaOculta2 = new double[8,10];
+			pesosCapaOculta3 = new double[8,8];
+			pesosCapaSalida = new double[3,8];
+
+			StreamReader streamreader = new StreamReader ("Assets/pesos.csv");
+
+			////
+			string prueba = "-3.68";
+			double p2 = double.Parse (prueba);
+			Debug.Log ("prueba: " + p2);
+			/// 
+
+			String linea = "";
+
+			for (int i = 0; i < 29; i++) {
+
+				linea = streamreader.ReadLine();
+				Debug.Log ("Se intentara cortar: " + linea);
+				string[] splitString = linea.Split (new string[] { ";" }, StringSplitOptions.None);
+				Debug.Log ("primer dato: " + splitString[0]);
+				for (int j = 0; j < splitString.Length; j++) {
+					if (i < 10) {
+						Debug.Log ("numero: " + double.Parse (splitString [j]));
+						pesosCapaOculta [i, j] = double.Parse (splitString [j]);
+					} else if (i < 18) {
+						pesosCapaOculta2 [i - 10, j] = double.Parse (splitString [j]);
+					} else if (i < 26) {
+						pesosCapaOculta3 [i - 18, j] = double.Parse (splitString [j]);
+					} else {
+						pesosCapaSalida [i - 26, j] = double.Parse (splitString [j]);
+					}
+				}
+			}
+		}
 	}
 
 	public string Decimal_a_binario(int numero, int tamañoRequerido, bool usarCeros){
