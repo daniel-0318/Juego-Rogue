@@ -19,13 +19,13 @@ public class RedNeuronal {
 	private double[,] entradas;
 	private double[,] salidas;
 
-	private double[,] entradaNetaCapaOculta;
-	private double[,] salidaCapaOculta;
-	private double[,] entradaNetaCapaOculta2;
-	private double[,] salidaCapaOculta2;
-	private double[,] entradaNetaCapaOculta3;
-	private double[,] salidaCapaOculta3;
-	private double[,] entradaNetaCapaSalida;
+//	private double[,] entradaNetaCapaOculta;
+//	private double[,] salidaCapaOculta;
+//	private double[,] entradaNetaCapaOculta2;
+//	private double[,] salidaCapaOculta2;
+//	private double[,] entradaNetaCapaOculta3;
+//	private double[,] salidaCapaOculta3;
+//	private double[,] entradaNetaCapaSalida;
 
 	double[,] pesosCapaOculta;
 	double[,] pesosCapaOculta2;
@@ -197,15 +197,16 @@ public class RedNeuronal {
 	}
 
 	public double Sigmoidea(double numero){
-		if (numero > 45) {
-			return 1;
-		} else {
-			if (numero < -45)
-				return 0;
-			else {
-				return  1.0 / (1 + Mathf.Exp((float)-numero));
-			}
-		}
+//		if (numero > 45) {
+//			return 1;
+//		} else {
+//			if (numero < -45)
+//				return 0;
+//			else {
+//				return  1.0 / (1 + Mathf.Exp((float)-numero));
+//			}
+//		}
+		return  1.0 / (1 + Mathf.Exp((float)-numero));
 	}
 
 	public double DerivadaSigmoidea(double numero){
@@ -218,191 +219,61 @@ public class RedNeuronal {
 		return resultado;
 	}
 
-	public double[,] Red_neuronal(double[,] entrada, double[,] pesosCapa1, double[,] pesosCapa2,double[,] pesosCapaSalida){
+	public double[,] Red_neuronal(double[,] entrada){
 
 		//Capa de entrada
 		//No se realiza ningun procesamiento
 		//*************************************
-
 		//Capa oculta
-		double tendenciaCapa1 = 1;
-		entradaNetaCapaOculta = MultiMatrices(pesosCapa1, Transpuesta(entrada));
-		entradaNetaCapaOculta = Transpuesta (Suma_Escalar_a_Matriz (tendenciaCapa1, entradaNetaCapaOculta));
+		double tendenciaCapa1 = 0;
+		double[,] entradaNetaCapaOculta = MultiMatrices(pesosCapaOculta, Transpuesta(entrada));
+		entradaNetaCapaOculta = Transpuesta (entradaNetaCapaOculta);
 		//Debug.Log ("Entrada neta 1: " + entradaNetaCapaOculta.GetLength(0) + " " + entradaNetaCapaOculta.GetLength(1));
 		//Debug.Log ("Entrada neta 1: " + entradaNetaCapaOculta [0, 0] + " " + entradaNetaCapaOculta [0, 1] + " " + entradaNetaCapaOculta [0, 2]);
-		salidaCapaOculta = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaOculta);
+		double[,] salidaCapaOculta = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaOculta);
 
 		//Capa oculta2
-		double tendenciaCapa2 = 1;
-		entradaNetaCapaOculta2 = MultiMatrices(pesosCapa2, Transpuesta(salidaCapaOculta));
-		entradaNetaCapaOculta2 = Transpuesta (Suma_Escalar_a_Matriz (tendenciaCapa2, entradaNetaCapaOculta2));
+		double tendenciaCapa2 = 0;
+		double[,] entradaNetaCapaOculta2 = MultiMatrices(pesosCapaOculta2, Transpuesta(salidaCapaOculta));
+		entradaNetaCapaOculta2 = Transpuesta (entradaNetaCapaOculta2);
 		//Debug.Log ("Entrada neta 2: " + entradaNetaCapaOculta2.GetLength(0) + " " + entradaNetaCapaOculta2.GetLength(1));
 		//Debug.Log ("Entrada neta 2: " + entradaNetaCapaOculta2 [0, 0] + " " + entradaNetaCapaOculta2 [0, 1] );
-		salidaCapaOculta2 = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaOculta2);
+		double[,] salidaCapaOculta2 = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaOculta2);
+
+		//Capa oculta3
+		double tendenciaCapa3 = 0;
+		double[,] entradaNetaCapaOculta3 = MultiMatrices(pesosCapaOculta3, Transpuesta(salidaCapaOculta2));
+		entradaNetaCapaOculta3 = Transpuesta (entradaNetaCapaOculta3);
+
+		double[,] salidaCapaOculta3 = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaOculta3);
+
 
 		//Capa de salida
-		double tendenciaCapa3 = 1;
-		entradaNetaCapaSalida = MultiMatrices(pesosCapaSalida, Transpuesta(salidaCapaOculta2));
-		entradaNetaCapaSalida = Transpuesta (Suma_Escalar_a_Matriz (tendenciaCapa3, entradaNetaCapaSalida));
+		double tendenciaCapa4 = 0;
+		double[,] entradaNetaCapaSalida = MultiMatrices(pesosCapaSalida, Transpuesta(salidaCapaOculta3));
+		entradaNetaCapaSalida = Transpuesta (entradaNetaCapaSalida);
+		ImprimirMatriz (entradaNetaCapaSalida);
 		double[,] salida = Aplicar_funcion_activacion_a_matriz (entradaNetaCapaSalida);
 
 
-		return salida;  /////////// En si no es necesario devolverlo porque es una variable de la clase mirar como seria mejor /////////////////////////
-	}
-
-
-	public void Backpropagation(double[,] entradaDeseada, double[,] salidaDeseada){
-
-		//Pesos Aleatorios
-		pesosCapaOculta = matrizRadom (10, 5);
-		pesosCapaOculta2 = matrizRadom (8, 10);
-		pesosCapaOculta3 = matrizRadom (8, 8);
-		pesosCapaSalida = matrizRadom (3, 8);
-		ImprimirMatriz (pesosCapaOculta);
-		ImprimirMatriz (pesosCapaOculta2);
-		ImprimirMatriz (pesosCapaSalida);
-		double error_anterior = 0;
-
-		////// FALTARIA QUE SE COGAN PATRONES ALEATORIOS PARA ENTRENAMIENTO Y PARA PRUEBAS
-
-		int iteraciones = 0;
-		double error = 0;
-
-		for (int j = 0; j < entradaDeseada.GetLength (0); j++) {
-			double [,] salida_prueba = Red_neuronal (Sacar_fila_de_matriz (j, entradaDeseada), pesosCapaOculta, pesosCapaOculta2, pesosCapaSalida);
-			error_anterior += 0.5 * (Mathf.Pow ((float)(salidaDeseada [j, 0] - salida_prueba [0, 0]), 2f) +
-			Mathf.Pow ((float)(salidaDeseada [j, 1] - salida_prueba [0, 1]), 2f));
-		}
-		for (int d = 0; d < 100; d++) {
-
-			for (int i = 0; i < entradaDeseada.GetLength (0); i++) {
-				iteraciones++;
-				double[,] pesosCapaOcultaActual = Copiar_Matriz (pesosCapaOculta);
-				double[,] pesosCapaOcultaActual2 = Copiar_Matriz (pesosCapaOculta2);
-				double[,] pesosCapaSalidaActual = Copiar_Matriz (pesosCapaSalida);
-
-
-				double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradaDeseada), pesosCapaOcultaActual, pesosCapaOcultaActual2, pesosCapaSalidaActual);
-				/*
-				Debug.Log ("-----------------------------------------------");
-
-				Debug.Log ("la salida 1 fue: " + salida [0, 0] + " y " + salida [0, 1]);
-				Debug.Log ("la salida esperada era: " + salidaDeseada [i, 0] + " y " + salidaDeseada [i, 1]);*/
-
-
-				//Miramos la neurona de la capa de salida para ir corrigiendo pesos.
-
-				double errorCapaDeSalida = (salidaDeseada [i, 0] - salida [0, 0]) * DerivadaSigmoidea (entradaNetaCapaSalida [0, 0]);
-
-				//Actualizamos pesos de la capa de salida
-				pesosCapaSalida [0, 0] += factorEntrenamiento * errorCapaDeSalida * salidaCapaOculta2 [0, 0];
-				pesosCapaSalida [0, 1] += factorEntrenamiento * errorCapaDeSalida * salidaCapaOculta2 [0, 1];
-
-
-				//Neurona 2 capa de salida.
-
-				double errorCapaDeSalida2 = (salidaDeseada [i, 1] - salida [0, 1]) * DerivadaSigmoidea (entradaNetaCapaSalida [0, 1]);
-				pesosCapaSalida [1, 0] += factorEntrenamiento * errorCapaDeSalida * salidaCapaOculta2 [0, 0];
-				pesosCapaSalida [1, 1] += factorEntrenamiento * errorCapaDeSalida * salidaCapaOculta2 [0, 1];
-
-
-
-				//Dos neuronas en la segunda capa oculta, entonces actualizamos pesos
-				//El error total de la capa oculta, es el error de la cada de salida
-				//propagamos hacia atras el error de saliida utilizando el peso
-				double errorNeurona1CapaOculta2 = DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 0]) * pesosCapaSalidaActual [0, 0] * errorCapaDeSalida +
-				                                 DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 0]) * pesosCapaSalidaActual [1, 0] * errorCapaDeSalida2;
-				pesosCapaOculta2 [0, 0] += factorEntrenamiento * errorNeurona1CapaOculta2 * salidaCapaOculta [0, 0];
-				pesosCapaOculta2 [0, 1] += factorEntrenamiento * errorNeurona1CapaOculta2 * salidaCapaOculta [0, 1];
-				pesosCapaOculta2 [0, 2] += factorEntrenamiento * errorNeurona1CapaOculta2 * salidaCapaOculta [0, 2];
-
-				double errorNeurona2CapaOculta2 = DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 1]) * pesosCapaSalidaActual [0, 1] * errorCapaDeSalida +
-				                                 DerivadaSigmoidea (entradaNetaCapaOculta2 [0, 1]) * pesosCapaSalidaActual [1, 1] * errorCapaDeSalida2;
-				pesosCapaOculta2 [1, 0] += factorEntrenamiento * errorNeurona2CapaOculta2 * salidaCapaOculta [0, 0];
-				pesosCapaOculta2 [1, 1] += factorEntrenamiento * errorNeurona2CapaOculta2 * salidaCapaOculta [0, 1];
-				pesosCapaOculta2 [1, 2] += factorEntrenamiento * errorNeurona2CapaOculta2 * salidaCapaOculta [0, 2];
-
-
-				//Tres neuronas en la primera capa oculta, entonces actualizamos pesos
-				//El error total de la capa oculta, es el error de la capa oculta2
-				//propagamos hacia atras el error de saliida utilizando el peso
-
-				double errorNeurona1CapaOculta = DerivadaSigmoidea (entradaNetaCapaOculta [0, 0]) * pesosCapaOcultaActual2 [0, 0] * errorNeurona1CapaOculta2 +
-				                                DerivadaSigmoidea (entradaNetaCapaOculta [0, 0]) * pesosCapaOcultaActual2 [1, 0] * errorNeurona2CapaOculta2;
-				/*pesosCapaOculta [0, 0] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 0];
-			pesosCapaOculta [0, 1] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 1];
-			pesosCapaOculta [0, 2] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, 2];*/
-
-				for (int j = 0; j < pesosCapaOculta.GetLength (1); j++) {
-					pesosCapaOculta [0, j] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, j];
-				}
-
-				double errorNeurona2CapaOculta = DerivadaSigmoidea (entradaNetaCapaOculta [0, 1]) * pesosCapaOcultaActual2 [0, 1] * errorNeurona1CapaOculta2 +
-				                                DerivadaSigmoidea (entradaNetaCapaOculta [0, 1]) * pesosCapaOcultaActual2 [1, 1] * errorNeurona2CapaOculta2;
-				/*pesosCapaOculta [1, 0] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 0];
-			pesosCapaOculta [1, 1] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 1];
-			pesosCapaOculta [1, 2] += factorEntrenamiento * errorNeurona2CapaOculta * entradaDeseada [i, 2];*/
-
-				for (int j = 0; j < pesosCapaOculta.GetLength (1); j++) {
-					pesosCapaOculta [1, j] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, j];
-				}
-
-				double errorNeurona3CapaOculta = DerivadaSigmoidea (entradaNetaCapaOculta [0, 2]) * pesosCapaOcultaActual2 [0, 2] * errorNeurona1CapaOculta2 +
-				                                DerivadaSigmoidea (entradaNetaCapaOculta [0, 2]) * pesosCapaOcultaActual2 [1, 2] * errorNeurona2CapaOculta2;
-				/*pesosCapaOculta [2, 0] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 0];
-			pesosCapaOculta [2, 1] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 1];
-			pesosCapaOculta [2, 2] += factorEntrenamiento * errorNeurona3CapaOculta * entradaDeseada [i, 2];*/
-
-				for (int j = 0; j < pesosCapaOculta.GetLength (1); j++) {
-					pesosCapaOculta [2, j] += factorEntrenamiento * errorNeurona1CapaOculta * entradaDeseada [i, j];
-				}
-
-				error = 0;
-				for (int j = 0; j < entradaDeseada.GetLength (0); j++) {
-					double[,] salida_prueba = Red_neuronal (Sacar_fila_de_matriz (j, entradaDeseada), pesosCapaOculta, pesosCapaOculta2, pesosCapaSalida);
-					error += 0.5 * (Mathf.Pow ((float)(salidaDeseada [j, 0] - salida_prueba [0, 0]), 2f) + Mathf.Pow ((float)(salidaDeseada [j, 1] - salida_prueba [0, 1]), 2f));
-				}
-
-				Debug.Log ("Error global acumulado: " + error);
-
-				//Ajuste de entrenamiento
-				if (error < error_anterior)
-					factorEntrenamiento = p * factorEntrenamiento;
-				else {
-					factorEntrenamiento = a * factorEntrenamiento;
-				}
-				//Guardamos el error actual como el anterior para la sgte iteracion
-				error_anterior = error;
-
-				//Condicion de salida del ajuste de pesos
-				if (error < errorPermitido) {
-					break;
-					Debug.Log ("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-				}
-			}
-		}
-
-		Debug.Log ("Se necesito iterar el for: " + iteraciones + " veces");
-		Debug.Log ("Error global es: " + error);
-
-		ImprimirMatriz (pesosCapaOculta);
-		ImprimirMatriz (pesosCapaOculta2);
-		ImprimirMatriz (pesosCapaSalida);
+		return salida;
 	}
 
 
 	public void invocar_algoritmo_entrenamiento(){
 		//Backpropagation (entradas, salidas);
+		Debug.Log ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Cargo pesos ~~~~~~~~~~~~~~~~+");
 		Cargar_pesos();
-		Debug.Log ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Fin de entrenamiento ~~~~~~~~~~~~~~~~+");
+		Debug.Log ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Cargo datos ~~~~~~~~~~~~~~~~+");
+		Cargar_datos ();
 
-
-		for (int i = 0; i < 24; i++) {
+		for (int i = 0; i < 100; i++) {
 			Debug.Log ("=========================================");
-			Debug.Log ("Se desea: " + salidas [i, 0] + " " + salidas[i,1]);
-			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradas), pesosCapaOculta, pesosCapaOculta2, pesosCapaSalida);
-			Debug.Log ("Se obtuvo: " + salida [0, 0] + " " + salida[0,1]);
-			Debug.Log ("Un error de : " + (salida [0, 0] - salidas [i, 0]) + " y " + (salida [0, 1] - salidas [i, 1]));
+			Debug.Log ("Se desea: " + salidas [0,i]);
+			double[,] salida = Red_neuronal (Sacar_fila_de_matriz (i, entradas));
+			Debug.Log ("La salida tiene" + salida.Length);
+			Debug.Log ("Se obtuvo: " + salida [0, 0] + " " + salida[0,1] + " " + salida[0,2]);
+		//	Debug.Log ("Un error de : " + (salida [0, 0] - salidas [i, 0]) + " y " + (salida [0, 1] - salidas [i, 1]));
 		}
 		
 	}
@@ -416,23 +287,15 @@ public class RedNeuronal {
 
 			StreamReader streamreader = new StreamReader ("Assets/pesos.csv");
 
-			////
-			string prueba = "-3.68";
-			double p2 = double.Parse (prueba);
-			Debug.Log ("prueba: " + p2);
-			/// 
 
 			String linea = "";
 
 			for (int i = 0; i < 29; i++) {
 
 				linea = streamreader.ReadLine();
-				Debug.Log ("Se intentara cortar: " + linea);
 				string[] splitString = linea.Split (new string[] { ";" }, StringSplitOptions.None);
-				Debug.Log ("primer dato: " + splitString[0]);
 				for (int j = 0; j < splitString.Length; j++) {
 					if (i < 10) {
-						Debug.Log ("numero: " + double.Parse (splitString [j]));
 						pesosCapaOculta [i, j] = double.Parse (splitString [j]);
 					} else if (i < 18) {
 						pesosCapaOculta2 [i - 10, j] = double.Parse (splitString [j]);
@@ -440,6 +303,33 @@ public class RedNeuronal {
 						pesosCapaOculta3 [i - 18, j] = double.Parse (splitString [j]);
 					} else {
 						pesosCapaSalida [i - 26, j] = double.Parse (splitString [j]);
+					}
+				}
+			}
+		}
+	}
+
+
+	public void Cargar_datos(){
+		if (File.Exists ("Assets/datos0.csv")) {
+			StreamReader streamreader = new StreamReader ("Assets/datos0.csv");
+
+
+			String linea = "";
+
+			for (int i = 0; i < 6; i++) {
+
+				linea = streamreader.ReadLine ();
+				//Debug.Log ("Se intentara cortar: " + linea);
+				string[] splitString = linea.Split (new string[] { ";" }, StringSplitOptions.None);
+				//Debug.Log ("primer dato: " + splitString [0]);
+				entradas = new double[splitString.Length, 5];
+				salidas = new double[1,splitString.Length];
+				for (int j = 0; j < splitString.Length; j++) {
+					if (i < 5) {
+						entradas [j, i] =  double.Parse (splitString [j]);
+					} else {
+						salidas [0, j] =  double.Parse (splitString [j]);
 					}
 				}
 			}
@@ -569,5 +459,42 @@ public class RedNeuronal {
 			entradas [posicion,24] = int.Parse(matriz [0]);
 
 	}
+
+	public void ExecuteCommand ()
+	{
+		string comandos = "cd Assets & python rrnn.py";
+		//Crear proceso
+		System.Diagnostics.Process process = new System.Diagnostics.Process();
+
+		System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+
+
+
+		//Aqui se puede usar Hidden para no mostrar la ventana del CMD
+
+		// Esto es útil para procesos en los que no quieras mostrar la ventana
+
+		startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal; //Hidden, Maximized, Minimized, Normal
+
+		startInfo.FileName = "cmd.exe";
+
+		startInfo.Arguments = "/c" + comandos;
+
+		//process.EnableRaisingEvents = true;
+
+		//process.Exited += (sender, e) => { Finalizado(); }; //Método al cual se llamará al finalizar
+
+		process.StartInfo = startInfo;
+		process.WaitForExit();
+		process.Start();
+
+	}
+
+	public void Finalizado() {	
+
+		Debug.Log("Proceso Finalizado!");	
+
+	}
+
 
 }

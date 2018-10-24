@@ -276,42 +276,42 @@ public class SaveLoad {
 	/*Funcion que sirve para leer todos los archivo txt generados hasta el numero antes de numMaximo(porque aun se esta ejecutando la actual partida) que se da.*/
 	public void leerArchivosTxt(int numMaximo){
 		for (int i = 0; i < numMaximo; i++) {
-			if (File.Exists ("Assets/datos" + i + ".txt")) {
+			if (File.Exists ("Assets/datos" + i + ".csv")) {
 				bool leyoPrimeraLinea = false; //Variable para controlar que leyo ya la primera linea y no repetir al tipo de jugada que corresponde
-				pasosJugadorTxt.Add (new List<int>());
-				vidaJugadorTxt.Add (new List<int>());
+//				pasosJugadorTxt.Add (new List<int>());
+//				vidaJugadorTxt.Add (new List<int>());
+//
+//				posicionMuerteJugadorTxt.Add (new List<int>());
+//				listaEnemigosTxt.Add (new List<string>());
+//				listaGolpesEnemigosTxt.Add (new List<string>());
+//				listaPuntajeTxt.Add(new List<int>());
+//				listaMuertesTxt.Add(new List<int>());
+//				listaSecretosTxt.Add(new List<int>());
 
-				posicionMuerteJugadorTxt.Add (new List<int>());
-				listaEnemigosTxt.Add (new List<string>());
-				listaGolpesEnemigosTxt.Add (new List<string>());
-				listaPuntajeTxt.Add(new List<int>());
-				listaMuertesTxt.Add(new List<int>());
-				listaSecretosTxt.Add(new List<int>());
-
-				StreamReader streamreader = new StreamReader ("Assets/datos" + i + ".txt");
+				StreamReader streamreader = new StreamReader ("Assets/datos" + i + ".csv");
 
 				String linea = "";
 				bool controlCadaArchivo = true; //sirve para que solo intente agrandar la lista de matrices por nivel solo una vez cada que lee un archivo txt
 
-				for (int j = 0; j < 9; j++) {
+				for (int j = 0; j < 5; j++) {
 					
 					linea = streamreader.ReadLine ();
 					string[] splitString = linea.Split (new string[] { ";" }, StringSplitOptions.None);
-					int difDeNiveles = Math.Abs (nivelMasAltoEnTxt - splitString.Length);
-
-					if (splitString.Length > nivelMasAltoEnTxt  & controlCadaArchivo) {
-						nivelMasAltoEnTxt = splitString.Length;
-						//Debug.Log ("Entro a cambiar el valor del nivel mas alto con: " + nivelMasAltoEnTxt);
-						controlCadaArchivo = false;
-						for (int k = 0; k < difDeNiveles; k++) {
-							matrizPorNiveles.Add (new List<string> ()); //Se crea una nueva lista para cada nivel.
-							matrizPorNivelesTipo.Add( new List<string>());
-						}
-					}
-
-					//Debug.Log ("El experimento salio para tener tamaño: " + matrizPorNiveles.Count);
-
-
+//					int difDeNiveles = Math.Abs (nivelMasAltoEnTxt - splitString.Length);
+//
+//					if (splitString.Length > nivelMasAltoEnTxt  & controlCadaArchivo) {
+//						nivelMasAltoEnTxt = splitString.Length;
+//						//Debug.Log ("Entro a cambiar el valor del nivel mas alto con: " + nivelMasAltoEnTxt);
+//						controlCadaArchivo = false;
+//						for (int k = 0; k < difDeNiveles; k++) {
+//							matrizPorNiveles.Add (new List<string> ()); //Se crea una nueva lista para cada nivel.
+//							matrizPorNivelesTipo.Add( new List<string>());
+//						}
+//					}
+//
+//					//Debug.Log ("El experimento salio para tener tamaño: " + matrizPorNiveles.Count);
+//
+//
 					IngresarDatosAMatrices (splitString, j, i, leyoPrimeraLinea);
 					leyoPrimeraLinea = true;
 				}

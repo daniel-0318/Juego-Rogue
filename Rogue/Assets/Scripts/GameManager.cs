@@ -303,13 +303,14 @@ public class GameManager : MonoBehaviour {
 
 	public void cargar(){
 
-		datos.leerArchivosTxt (numero_archivo_txt);
+		//datos.leerArchivosTxt (numero_archivo_txt);
 
 		RedNeuronal rn = new RedNeuronal();
+		rn.ExecuteCommand ();
 		//rn.Copiar_datos_entrada(datos.getMatrizPorNiveles());
 		//rn.Copiar_datos_salidas (datos.getMatrizPorNivelesTipo ());
 		//rn.Matriz_decimal_a_binaria ();
-		rn.invocar_algoritmo_entrenamiento ();
+		//rn.invocar_algoritmo_entrenamiento ();
 		Debug.Log ("matrices copiadas");
 	}
 
@@ -318,7 +319,7 @@ public class GameManager : MonoBehaviour {
 	public int numero_de_guardado_libre(){
 		int numero = 0;
 		for (int i = 0; i < 100; i++) {
-			if (!File.Exists ("Assets/datos"+i+".txt")) {
+			if (!File.Exists ("Assets/datos"+i+".csv")) {
 				Debug.Log ("No existe el txt numero:" + i);
 				numero = i;
 				break;
