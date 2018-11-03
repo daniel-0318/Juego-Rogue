@@ -2,32 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Text;
 
-[Serializable]
 public class SaveLoad {
 
 	//variables
 	public List<int> numeroPasosJugador= new List<int>();
 	public List<int> vidajugador = new List<int>();
-	public int jugadorMuerto = 0;
-	public List<int> posicionMuerteJugador = new List<int> ();
-	public List<List<int>> listadoEnemigos = new List<List<int>>(); //cada 4 num son vecesGolpeJugador, IA, Px y posY de cada enemigo en cada nivel (de lista interna)
-	public List<List<List<int>>> ListadoGolpesEnemigosNiveles = new List<List<List<int>>> ();
-	public List<List<List<int>>> ListadoitemsNiveles = new List<List<List<int>>> ();
+	public int nivel = 0;
+
 	public List<int> score = new List<int> ();
 	public List<int> killsEnemies = new List<int> ();
 	public List<int> secretosEncontrados = new List<int> ();
 
 	private string pasosDelJugador = "";
 	private string vidaDelJugador = "";
-	private string jugadorSeMurio = "";
-	private string posicionMuerteDelJugador = "";
-	private string listadoDeEnemigos = "";
-	private string listadoDeGolpesDeEnemigosNiveles = "";
-	private string listadoDeItems = "";
+
 	private string puntaje = "";
 	private string muertes =  "";
 	private string encontroSecretos = "";
@@ -54,26 +45,6 @@ public class SaveLoad {
 
 	public string getvidaDelJugador(){
 		return vidaDelJugador;
-	}
-
-	public string getJugadorSeMurio(){
-		return jugadorSeMurio;
-	}
-
-	public string getPosicionMuerteDelJugador(){
-		return posicionMuerteDelJugador;
-	}
-
-	public string getListadoDeEnemigos(){
-		return listadoDeItems;
-	}
-
-	public string getListadoDeGolpesDeEnemigosNiveles(){
-		return listadoDeGolpesDeEnemigosNiveles;
-	}
-
-	public string getListadoDeItems(){
-		return listadoDeItems;
 	}
 
 	public List<List<string>> getMatrizPorNiveles(){
@@ -120,78 +91,7 @@ public class SaveLoad {
 
 	}
 
-	public void MostrarJugadorMuerto(){
-		//Debug.Log ("####################  Jugador Muerto ################");
-		//Debug.Log (jugadorMuerto);
-		jugadorSeMurio = "" + jugadorMuerto;
-		//Debug.Log (jugadorSeMurio);
 
-	}
-
-	public void MostrarPosicionMuerteDelJugador(){
-		//Debug.Log ("####################  PosicionMuerteJugador ################");
-		//Debug.Log (posicionMuerteJugador[0] + " " + posicionMuerteJugador[1]);
-		posicionMuerteDelJugador = "" + posicionMuerteJugador [0] + ";" + posicionMuerteJugador [1];
-		//Debug.Log (posicionMuerteDelJugador);
-
-	}
-
-	public void MostrarListadoEnemigos(){
-		//Debug.Log ("####################  Listado Enemigos ################");
-		//Debug.Log (listadoEnemigos.Count);
-		for(int i=0;i<listadoEnemigos.Count;i++){
-			//Debug.Log ("nivel " + (i+1));
-
-			if (listadoEnemigos[i].Count==0) {
-				listadoDeEnemigos += "#";
-			}
-
-			for (int j = 0; j < listadoEnemigos [i].Count; j += 4) {
-				//Debug.Log (listadoEnemigos [i] [j] + " " + listadoEnemigos [i] [j + 1] + " " + listadoEnemigos [i] [j + 2] + " " + listadoEnemigos [i] [j + 3]);
-				listadoDeEnemigos += listadoEnemigos [i] [j] + "," + listadoEnemigos [i] [j + 1] + "," + listadoEnemigos [i] [j + 2] + "," + listadoEnemigos [i] [j + 3];
-				if ((j + 4) < listadoEnemigos [i].Count)
-					listadoDeEnemigos += ",";
-			}
-			if ((i + 1) < listadoEnemigos.Count) {
-				listadoDeEnemigos += ";";
-			}
-		}
-
-		//Debug.Log (listadoDeEnemigos);
-	}
-
-	public void MostrarListadoGolpesEnemigosNiveles(){
-		//Debug.Log ("####################  Listado Golpes Enemigos Niveles ################");
-		for(int i=0;i<ListadoGolpesEnemigosNiveles.Count;i++){
-			//Debug.Log ("nivel " + (i + 1));
-
-			if(ListadoGolpesEnemigosNiveles [i].Count == 0)
-				listadoDeGolpesDeEnemigosNiveles += "#";
-			
-			for(int j=0;j<ListadoGolpesEnemigosNiveles[i].Count;j++){
-				for(int k=0;k<ListadoGolpesEnemigosNiveles[i][j].Count;k++){
-					//Debug.Log (ListadoGolpesEnemigosNiveles[i][j][k]);
-					listadoDeGolpesDeEnemigosNiveles += ListadoGolpesEnemigosNiveles [i] [j] [k] + ",";
-				}
-				listadoDeGolpesDeEnemigosNiveles += "#";
-				//Debug.Log ("Fin de un enemigo");
-			}
-			if ((i + 1) < ListadoGolpesEnemigosNiveles.Count) {
-				listadoDeGolpesDeEnemigosNiveles += ";";
-			}
-		}
-	}
-
-	public void MostrarListadoitemsNiveles(){
-		//Debug.Log ("####################  ListadoitemsNiveles ################");
-		for(int i=0;i<ListadoitemsNiveles.Count;i++){
-			for(int j=0;j<ListadoitemsNiveles[i].Count;j++){
-				for(int k=0;k<ListadoitemsNiveles[i][j].Count;k++){
-					//Debug.Log ("nivel " + (i+1)+" " + ListadoitemsNiveles[i][j][k]);
-				}
-			}
-		}
-	}
 	public void MostrarPuntajes(){
 		for (int i = 0; i < score.Count; i++) {
 			if (i == 0) {
@@ -230,29 +130,22 @@ public class SaveLoad {
 		}
 	}
 		
-	public void GuardarParaExportar(int numeroArchivo ){
+	public void GuardarParaExportar(){
 		//Debug.Log ("Entro a crear el archivo de texto");
-		StreamWriter texto = new StreamWriter ("Assets/datos"+numeroArchivo+ ".txt");
+		StreamWriter texto = new StreamWriter ("Assets/datos.csv");
 
 		resetDatosStringAGuardar (); //para que no se duplique la informacion en el archivo txt
 
 		MostrarPasos ();
 		MostrarVidaJugador ();
-		//MostrarJugadorMuerto ();
-		//MostrarPosicionMuerteDelJugador ();
-		//MostrarListadoEnemigos ();
-		//MostrarListadoGolpesEnemigosNiveles ();
-		//MostrarListadoitemsNiveles ();
 		MostrarPuntajes ();
 		MostrarMuertes ();
 		MostrarSecretosEncontrados ();
 
+		texto.WriteLine (nivel);
 		texto.WriteLine (pasosDelJugador);
 		texto.WriteLine (vidaDelJugador);
-		//texto.WriteLine (jugadorSeMurio);
-		//texto.WriteLine (posicionMuerteDelJugador);
-		//texto.WriteLine (listadoDeEnemigos);
-		//texto.WriteLine (listadoDeGolpesDeEnemigosNiveles);
+
 		texto.WriteLine (puntaje);
 		texto.WriteLine (muertes);
 		texto.WriteLine (encontroSecretos);
@@ -264,10 +157,6 @@ public class SaveLoad {
 	public void resetDatosStringAGuardar(){
 		pasosDelJugador = "";
 		vidaDelJugador = "";
-		jugadorSeMurio = "";
-		posicionMuerteDelJugador = "";
-		listadoDeEnemigos = "";
-		listadoDeGolpesDeEnemigosNiveles = "";
 		puntaje = "";
 		muertes = "";
 		encontroSecretos = "";
@@ -312,7 +201,7 @@ public class SaveLoad {
 //					//Debug.Log ("El experimento salio para tener tamaño: " + matrizPorNiveles.Count);
 //
 //
-					IngresarDatosAMatrices (splitString, j, i, leyoPrimeraLinea);
+					//IngresarDatosAMatrices (splitString, j, i, leyoPrimeraLinea);
 					leyoPrimeraLinea = true;
 				}
 
@@ -324,154 +213,6 @@ public class SaveLoad {
 		//revisarMatricestxt ();
 	}
 
-	public void IngresarDatosAMatrices(string[] splitString, int matrizElegida, int tipo, bool yaLeyoPrimeraLinea){
 
-
-		for (int i = 0; i < splitString.Length; i++) {
-
-			if (matrizElegida == 0) {
-				//Debug.Log ("Pasos jugador" + splitString [i]);
-				pasosJugadorTxt [pasosJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
-			} else if (matrizElegida == 1) {
-				//Debug.Log ("vida jugador" + splitString [i]);
-				vidaJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
-			} else if (matrizElegida == 2) {
-				//Debug.Log ("jugador muerto" + splitString [i]);
-				jugadorMuertoTxt.Add (int.Parse (splitString [i]));
-				//matrizPorNiveles [i].Add (splitString [i]);
-			} else if (matrizElegida == 3) {
-				//Debug.Log ("posicion muerte jugador" + splitString [i]);
-				posicionMuerteJugadorTxt [vidaJugadorTxt.Count - 1].Add (int.Parse (splitString [i]));
-				//matrizPorNiveles [i].Add (splitString [i]);
-			} else if (matrizElegida == 4) {
-				//Debug.Log ("Lista enemigos" + splitString [i]);
-				listaEnemigosTxt [listaEnemigosTxt.Count - 1].Add (splitString [i]);
-				//matrizPorNiveles [i].Add (splitString [i]);
-			} else if (matrizElegida == 5) {
-				//Debug.Log ("Lista golpes enemigo" + splitString [i]);
-				listaGolpesEnemigosTxt [listaGolpesEnemigosTxt.Count - 1].Add (splitString [i]);
-				//matrizPorNiveles [i].Add (splitString [i]);
-			} else if (matrizElegida == 6) {
-				//Debug.Log ("Lista puntaje" + splitString [i]);
-				listaPuntajeTxt [listaPuntajeTxt.Count - 1].Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
-			}else if (matrizElegida == 7 ) {
-				//Debug.Log ("Lista muertes" + splitString [i]);
-				listaMuertesTxt [listaMuertesTxt.Count - 1].Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
-			}else if (matrizElegida == 8 ) {
-				//Debug.Log ("Lista secretos" + splitString [i]);
-				listaSecretosTxt [listaSecretosTxt.Count - 1].Add (int.Parse (splitString [i]));
-				matrizPorNiveles [i].Add (splitString [i]);
-			}
-				
-			if (yaLeyoPrimeraLinea == false) {
-				//Debug.Log ("guarda solo 3 veces y no mas");
-				matrizPorNivelesTipo[i].Add ("" + tipo);
-			}
-
-		}
-	}
-
-	public void revisarMatricestxt(){
-		Debug.Log ("---------------------------------------------");
-		//Debug.Log ("Pasos jugador");
-		for (int i = 0; i < pasosJugadorTxt.Count; i++) {
-			//Debug.Log ("Archivo n°:" + (i+1));
-			for (int j = 0; j<pasosJugadorTxt [i].Count; j++) {
-				//Debug.Log (pasosJugadorTxt [i][j]);
-			}
-		}
-		//Debug.Log ("vida jugador");
-		for (int i = 0; i < vidaJugadorTxt.Count; i++) {
-			//Debug.Log ("Archivo n°:" + (i+1));
-			for (int j = 0; j<vidaJugadorTxt [i].Count; j++) {
-				//Debug.Log (vidaJugadorTxt [i][j]);
-			}
-		}
-		//Debug.Log ("jugador muerto");
-		for (int i = 0; i < jugadorMuertoTxt.Count; i++) {
-			//Debug.Log ("Archivo n°:" + (i+1));
-			//Debug.Log (jugadorMuertoTxt[i]);
-		}
-		//Debug.Log ("posicion muerte jugador");
-		for (int i = 0; i < posicionMuerteJugadorTxt.Count; i++) {
-			//Debug.Log ("Archivo n°:" + (i+1));
-			for (int j = 0; j<posicionMuerteJugadorTxt [i].Count; j++) {
-				//Debug.Log(posicionMuerteJugadorTxt [i] [j]);
-			}
-		}
-		//Debug.Log ("listado enemigos");
-		for (int i = 0; i < listaEnemigosTxt.Count; i++) {
-			//Debug.Log ("Archivo n°:" + (i+1));
-			for (int j = 0; j<listaEnemigosTxt [i].Count; j++) {
-				//Debug.Log (listaEnemigosTxt [i][j]);
-			}
-		}
-		//Debug.Log ("listado golpes enemigos");
-		for (int i = 0; i < listaGolpesEnemigosTxt.Count; i++) {
-			//Debug.Log ("Archivo n°:" + (i+1));
-			for (int j = 0; j<listaGolpesEnemigosTxt [i].Count; j++) {
-				//Debug.Log (listaGolpesEnemigosTxt [i][j]);
-			}
-		}
-		Debug.Log ("listado por niveles");
-		int tipo = 0;
-		for (int i = 0; i < matrizPorNiveles.Count; i++) {
-			Debug.Log ("nivel: " + (i+1));
-			for (int j = 0; j<matrizPorNiveles [i].Count; j++) {
-				Debug.Log ("J es: " + j);
-				Debug.Log (matrizPorNiveles [i][j]);
-				if (i == 1) {
-					if (j == 7 || j == 15 || j == 23) {
-
-						Debug.Log ("Es de tipo = " + matrizPorNivelesTipo [i] [tipo]);
-						tipo++;
-					}
-				} else if (i > 1) {
-					if (j == 6 || j == 13 || j == 20) {
-
-						Debug.Log ("Es de tipo = " + matrizPorNivelesTipo [i] [tipo]);
-						tipo++;
-					}
-				}else{
-					if (j == 8 || j == 17 || j == 26) {
-
-						Debug.Log ("Es de tipo = " + matrizPorNivelesTipo [i] [tipo]);
-						tipo++;
-					}
-
-				}
-				if (tipo == 3) {
-					tipo = 0;
-				}
-
-			}
-		}
-		/*
-		Debug.Log ("puntaje");
-		for (int i = 0; i < listaPuntajeTxt.Count; i++) {
-			Debug.Log ("Archivo n°:" + (i + 1));
-			for (int j = 0; j < listaPuntajeTxt [i].Count; j++) {
-				Debug.Log (listaPuntajeTxt [i] [j]);
-			}
-		}
-		Debug.Log ("Muertes:");
-		for (int i = 0; i < listaMuertesTxt.Count; i++) {
-			Debug.Log ("Archivo n°:" + (i + 1));
-			for (int j = 0; j < listaMuertesTxt [i].Count; j++) {
-				Debug.Log (listaMuertesTxt [i] [j]);
-			}
-		}
-		Debug.Log ("secretos:");
-		for (int i = 0; i < listaPuntajeTxt.Count; i++) {
-			Debug.Log ("Archivo n°:" + (i + 1));
-			for (int j = 0; j < listaPuntajeTxt [i].Count; j++) {
-				Debug.Log (listaPuntajeTxt [i] [j]);
-			}
-		}*/
-	}
 
 }
