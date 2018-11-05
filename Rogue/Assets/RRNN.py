@@ -56,6 +56,11 @@ def tipo_jugador():
             print("encontrado")
             prediciones = nn.predict(niveles)
             print(prediciones)
+            selecion = open("tipos.csv","w")
+            
+            for i in prediciones:
+                selecion.write(str(i) +"\n")
+            selecion.close()
             nivel_a_ejecutar+=3
         time.sleep(10)
 

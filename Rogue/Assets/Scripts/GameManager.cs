@@ -47,6 +47,10 @@ public class GameManager : MonoBehaviour {
 	private bool moveToNode = false;
 	private Vector2 coordeNode;
 
+	public bool yaEjecuto = false;
+	private int nivel_a_ejecutar_red_reuronal = 2;
+	private int nivel_a_detectar_tipo_jugador = 4;
+
 
 	private void Awake(){
 		
@@ -125,11 +129,22 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void Update(){
+		if(level == nivel_a_ejecutar_red_reuronal && yaEjecuto == false){//Indica el nivel en el cual se ejecuta la red neuronal en python
+			yaEjecuto = true;
+			cargarRedNeuronal ();
+		}
+
+		if(level == (nivel_a_ejecutar_red_reuronal + nivel_a_detectar_tipo_jugador)){ //Indica en que nivel se buscara detectar al jugador
+			revisar_tipo_jugador();
+			nivel_a_detectar_tipo_jugador += 4;
+		}
+
 		if (PlayerTurn || enemiesMoving || doingSetup)
 			return;
 
 		StartCoroutine (MoveEnemies());
 	}
+
 
 	public void AddEnemyToList(Enemy enemy){
 		enemies.Add (enemy);
@@ -272,15 +287,18 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	public void cargar(){
-
-		//datos.leerArchivosTxt (numero_archivo_txt);
+	public void cargarRedNeuronal(){
 
 		RedNeuronal rn = new RedNeuronal();
 		rn.ExecuteCommand ();
 
 	}
 
-
+	public void revisar_tipo_jugador(){
 		
+	}
+
+
+
+
 }

@@ -85,9 +85,7 @@ public class Player : MovingObject {
 			return;
 		}
 		if (GameManager.instance.enemigoMuerto) {
-			Debug.Log ("Tentativamente funciono");
 			killsEnemies += 1;
-			killsEnemiesText.text = "kills: " + killsEnemies;
 			GameManager.instance.enemigoMuerto = false;
 		}
 
@@ -101,7 +99,7 @@ public class Player : MovingObject {
 
 		}
 		if(Input.GetKeyDown(KeyCode.R)){
-			GameManager.instance.cargar ();
+			GameManager.instance.cargarRedNeuronal ();
 
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
