@@ -8,12 +8,17 @@ Created on Tue Oct  9 11:32:30 2018
 import numpy as np
 import pandas as pd
 import threading, time
+import os
+import pathlib
 from matplotlib import pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 #from sklearn.metrics import classification_report, confusion_matrix
 
+p = pathlib.Path('tipos.csv')
 
+if p.is_file():
+    os.remove("tipos.csv")
 ejecuciones = open("ejecuciones.csv","w")
 dataIn = pd.read_csv('datos0.csv',header=None) #LA BD
 

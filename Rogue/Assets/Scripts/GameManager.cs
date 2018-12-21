@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 	private Vector2 coordeNode;
 
 	public bool yaEjecuto = false;
-	private int nivel_a_ejecutar_red_reuronal = 1;
+	private int nivel_a_ejecutar_red_reuronal = 2;
 	private int nivel_a_detectar_tipo_jugador = 7;
 
 
