@@ -141,7 +141,11 @@ public class SaveLoad {
 	}
 
 	/*Funcion que sirve para leer todos los archivo txt generados hasta el numero antes de numMaximo(porque aun se esta ejecutando la actual partida) que se da.*/
-	public void leerArchivosCsv(int numMaximo){
+	public int leerArchivosCsv(){
+		int t0 = 0;
+		int t1 = 0;
+		int t2 = 0;
+
 		if (File.Exists ("Assets/tipos.csv")) {
 
 			StreamReader streamreader = new StreamReader ("Assets/tipos.csv");
@@ -152,14 +156,28 @@ public class SaveLoad {
 //				
 //				linea = streamreader.ReadLine ();
 //			}
-			while(linea != ""){
-				Debug.Log ("Encontro linea");
+			while(linea != null){
+				Debug.Log ("Encontro" + linea + "Fin");
+				Debug.Log ("Pruebas " + (linea== " ") + (linea==null));
+				int tp = int.Parse (linea);
+				if (tp == 0) {
+					t0++;
+				} else if (tp == 1) {
+					t1++;
+				} else {
+					t2++;
+				}
 				linea = streamreader.ReadLine ();
 			}
 
-
 			streamreader.Close ();
-
+		}
+		if ((t0 > t1)&& (t0 > t2)) {
+			return 0;
+		} else if ((t1 > t0) && (t1 > t2)) {
+			return 1;
+		} else {
+			return 2;
 		}
 	}
 

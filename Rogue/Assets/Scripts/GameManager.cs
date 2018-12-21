@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
 
 
 	SaveLoad datos = new SaveLoad();
+	int tipo_jugador_rn; //Tipo de jugador que la red neuronal detecto
 
 	GameObject[] sodas,foods,ammos; //Toca tener sus instancias ya que una vez desactivadas no aparecen con findObjectswhithtag
 
@@ -48,8 +49,8 @@ public class GameManager : MonoBehaviour {
 	private Vector2 coordeNode;
 
 	public bool yaEjecuto = false;
-	private int nivel_a_ejecutar_red_reuronal = 2;
-	private int nivel_a_detectar_tipo_jugador = 4;
+	private int nivel_a_ejecutar_red_reuronal = 1;
+	private int nivel_a_detectar_tipo_jugador = 7;
 
 
 	private void Awake(){
@@ -136,6 +137,7 @@ public class GameManager : MonoBehaviour {
 
 		if(level == (nivel_a_ejecutar_red_reuronal + nivel_a_detectar_tipo_jugador)){ //Indica en que nivel se buscara detectar al jugador
 			revisar_tipo_jugador();
+			Debug.Log (tipo_jugador_rn);
 			nivel_a_detectar_tipo_jugador += 4;
 		}
 
@@ -295,6 +297,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void revisar_tipo_jugador(){
+		SaveLoad tp = new SaveLoad();
+		tipo_jugador_rn = tp.leerArchivosCsv ();
 		
 	}
 
