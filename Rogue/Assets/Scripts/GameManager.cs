@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour {
 
 	private List<Enemy> enemies = new List<Enemy>(); //lista de enemigos para controlar los moviendo de ellos
 	private bool enemiesMoving; //Por defecto se inicializa en falso
+	private bool ChangeEnemyMovement; // una vez detectado el tipo de jugador el tipo de movimiento de los enemigos cambia
 
 
 	SaveLoad datos = new SaveLoad();
@@ -112,10 +113,19 @@ public class GameManager : MonoBehaviour {
 			}
 			if (enemies [i].gameObject.activeInHierarchy) {
 
-				if (enemies [i].tipoMovimiento == 3) {
+				if (enemies [i].tipoMovimiento == 3 && !ChangeEnemyMovement) {
 					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
 					enemies [i].RealizarMovimiento ();
-				} else {
+
+				}else if(ChangeEnemyMovement && tipo_jugador_rn == 1){
+					Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
+					Vector2 respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
+					Debug.Log ("Posicion del objeto" + respuesta);
+					enemies [i].setTypeOfMoviment (3);
+					enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
+					enemies [i].RealizarMovimiento ();
+				}
+				else {
 					enemies [i].RealizarMovimiento ();
 				}
 			}
@@ -137,7 +147,8 @@ public class GameManager : MonoBehaviour {
 
 		if(level == (nivel_a_ejecutar_red_reuronal + nivel_a_detectar_tipo_jugador)){ //Indica en que nivel se buscara detectar al jugador
 			revisar_tipo_jugador();
-			Debug.Log (tipo_jugador_rn);
+			Debug.Log ("========== " + tipo_jugador_rn);
+			ChangeEnemyMovement = true;
 			nivel_a_detectar_tipo_jugador += 4;
 		}
 
@@ -244,10 +255,11 @@ public class GameManager : MonoBehaviour {
 		return listaItems;
 	}
 
-	/*Función que sirve para obtener la distancia minima a un item desde la posicion del jugador */
-	public int itemMasCercanoAlJugador(int posJugadorX, int posJugadorY){
+	/*Función que sirve para obtener la distancia minima a un item desde una posicion dada */
+	public Vector2 itemMasCercanoAlJugador(int posJugadorX, int posJugadorY){
 		List<List<int>> listaItems = getListaItems ();
 		int distanciaMinima= 99; //Distancia minima al item mas cercano
+		Vector2 respuesta = new Vector2(0,0);
 
 		for (int i = 0; i < listaItems.Count; i++) {
 
@@ -259,11 +271,12 @@ public class GameManager : MonoBehaviour {
 
 			if ((x + y) < distanciaMinima) {
 				distanciaMinima = x + y;
+				respuesta = new Vector2 (posX, posY);
 			}
 
 		}
 		Debug.Log ("######### Distancia minima encontrada: " + distanciaMinima);
-		return distanciaMinima;
+		return respuesta;
 
 	}
 
@@ -299,7 +312,7 @@ public class GameManager : MonoBehaviour {
 	public void revisar_tipo_jugador(){
 		SaveLoad tp = new SaveLoad();
 		tipo_jugador_rn = tp.leerArchivosCsv ();
-		
+		ChangeEnemyMovement = true;
 	}
 
 

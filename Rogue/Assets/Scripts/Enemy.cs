@@ -17,8 +17,13 @@ public class Enemy : MovingObject {
 	private Vector2 posicionNodo = new Vector2 (-1, -1);
 
 	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio=0,normal=1, esqui_obstaculos=2, nodo=3 )
+	private int tipoMovimientoAntes = 0;
 	public List<int> LugarDelGolpe = new List<int>(); //las dos primeras posiciones son del enemigo y las otras dos del jugador
 	public int vecesGolepandoJugador = 0;
+
+	private bool identifiedPlater; //sirve para comenzar a contar el tipo que mantiene cerca del objeto
+	private int maxTimeCamper = 4;
+	private int timeElapsedCamper = 0;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -38,6 +43,7 @@ public class Enemy : MovingObject {
 			tipoMovimiento = 3;
 		}
 
+		tipoMovimientoAntes = tipoMovimiento; // ##########################3 toca revisar que no se cambie si de modifica tipoMoviento
 		Debug.Log ("Este enemigo sera: " + tipoMovimiento);
 
 		GameManager.instance.AddEnemyToList (this);//Cada enemigo se añade a la lista por su cuenta
@@ -178,12 +184,12 @@ public class Enemy : MovingObject {
 		if (hitPlayer != null) {
 			Debug.Log ("Encontro al jugador");
 			vecesGolepandoJugador += 1; //se aumenta 1 la cantida de daño que le hizo al jugador (para las metricas)
-			LugarDelGolpe.Add ( (int) transform.position.x);
-			LugarDelGolpe.Add ((int)transform.position.y);
-			LugarDelGolpe.Add ((int)target.position.x);
-			LugarDelGolpe.Add ((int)target.position.y);
-			int disMinItem = GameManager.instance.itemMasCercanoAlJugador ((int) target.position.x,(int) target.position.y);
-			LugarDelGolpe.Add (disMinItem);
+//			LugarDelGolpe.Add ( (int) transform.position.x);
+//			LugarDelGolpe.Add ((int)transform.position.y);
+//			LugarDelGolpe.Add ((int)target.position.x);
+//			LugarDelGolpe.Add ((int)target.position.y);
+//			int disMinItem = GameManager.instance.itemMasCercanoAlJugador ((int) target.position.x,(int) target.position.y);
+//			LugarDelGolpe.Add (disMinItem);
 			hitPlayer.LoseHealth (playerDamage);
 			animator.SetTrigger ("enemyAttack");
 			SoundManager.instance.RandomizeSfx (enemyAttack1, enemyAttack2);
@@ -332,5 +338,10 @@ public class Enemy : MovingObject {
 		posicion.Add ((int)target.position.x);
 		posicion.Add ((int)target.position.y);
 		return posicion;
+	}
+
+	public void setTypeOfMoviment(int type){
+		tipoMovimientoAntes = tipoMovimiento;
+		tipoMovimiento = type;
 	}
 }
