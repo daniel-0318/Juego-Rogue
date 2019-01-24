@@ -121,11 +121,24 @@ public class GameManager : MonoBehaviour {
 					Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
 					Vector2 respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
 					Debug.Log ("Posicion del objeto" + respuesta);
-					enemies [i].setTypeOfMoviment (3);
+
+					if (enemies[i].get_timeElapsedCamper() < 4) {
+						Debug.Log ("++++++++ cambio de movimiento a 3");
+						enemies [i].setTypeOfMoviment (3);
+					}
+					enemies [i].set_timeElapsedCamper (1);
 					enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 					enemies [i].RealizarMovimiento ();
-				}
-				else {
+
+					if (enemies [i].get_timeElapsedCamper() == 6) {
+						Debug.Log ("----- restauracion de movimiento");
+						enemies [i].restoreMove();
+					}
+					if (enemies [i].get_timeElapsedCamper() >= 12) {
+						Debug.Log (" ******* cambio de movimiento a 3");
+						enemies [i].setTypeOfMoviment (3);
+					}
+				}else {
 					enemies [i].RealizarMovimiento ();
 				}
 			}
