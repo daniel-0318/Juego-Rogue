@@ -94,14 +94,20 @@ public class Player : MovingObject {
 
 		//////////////////////////   ZONA PRUEBA
 		if(Input.GetKeyDown(KeyCode.M)){
-			Debug.Log ("Entro en la letra M a mapiar");
-			GameManager.instance.borrameLuego ();
+			Debug.Log ("Entro a detectar jugador EXPLORADOR");
+			GameManager.instance.borrameLuego (1);
+
+		}
+		if(Input.GetKeyDown(KeyCode.N)){
+			Debug.Log ("Entro a detectar jugador ASESINO");
+			GameManager.instance.borrameLuego (2);
 
 		}
 		if(Input.GetKeyDown(KeyCode.R)){
 			GameManager.instance.cargarRedNeuronal ();
 
 		}
+		/////////////////////////////// FIN ZONA PRUEBA
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			vertical = 1;
 		}else if (Input.GetKeyDown (KeyCode.DownArrow)) {

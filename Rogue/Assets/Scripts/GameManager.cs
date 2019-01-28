@@ -117,11 +117,11 @@ public class GameManager : MonoBehaviour {
 					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
 					enemies [i].RealizarMovimiento ();
 
-				}else if(ChangeEnemyMovement && tipo_jugador_rn == 1 ){// #### tipo jugador explorador encontrado
-					Vector2 respuesta;
+				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2) ){// #### tipo jugador explorador encontrado
+					Vector2 respuesta = new Vector2();
 					if (enemies [i].get_skipMove () == true) {
 						enemies [i].RealizarMovimiento ();
-					} else {
+					} else if (!(tipo_jugador_rn == 2 && (i == 0)) ){
 
 						Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
 						//Debug.Log ("Posicion del objeto" + respuesta);
@@ -129,9 +129,19 @@ public class GameManager : MonoBehaviour {
 						if(enemies[i].get_maxTimeCamper() == 0){ //Dar un valor de cuando campeara el objeto
 							Debug.Log("Cambio de tiempo de campeo");
 							enemies [i].set_maxTimeCamper ();
-							respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
+							if (tipo_jugador_rn == 1) {
+								respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
+							} else if (tipo_jugador_rn == 2) {
+								respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
+							}
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
+
+						if (tipo_jugador_rn == 2) {
+							respuesta = respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
+							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
+						}
+
 
 						if (enemies[i].get_timeElapsedCamper() < enemies[i].get_maxTimeCamper()) {
 							Debug.Log ("++++++++ cambio de movimiento a 3");
@@ -159,6 +169,8 @@ public class GameManager : MonoBehaviour {
 							enemies [i].set_goalOk(false);
 						}
 						
+					}else if(tipo_jugador_rn == 2 && (i == 0)){
+						enemies [i].RealizarMovimiento ();
 					}
 
 				}else if(ChangeEnemyMovement && tipo_jugador_rn == 2){
@@ -364,9 +376,9 @@ public class GameManager : MonoBehaviour {
 
 	///////////////// BORRAR LUEGO
 	/// 
-	public void borrameLuego(){
+	public void borrameLuego(int type){
 		ChangeEnemyMovement = true;
-		tipo_jugador_rn = 1;
+		tipo_jugador_rn = type;
 	}
 	/// 
 	/// //////////////////////////
