@@ -95,7 +95,7 @@ public class Player : MovingObject {
 		//////////////////////////   ZONA PRUEBA
 		if(Input.GetKeyDown(KeyCode.M)){
 			Debug.Log ("Entro en la letra M a mapiar");
-			GoalLook ();
+			GameManager.instance.borrameLuego ();
 
 		}
 		if(Input.GetKeyDown(KeyCode.R)){

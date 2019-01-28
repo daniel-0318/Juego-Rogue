@@ -13,7 +13,7 @@ public class Enemy : MovingObject {
 	private int healthPoints=10;
 	public Vector2 MovEsquive = new Vector2 (0,0);
 	private bool aunEsquivando;
-	private bool goalOk = false;
+	private bool goalOk = false; //ya llego a la posicion establecida
 	private Vector2 posicionNodo = new Vector2 (-1, -1);
 
 	public int tipoMovimiento = 0; // para saber que movimiento realiza (aleatorio=0,normal=1, esqui_obstaculos=2, nodo=3 )
@@ -22,8 +22,9 @@ public class Enemy : MovingObject {
 	public int vecesGolepandoJugador = 0;
 
 	private bool identifiedPlayer; //sirve para comenzar a contar el tipo que mantiene cerca del objeto
-	private int maxTimeCamper = 4;
-	private int timeElapsedCamper = 0;
+	private int maxTimeCamper = 0;
+	private int timeElapsedCamper = 0; 
+	private int timeResetCamper = 0;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -131,8 +132,9 @@ public class Enemy : MovingObject {
 		//	Debug.Log ("Enemigo, jugador cerca");
 			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
 		}else {//Acercarse al nodo que fue activado
-			if (posicionNodo == (Vector2)transform.position && identifiedPlayer == false) {
-			//	Debug.Log ("Enemigo, ya llego a la meta");
+			Debug.Log("°°°°°°° en el else de node " + (posicionNodo == (Vector2)transform.position) );
+			if (posicionNodo == (Vector2)transform.position ) {
+				Debug.Log ("Enemigo, ya llego a la meta");
 				goalOk = true;
 				MoveEnemyRandom ();
 			}  else {
@@ -368,5 +370,36 @@ public class Enemy : MovingObject {
 		}
 			
 			
+	}
+
+	public void set_maxTimeCamper(){
+		maxTimeCamper = (int)Random.Range (1.0f, 7.0f);
+		timeResetCamper = maxTimeCamper * 2;
+	}
+
+	public int get_maxTimeCamper(){
+		return maxTimeCamper;
+	}
+
+	public bool get_goalOK(){
+		return goalOk;
+	}
+
+	public void set_goalOk(bool valor){
+		goalOk = valor;
+	}
+
+	public bool get_skipMove(){
+		return skipmove;
+	}
+
+	public int get_timeResetCamper(){
+		return timeResetCamper;
+	}
+
+	public void reset_timesCampers(){
+		timeElapsedCamper = 0;
+		maxTimeCamper = 0;
+		timeResetCamper = 0;
 	}
 }

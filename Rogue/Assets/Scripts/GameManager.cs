@@ -117,27 +117,61 @@ public class GameManager : MonoBehaviour {
 					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
 					enemies [i].RealizarMovimiento ();
 
-				}else if(ChangeEnemyMovement && tipo_jugador_rn == 1){
-					Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
-					Vector2 respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
-					Debug.Log ("Posicion del objeto" + respuesta);
+				}else if(ChangeEnemyMovement && tipo_jugador_rn == 1 ){// #### tipo jugador explorador encontrado
+					Vector2 respuesta;
+					if (enemies [i].get_skipMove () == true) {
+						enemies [i].RealizarMovimiento ();
+					} else {
 
-					if (enemies[i].get_timeElapsedCamper() < 4) {
-						Debug.Log ("++++++++ cambio de movimiento a 3");
-						enemies [i].setTypeOfMoviment (3);
-					}
-					enemies [i].set_timeElapsedCamper (1);
-					enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
-					enemies [i].RealizarMovimiento ();
+						Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
+						//Debug.Log ("Posicion del objeto" + respuesta);
 
-					if (enemies [i].get_timeElapsedCamper() == 6) {
-						Debug.Log ("----- restauracion de movimiento");
-						enemies [i].restoreMove();
+						if(enemies[i].get_maxTimeCamper() == 0){ //Dar un valor de cuando campeara el objeto
+							Debug.Log("Cambio de tiempo de campeo");
+							enemies [i].set_maxTimeCamper ();
+							respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
+							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
+						}
+
+						if (enemies[i].get_timeElapsedCamper() < enemies[i].get_maxTimeCamper()) {
+							Debug.Log ("++++++++ cambio de movimiento a 3");
+							enemies [i].setTypeOfMoviment (3);
+						}
+
+						//////////////////
+						enemies [i].RealizarMovimiento ();
+						/////////////////
+						if (enemies [i].get_goalOK()) {/// si ya llego al objeto entonces comienza a sumar el tiempo de campeo
+							Debug.Log("llegada al objetivo");
+							enemies [i].set_timeElapsedCamper (1);
+						}
+
+						if (enemies [i].get_timeElapsedCamper() == enemies[i].get_maxTimeCamper()) {
+							Debug.Log ("----- restauracion de movimiento");
+							enemies [i].restoreMove();
+						}
+
+						Debug.Log ("~~~~~~ " + enemies [i].get_timeElapsedCamper () + " " +  enemies [i].get_timeResetCamper());
+						if (enemies [i].get_timeElapsedCamper() > enemies [i].get_timeResetCamper() ) {
+							Debug.Log (" ******* cambio de movimiento a 3");
+							enemies [i].setTypeOfMoviment (3);
+							enemies [i].reset_timesCampers ();
+							enemies [i].set_goalOk(false);
+						}
+						
 					}
-					if (enemies [i].get_timeElapsedCamper() >= 12) {
-						Debug.Log (" ******* cambio de movimiento a 3");
-						enemies [i].setTypeOfMoviment (3);
+
+				}else if(ChangeEnemyMovement && tipo_jugador_rn == 2){
+					Debug.Log ("##### ¡¡¡ Jugador tipo ASESINO !!!!!!!!");
+					Vector2 respuesta;
+
+					if(enemies[i].get_maxTimeCamper() == 0){ //Dar un valor de cuando campeara el objeto
+						Debug.Log("Cambio de tiempo de campeo");
+						enemies [i].set_maxTimeCamper ();
+						respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
+						enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 					}
+					
 				}else {
 					enemies [i].RealizarMovimiento ();
 				}
@@ -328,7 +362,14 @@ public class GameManager : MonoBehaviour {
 		ChangeEnemyMovement = true;
 	}
 
-
+	///////////////// BORRAR LUEGO
+	/// 
+	public void borrameLuego(){
+		ChangeEnemyMovement = true;
+		tipo_jugador_rn = 1;
+	}
+	/// 
+	/// //////////////////////////
 
 
 }
