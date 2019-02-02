@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
 	SaveLoad datos = new SaveLoad();
 	int tipo_jugador_rn; //Tipo de jugador que la red neuronal detecto
 
-	GameObject[] sodas,foods,ammos; //Toca tener sus instancias ya que una vez desactivadas no aparecen con findObjectswhithtag
+	GameObject[] sodas,foods,ammos, coins; //Toca tener sus instancias ya que una vez desactivadas no aparecen con findObjectswhithtag
 
 	private int level = 0;
 	private GameObject levelImage;
@@ -117,31 +117,33 @@ public class GameManager : MonoBehaviour {
 					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
 					enemies [i].RealizarMovimiento ();
 
-				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2) ){// #### tipo jugador explorador encontrado
+				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2) ){// #### tipo jugador explorador o asesino encontrado
+
 					Vector2 respuesta = new Vector2();
 					if (enemies [i].get_skipMove () == true) {
 						enemies [i].RealizarMovimiento ();
 					} else if (!(tipo_jugador_rn == 2 && (i == 0)) ){
-
-						Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
 						//Debug.Log ("Posicion del objeto" + respuesta);
 
 						if(enemies[i].get_maxTimeCamper() == 0){ //Dar un valor de cuando campeara el objeto
 							Debug.Log("Cambio de tiempo de campeo");
+							enemies[i].set_identifiedPlayer(tipo_jugador_rn);//sirve para que el goalOK del enemigo se maneje distinto dependiendo el tipo de jugador
 							enemies [i].set_maxTimeCamper ();
 							if (tipo_jugador_rn == 1) {
-								respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
+								Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
+								respuesta = item_aleatorio ();
 							} else if (tipo_jugador_rn == 2) {
+								Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
 								respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
+								enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 							}
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
-
 						if (tipo_jugador_rn == 2) {
-							respuesta = respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
+							Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
+							respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
-
 
 						if (enemies[i].get_timeElapsedCamper() < enemies[i].get_maxTimeCamper()) {
 							Debug.Log ("++++++++ cambio de movimiento a 3");
@@ -170,20 +172,10 @@ public class GameManager : MonoBehaviour {
 						}
 						
 					}else if(tipo_jugador_rn == 2 && (i == 0)){
+						Debug.Log ("##### ¡¡¡ Jugador tipo ASESINO primer zombi !!!!!!!!");
 						enemies [i].RealizarMovimiento ();
 					}
 
-				}else if(ChangeEnemyMovement && tipo_jugador_rn == 2){
-					Debug.Log ("##### ¡¡¡ Jugador tipo ASESINO !!!!!!!!");
-					Vector2 respuesta;
-
-					if(enemies[i].get_maxTimeCamper() == 0){ //Dar un valor de cuando campeara el objeto
-						Debug.Log("Cambio de tiempo de campeo");
-						enemies [i].set_maxTimeCamper ();
-						respuesta = itemMasCercanoAlJugador ((int)enemies [i].transform.position.x, (int)enemies [i].transform.position.y);
-						enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
-					}
-					
 				}else {
 					enemies [i].RealizarMovimiento ();
 				}
@@ -270,6 +262,8 @@ public class GameManager : MonoBehaviour {
 		sodas = GameObject.FindGameObjectsWithTag ("Soda");
 		foods = GameObject.FindGameObjectsWithTag ("Food");
 		ammos = GameObject.FindGameObjectsWithTag ("Ammo");
+		coins = GameObject.FindGameObjectsWithTag ("Coin");
+
 	}
 
 	/*Función que sirve para obtener la lista de items de cada nivel (posx, posy, adquiriojugador)*/
@@ -311,6 +305,18 @@ public class GameManager : MonoBehaviour {
 			listaItems.Add (item);
 		}
 
+		for (int i = 0; i < coins.Length; i++) {
+			List <int> item = new List<int> ();
+			item.Add ((int)coins [i].transform.position.x);
+			item.Add ((int)coins [i].transform.position.y);
+			if (coins [i].activeInHierarchy) {
+				item.Add (1);
+			} else {
+				item.Add (0);
+			}
+			listaItems.Add (item);
+		}
+
 		return listaItems;
 	}
 
@@ -337,6 +343,16 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("######### Distancia minima encontrada: " + distanciaMinima);
 		return respuesta;
 
+	}
+
+	public Vector2 item_aleatorio(){
+		List<List<int>> listaItems = getListaItems ();
+		int tamaño_lista_items = listaItems.Count;
+
+		int pos_random = (int) UnityEngine.Random.Range (0, tamaño_lista_items);
+		Vector2 respuesta = new Vector2 ( listaItems [pos_random][0], listaItems [pos_random][1]);
+
+		return respuesta;
 	}
 
 	public void guardar(int playerDead){

@@ -21,7 +21,7 @@ public class Enemy : MovingObject {
 	public List<int> LugarDelGolpe = new List<int>(); //las dos primeras posiciones son del enemigo y las otras dos del jugador
 	public int vecesGolepandoJugador = 0;
 
-	private bool identifiedPlayer; //sirve para comenzar a contar el tipo que mantiene cerca del objeto
+	private int identifiedPlayer = -1; //sirve para comenzar a contar el tipo que mantiene cerca del objeto
 	private int maxTimeCamper = 0;
 	private int timeElapsedCamper = 0; 
 	private int timeResetCamper = 0;
@@ -133,11 +133,19 @@ public class Enemy : MovingObject {
 			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
 		}else {//Acercarse al nodo que fue activado
 			Debug.Log("°°°°°°° en el else de node " + (posicionNodo == (Vector2)transform.position) );
-			if (posicionNodo == (Vector2)transform.position ) {
+			Debug.Log ("Miremos que dara "+ near_object() + " tipo jugador" + identifiedPlayer);
+			//Este primer if es si el enemigo es capaz de estar en la misma posicion del objetivo (nodo o item)
+			if (posicionNodo == (Vector2)transform.position  && identifiedPlayer == -1 ) {
 				Debug.Log ("Enemigo, ya llego a la meta");
 				goalOk = true;
 				MoveEnemyRandom ();
-			}  else {
+			// El enemigo esta en una posicion aledaña a su posicion objetivo
+			}else if(near_object()  && identifiedPlayer != -1){
+				Debug.Log ("Enemigo, ya llego cerca de otro");
+				goalOk = true;
+				MoveEnemyRandom ();
+			} else {
+				Debug.Log ("Enemigo, esquivar");
 				esquivar (posicionNodo, 1);
 			}
 		}
@@ -345,9 +353,29 @@ public class Enemy : MovingObject {
 		return posicion;
 	}
 
+	/*
+	 * Funcion: calcular si el enemigo esta en una posicion aledaña a la posicion objetivo (nodo)
+	 * Salida: Devuelve "true" si la posicion del enemigo es aledaña a la posicion objeto, caso contrario devuelve "false"
+	*/
+	public bool near_object(){
+		bool respuesta = false;
+
+		int x = (int) Mathf.Abs (transform.position.x - posicionNodo.x);
+		int y = (int) Mathf.Abs (transform.position.y - posicionNodo.y);
+
+		if (x <= 1 && y <= 1) {
+			respuesta = true;
+		}
+
+		return respuesta;
+	}
+
 	public void setTypeOfMoviment(int type){
-		identifiedPlayer = true;
 		tipoMovimiento = type;
+	}
+
+	public void set_identifiedPlayer(int type){
+		identifiedPlayer = type;
 	}
 
 	public void set_timeElapsedCamper(int quantity){
@@ -368,7 +396,7 @@ public class Enemy : MovingObject {
 		} else {
 			tipoMovimiento = 3;
 		}
-			
+		identifiedPlayer = -1;
 			
 	}
 
