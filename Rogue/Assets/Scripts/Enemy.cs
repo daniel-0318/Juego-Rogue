@@ -25,6 +25,7 @@ public class Enemy : MovingObject {
 	private int maxTimeCamper = 0;
 	private int timeElapsedCamper = 0; 
 	private int timeResetCamper = 0;
+	private int areaCamper= -1;
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -140,7 +141,7 @@ public class Enemy : MovingObject {
 				goalOk = true;
 				MoveEnemyRandom ();
 			// El enemigo esta en una posicion aledaña a su posicion objetivo
-			}else if(near_object()  && identifiedPlayer != -1){
+			}else if(near_object()  && (identifiedPlayer == 2 || identifiedPlayer == 3)){
 				Debug.Log ("Enemigo, ya llego cerca de otro");
 				goalOk = true;
 				MoveEnemyRandom ();
@@ -429,5 +430,14 @@ public class Enemy : MovingObject {
 		timeElapsedCamper = 0;
 		maxTimeCamper = 0;
 		timeResetCamper = 0;
+		areaCamper = -1;
+	}
+
+	public void set_areaCamper(int value){
+		areaCamper = value;
+	}
+
+	public int get_areaCamper(){
+		return areaCamper;
 	}
 }

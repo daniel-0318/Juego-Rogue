@@ -53,6 +53,8 @@ public class GameManager : MonoBehaviour {
 	private int nivel_a_ejecutar_red_reuronal = 2;
 	private int nivel_a_detectar_tipo_jugador = 7;
 
+	private bool [] areas = new bool[5];
+
 
 	private void Awake(){
 		
@@ -117,7 +119,7 @@ public class GameManager : MonoBehaviour {
 					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
 					enemies [i].RealizarMovimiento ();
 
-				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2) ){// #### tipo jugador explorador o asesino encontrado
+				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2 || tipo_jugador_rn == 3) ){//tipo jugador explorador o asesino encontrado
 
 					Vector2 respuesta = new Vector2();
 					if (enemies [i].get_skipMove () == true) {
@@ -136,6 +138,11 @@ public class GameManager : MonoBehaviour {
 								Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
 								respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
 								enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
+							}else if(tipo_jugador_rn == 3){
+								Debug.Log ("##### ¡¡¡ Jugador tipo triunfador !!!!!!!!");
+								Vector3 resp = selectedArea ();
+								enemies [i].set_areaCamper ((int)resp.z);
+								respuesta = new Vector2 (resp.x, resp.y);
 							}
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
@@ -160,6 +167,9 @@ public class GameManager : MonoBehaviour {
 
 						if (enemies [i].get_timeElapsedCamper() == enemies[i].get_maxTimeCamper()) {
 							Debug.Log ("----- restauracion de movimiento");
+							if (tipo_jugador_rn == 3) {
+								areas [enemies [i].get_areaCamper ()] = false;
+							}
 							enemies [i].restoreMove();
 						}
 
@@ -340,7 +350,6 @@ public class GameManager : MonoBehaviour {
 			}
 
 		}
-		Debug.Log ("######### Distancia minima encontrada: " + distanciaMinima);
 		return respuesta;
 
 	}
@@ -388,6 +397,42 @@ public class GameManager : MonoBehaviour {
 		SaveLoad tp = new SaveLoad();
 		tipo_jugador_rn = tp.leerArchivosCsv ();
 		ChangeEnemyMovement = true;
+	}
+
+	public Vector3 selectedArea(){
+		Vector3 respuesta = new Vector3 (1, 1);
+		int area = (int)UnityEngine.Random.Range (0.0f, 4.9f);
+		Debug.Log ("---el area fue " + area);
+		while (areas [area] == true) {
+			Debug.Log ("en el while");
+			area = (int)UnityEngine.Random.Range (0.0f, 3.9f);
+		}
+		areas [area] = true;
+		int x1 = (int)UnityEngine.Random.Range (0.0f, 7f);;
+		int y1 = (int)UnityEngine.Random.Range (0.0f, 7f);;
+		int x2 = (int)UnityEngine.Random.Range (8.0f, 15f);
+		int y2 = (int)UnityEngine.Random.Range (8.0f, 15f);
+		int x3 = (int)UnityEngine.Random.Range (3.0f, 11f);
+		int y3 = (int)UnityEngine.Random.Range (3.0f, 11f);
+
+		if (area == 0) {
+			respuesta = new Vector3 (x1, y1, 0);
+			Debug.Log (" ------------- area 1 " + respuesta);
+		} else if (area == 1) {
+			respuesta = new Vector3 (x2, y1, 1);
+			Debug.Log (" ------------- area 2 " + respuesta);
+		} else if (area == 2) {
+			respuesta = new Vector3 (x1, y2, 2);
+			Debug.Log (" ------------- area 3 " + respuesta);
+		} else if (area == 3) {
+			respuesta = new Vector3 (x2, y2, 3);
+			Debug.Log (" ------------- area 4 " + respuesta);
+		}else if (area == 4) {
+			respuesta = new Vector3 (x3, y3, 4);
+			Debug.Log (" ------------- area 5 " + respuesta);
+		}
+
+		return respuesta;
 	}
 
 	///////////////// BORRAR LUEGO

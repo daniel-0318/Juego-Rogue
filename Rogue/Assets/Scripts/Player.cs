@@ -103,6 +103,11 @@ public class Player : MovingObject {
 			GameManager.instance.borrameLuego (2);
 
 		}
+		if(Input.GetKeyDown(KeyCode.B)){
+			Debug.Log ("Entro a detectar jugador Triunfador");
+			GameManager.instance.borrameLuego (3);
+
+		}
 		if(Input.GetKeyDown(KeyCode.R)){
 			GameManager.instance.cargarRedNeuronal ();
 
