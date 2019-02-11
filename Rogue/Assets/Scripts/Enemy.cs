@@ -141,7 +141,7 @@ public class Enemy : MovingObject {
 				goalOk = true;
 				MoveEnemyRandom ();
 			// El enemigo esta en una posicion aledaña a su posicion objetivo
-			}else if(near_object()  && (identifiedPlayer == 2 || identifiedPlayer == 3)){
+			}else if(near_object()  && (identifiedPlayer == 0 || identifiedPlayer == 1)){
 				Debug.Log ("Enemigo, ya llego cerca de otro");
 				goalOk = true;
 				MoveEnemyRandom ();

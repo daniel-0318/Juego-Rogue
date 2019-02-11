@@ -94,8 +94,8 @@ public class Player : MovingObject {
 
 		//////////////////////////   ZONA PRUEBA
 		if(Input.GetKeyDown(KeyCode.M)){
-			Debug.Log ("Entro a detectar jugador EXPLORADOR");
-			GameManager.instance.borrameLuego (1);
+			Debug.Log ("Entro a detectar jugador Triunfador");
+			GameManager.instance.borrameLuego (0);
 
 		}
 		if(Input.GetKeyDown(KeyCode.N)){
@@ -104,8 +104,8 @@ public class Player : MovingObject {
 
 		}
 		if(Input.GetKeyDown(KeyCode.B)){
-			Debug.Log ("Entro a detectar jugador Triunfador");
-			GameManager.instance.borrameLuego (3);
+			Debug.Log ("Entro a detectar jugador EXPLORADOR");
+			GameManager.instance.borrameLuego (1);
 
 		}
 		if(Input.GetKeyDown(KeyCode.R)){

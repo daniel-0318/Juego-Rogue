@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour {
 					enemies [i].SetPosicionNodo ((int)coordeNode.x, (int)coordeNode.y);
 					enemies [i].RealizarMovimiento ();
 
-				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2 || tipo_jugador_rn == 3) ){//tipo jugador explorador o asesino encontrado
+				}else if(ChangeEnemyMovement && (tipo_jugador_rn == 1 || tipo_jugador_rn == 2 || tipo_jugador_rn == 0) ){//tipo jugador explorador o asesino encontrado
 
 					Vector2 respuesta = new Vector2();
 					if (enemies [i].get_skipMove () == true) {
@@ -131,15 +131,15 @@ public class GameManager : MonoBehaviour {
 							Debug.Log("Cambio de tiempo de campeo");
 							enemies[i].set_identifiedPlayer(tipo_jugador_rn);//sirve para que el goalOK del enemigo se maneje distinto dependiendo el tipo de jugador
 							enemies [i].set_maxTimeCamper ();
-							if (tipo_jugador_rn == 1) {
-								Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
+							if (tipo_jugador_rn == 0) {
+								Debug.Log ("##### ¡¡¡ Jugador tipo triunfador !!!!!!!!");
 								respuesta = item_aleatorio ();
 							} else if (tipo_jugador_rn == 2) {
 								Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
 								respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
 								enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
-							}else if(tipo_jugador_rn == 3){
-								Debug.Log ("##### ¡¡¡ Jugador tipo triunfador !!!!!!!!");
+							}else if(tipo_jugador_rn == 1){
+								Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
 								Vector3 resp = selectedArea ();
 								enemies [i].set_areaCamper ((int)resp.z);
 								respuesta = new Vector2 (resp.x, resp.y);
@@ -167,7 +167,7 @@ public class GameManager : MonoBehaviour {
 
 						if (enemies [i].get_timeElapsedCamper() == enemies[i].get_maxTimeCamper()) {
 							Debug.Log ("----- restauracion de movimiento");
-							if (tipo_jugador_rn == 3) {
+							if (tipo_jugador_rn == 1) {
 								areas [enemies [i].get_areaCamper ()] = false;
 							}
 							enemies [i].restoreMove();
