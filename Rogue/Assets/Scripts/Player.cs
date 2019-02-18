@@ -32,6 +32,8 @@ public class Player : MovingObject {
 
 	public GameObject bulletObject;
 
+	private int resetLista = 8;
+
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -244,6 +246,11 @@ public class Player : MovingObject {
 		if (other.CompareTag ("Exit")) {
 			if (cantidadPasos > 256) {
 				cantidadPasos = 256;
+			}
+
+			if (resetLista == GameManager.instance.getLevel()) {
+				GameManager.instance.reset_lista ();
+				resetLista += 4;
 			}
 			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
 			GameManager.instance.playerHealthtPoints = health;

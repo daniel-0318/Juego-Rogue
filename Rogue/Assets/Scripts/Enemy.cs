@@ -26,6 +26,7 @@ public class Enemy : MovingObject {
 	private int timeElapsedCamper = 0; 
 	private int timeResetCamper = 0;
 	private int areaCamper= -1;
+	private int seguir = -1; //Sirve para saber a que enemigo debe seguir
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -133,20 +134,20 @@ public class Enemy : MovingObject {
 		//	Debug.Log ("Enemigo, jugador cerca");
 			AttempMove ((int)playerIsNear.x, (int)playerIsNear.y);
 		}else {//Acercarse al nodo que fue activado
-			Debug.Log("°°°°°°° en el else de node " + (posicionNodo == (Vector2)transform.position) );
-			Debug.Log ("Miremos que dara "+ near_object() + " tipo jugador" + identifiedPlayer);
+//			Debug.Log("°°°°°°° en el else de node " + (posicionNodo == (Vector2)transform.position) );
+//			Debug.Log ("Miremos que dara "+ near_object() + " tipo jugador" + identifiedPlayer);
 			//Este primer if es si el enemigo es capaz de estar en la misma posicion del objetivo (nodo o item)
-			if (posicionNodo == (Vector2)transform.position  && identifiedPlayer == -1 ) {
-				Debug.Log ("Enemigo, ya llego a la meta");
+			if (posicionNodo == (Vector2)transform.position  && (identifiedPlayer == -1 || identifiedPlayer == 0)) {
+//				Debug.Log ("Enemigo, ya llego a la meta");
 				goalOk = true;
 				MoveEnemyRandom ();
 			// El enemigo esta en una posicion aledaña a su posicion objetivo
-			}else if(near_object()  && (identifiedPlayer == 0 || identifiedPlayer == 1)){
-				Debug.Log ("Enemigo, ya llego cerca de otro");
+			}else if(near_object()  && (identifiedPlayer == 2 || identifiedPlayer == 1)){
+//				Debug.Log ("Enemigo, ya llego cerca de otro");
 				goalOk = true;
 				MoveEnemyRandom ();
 			} else {
-				Debug.Log ("Enemigo, esquivar");
+//				Debug.Log ("Enemigo, esquivar");
 				esquivar (posicionNodo, 1);
 			}
 		}
@@ -431,6 +432,7 @@ public class Enemy : MovingObject {
 		maxTimeCamper = 0;
 		timeResetCamper = 0;
 		areaCamper = -1;
+		seguir = -1;
 	}
 
 	public void set_areaCamper(int value){
@@ -439,5 +441,13 @@ public class Enemy : MovingObject {
 
 	public int get_areaCamper(){
 		return areaCamper;
+	}
+
+	public int get_seguir(){
+		return seguir;
+	}
+
+	public void set_seguir(int valor){
+		seguir = valor;
 	}
 }

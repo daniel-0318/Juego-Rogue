@@ -29,7 +29,7 @@ public class BoardManager : MonoBehaviour {
 		RandomCoins ();
 		RandomAmmon ();
 		RadomNodes (); //nodos para waypoint
-		int enemyCount = (int)Mathf.Log (level+10, 2);// La cantidad de enemigos creceria logaritmicamente.
+		int enemyCount = (int)Mathf.Log (level+5, 2);// La cantidad de enemigos creceria logaritmicamente.
 		LayoutObjectAtRandom (enemyTiles,enemyCount,enemyCount);
 		GameObject objectInstan = Instantiate (exit, new Vector2(columnas-1, filas-1), Quaternion.identity ); //quaternion es la rotacion.
 		objectInstan.transform.SetParent (itemsHolder);

@@ -55,9 +55,10 @@ def tipo_jugador():
         nivel = open('datos.csv')
         nivel = nivel.readline()
         print(nivel)
-        niveles = pd.read_csv('datos.csv',header=None, skiprows=1)
-        niveles = niveles.transpose()
+        
         if int(nivel) == nivel_a_ejecutar:
+            niveles = pd.read_csv('datos.csv',header=None, skiprows=1)
+            niveles = niveles.transpose()
             print("encontrado")
             prediciones = nn.predict(niveles)
             print(prediciones)
@@ -67,7 +68,7 @@ def tipo_jugador():
                 selecion.write(str(i) +"\n")
             selecion.close()
             nivel_a_ejecutar+=4
-        time.sleep(10)
+        time.sleep(15)
 
         
 hilo = threading.Thread(target=tipo_jugador)

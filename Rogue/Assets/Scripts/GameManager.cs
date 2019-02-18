@@ -136,7 +136,9 @@ public class GameManager : MonoBehaviour {
 								respuesta = item_aleatorio ();
 							} else if (tipo_jugador_rn == 2) {
 								Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
-								respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
+								int seguir = enemigoASeguir (i);
+								enemies [i].set_seguir (seguir);
+								respuesta = new Vector2(enemies [seguir].transform.position.x, enemies [seguir].transform.position.y);
 								enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 							}else if(tipo_jugador_rn == 1){
 								Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
@@ -148,7 +150,7 @@ public class GameManager : MonoBehaviour {
 						}
 						if (tipo_jugador_rn == 2) {
 							Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
-							respuesta = new Vector2(enemies [i - 1].transform.position.x, enemies [i - 1].transform.position.y);
+							respuesta = new Vector2(enemies [enemies[i].get_seguir()].transform.position.x, enemies [enemies[i].get_seguir()].transform.position.y);
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
 
@@ -182,7 +184,7 @@ public class GameManager : MonoBehaviour {
 						}
 						
 					}else if(tipo_jugador_rn == 2 && (i == 0)){
-						Debug.Log ("##### ¡¡¡ Jugador tipo ASESINO primer zombi !!!!!!!!");
+						enemies[i].set_identifiedPlayer(tipo_jugador_rn);
 						enemies [i].RealizarMovimiento ();
 					}
 
@@ -208,7 +210,6 @@ public class GameManager : MonoBehaviour {
 
 		if(level == (nivel_a_ejecutar_red_reuronal + nivel_a_detectar_tipo_jugador)){ //Indica en que nivel se buscara detectar al jugador
 			revisar_tipo_jugador();
-			Debug.Log ("========== " + tipo_jugador_rn);
 			ChangeEnemyMovement = true;
 			nivel_a_detectar_tipo_jugador += 4;
 		}
@@ -368,6 +369,8 @@ public class GameManager : MonoBehaviour {
 
 		Debug.Log ("Guardando");
 
+		datos.resetListas (level);
+
 		datos.nivel = level;
 		datos.numeroPasosJugador = numeroPasosJugador;
 		datos.vidajugador.Add (playerHealthtPoints);
@@ -382,7 +385,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 
-		datos.GuardarParaExportar ();
+		datos.GuardarParaExportar (level);
 
 	}
 
@@ -408,8 +411,8 @@ public class GameManager : MonoBehaviour {
 			area = (int)UnityEngine.Random.Range (0.0f, 3.9f);
 		}
 		areas [area] = true;
-		int x1 = (int)UnityEngine.Random.Range (0.0f, 7f);;
-		int y1 = (int)UnityEngine.Random.Range (0.0f, 7f);;
+		int x1 = (int)UnityEngine.Random.Range (0.0f, 7f);
+		int y1 = (int)UnityEngine.Random.Range (0.0f, 7f);
 		int x2 = (int)UnityEngine.Random.Range (8.0f, 15f);
 		int y2 = (int)UnityEngine.Random.Range (8.0f, 15f);
 		int x3 = (int)UnityEngine.Random.Range (3.0f, 11f);
@@ -444,5 +447,24 @@ public class GameManager : MonoBehaviour {
 	/// 
 	/// //////////////////////////
 
+	public int getLevel(){
+		return level;
+	}
+
+	public void reset_lista(){
+		numeroPasosJugador = new List<int> ();
+	}
+
+	public int enemigoASeguir(int enemigo){
+		float max = enemies.Count -1f;
+		max += 0.9f;
+		int ASeguir = (int)UnityEngine.Random.Range (0.0f, max);
+
+		while(enemigo == ASeguir){
+			ASeguir = (int)UnityEngine.Random.Range (0.0f, max);
+		}
+
+		return ASeguir;
+	}
 
 }
