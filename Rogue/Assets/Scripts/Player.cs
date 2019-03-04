@@ -32,8 +32,6 @@ public class Player : MovingObject {
 
 	public GameObject bulletObject;
 
-	private int resetLista = 8;
-
 
 	protected override void Awake(){
 		animator = GetComponent<Animator> ();
@@ -248,9 +246,10 @@ public class Player : MovingObject {
 				cantidadPasos = 256;
 			}
 
-			if (resetLista == GameManager.instance.getLevel()) {
+			if (GameManager.instance.get_nivel_a_reset_pasos() == GameManager.instance.getLevel()) {
+				Debug.Log ("#################################### ENTRO ##################s");
 				GameManager.instance.reset_lista ();
-				resetLista += 4;
+				GameManager.instance.set_nivel_a_reset_pasos (2);
 			}
 			GameManager.instance.numeroPasosJugador.Add (cantidadPasos);
 			GameManager.instance.playerHealthtPoints = health;
@@ -292,7 +291,6 @@ public class Player : MovingObject {
 			other.gameObject.SetActive (false);
 			
 		}else if (other.CompareTag ("Node")) {
-			Debug.Log ("Funciono =) (/&%$#");
 			GameManager.instance.setCoordeNode ((Vector2)other.gameObject.transform.position);
 		}
 	}

@@ -51,7 +51,8 @@ public class GameManager : MonoBehaviour {
 
 	public bool yaEjecuto = false;
 	private int nivel_a_ejecutar_red_reuronal = 2;
-	private int nivel_a_detectar_tipo_jugador = 7;
+	private int nivel_a_detectar_tipo_jugador = 5;
+	private int nivel_a_reset_pasos = 6;
 
 	private bool [] areas = new bool[5];
 
@@ -88,6 +89,7 @@ public class GameManager : MonoBehaviour {
 		boardScript.SetupScene (level); //crear nivel
 		setListaItems();
 		Invoke ("HideLevelImage",levelStartDelay); //invoke sirve para ejecutar un metodo luego de cierto tiempo (levelstardelay)
+		areas = new bool[5];
 	
 	}
 
@@ -211,7 +213,7 @@ public class GameManager : MonoBehaviour {
 		if(level == (nivel_a_ejecutar_red_reuronal + nivel_a_detectar_tipo_jugador)){ //Indica en que nivel se buscara detectar al jugador
 			revisar_tipo_jugador();
 			ChangeEnemyMovement = true;
-			nivel_a_detectar_tipo_jugador += 4;
+			nivel_a_detectar_tipo_jugador += 2;
 		}
 
 		if (PlayerTurn || enemiesMoving || doingSetup)
@@ -465,6 +467,14 @@ public class GameManager : MonoBehaviour {
 		}
 
 		return ASeguir;
+	}
+
+	public int get_nivel_a_reset_pasos(){
+		return nivel_a_reset_pasos;
+	}
+
+	public void set_nivel_a_reset_pasos(int valor){
+		nivel_a_reset_pasos += valor;
 	}
 
 }

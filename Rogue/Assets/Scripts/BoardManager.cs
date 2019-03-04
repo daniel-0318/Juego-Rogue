@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour {
 
-	public int columnas = 16;
-	public int filas = 16;
+	private int columnas = 10;
+	private int filas = 10;
 	//contenedor para los objetos del piso y muros externos del juego para que no quede todo regado
 	private Transform boardHolder;
 

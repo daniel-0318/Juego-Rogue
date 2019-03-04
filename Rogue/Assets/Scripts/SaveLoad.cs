@@ -23,7 +23,7 @@ public class SaveLoad {
 	private string muertes =  "";
 	private string encontroSecretos = "";
 
-	private int nivelABorrar=8;
+	private int nivelABorrar=6;
 
 
 	public string getPasosDelJugador(){
@@ -149,7 +149,7 @@ public class SaveLoad {
 			score = new List<int> ();
 			killsEnemies = new List<int> ();
 			secretosEncontrados = new List<int> ();
-			nivelABorrar += 4;
+			nivelABorrar += 2;
 		}
 	}
 

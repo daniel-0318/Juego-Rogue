@@ -50,7 +50,7 @@ ejecuciones.close()
 #print(confusion_matrix(y_test,pred))  
 #print(classification_report(y_test,pred))  
 def tipo_jugador():
-    nivel_a_ejecutar = 7;
+    nivel_a_ejecutar = 5;
     while(True):
         nivel = open('datos.csv')
         nivel = nivel.readline()
@@ -67,7 +67,7 @@ def tipo_jugador():
             for i in prediciones:
                 selecion.write(str(i) +"\n")
             selecion.close()
-            nivel_a_ejecutar+=4
+            nivel_a_ejecutar+=2
         time.sleep(15)
 
         
