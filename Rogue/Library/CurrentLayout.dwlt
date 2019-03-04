@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 392}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -106,10 +106,10 @@ MonoBehaviour:
     y: 30
     width: 1366
     height: 635
-  m_MinSize: {x: 679, y: 342}
-  m_MaxSize: {x: 12004, y: 8042}
+  m_MinSize: {x: 683, y: 342}
+  m_MaxSize: {x: 12008, y: 8042}
   vertical: 0
-  controlID: 69
+  controlID: 23
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -130,10 +130,10 @@ MonoBehaviour:
     y: 0
     width: 996
     height: 635
-  m_MinSize: {x: 404, y: 342}
-  m_MaxSize: {x: 8004, y: 8042}
+  m_MinSize: {x: 406, y: 342}
+  m_MaxSize: {x: 8006, y: 8042}
   vertical: 1
-  controlID: 70
+  controlID: 24
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -154,8 +154,8 @@ MonoBehaviour:
     y: 0
     width: 996
     height: 364
-  m_MinSize: {x: 404, y: 221}
-  m_MaxSize: {x: 8004, y: 4021}
+  m_MinSize: {x: 406, y: 221}
+  m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
   controlID: 25
 --- !u!114 &8
@@ -176,8 +176,8 @@ MonoBehaviour:
     y: 0
     width: 304
     height: 364
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
@@ -254,8 +254,8 @@ MonoBehaviour:
     y: 0
     width: 370
     height: 635
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -365,23 +365,23 @@ MonoBehaviour:
     height: 343
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 5e97f9ff
-    m_LastClickedID: -420002
-    m_ExpandedIDs: 28a5f9ff2ac4f9ffdad0f9ffc835faff0651fafff49bfaff1ae8faff5e1cfbff72a7fbffe6fbfffff4ffffff00000000f6260000
+    m_SelectedIDs: 6c250000
+    m_LastClickedID: 0
+    m_ExpandedIDs: e6fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: AmmoText
-      m_OriginalName: AmmoText
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 9984
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
@@ -562,7 +562,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 59}
     m_SelectedIDs: 76250000
     m_LastClickedID: 9590
-    m_ExpandedIDs: 00000000f42400002025000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000f424000020250000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
