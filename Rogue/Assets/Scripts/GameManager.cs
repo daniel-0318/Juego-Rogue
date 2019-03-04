@@ -413,12 +413,12 @@ public class GameManager : MonoBehaviour {
 			area = (int)UnityEngine.Random.Range (0.0f, 3.9f);
 		}
 		areas [area] = true;
-		int x1 = (int)UnityEngine.Random.Range (0.0f, 7f);
-		int y1 = (int)UnityEngine.Random.Range (0.0f, 7f);
-		int x2 = (int)UnityEngine.Random.Range (8.0f, 15f);
-		int y2 = (int)UnityEngine.Random.Range (8.0f, 15f);
-		int x3 = (int)UnityEngine.Random.Range (3.0f, 11f);
-		int y3 = (int)UnityEngine.Random.Range (3.0f, 11f);
+		int x1 = (int)UnityEngine.Random.Range (0.0f, 4f);
+		int y1 = (int)UnityEngine.Random.Range (0.0f, 4f);
+		int x2 = (int)UnityEngine.Random.Range (5.0f, 9f);
+		int y2 = (int)UnityEngine.Random.Range (5.0f, 9f);
+		int x3 = (int)UnityEngine.Random.Range (4.0f, 7f);
+		int y3 = (int)UnityEngine.Random.Range (4.0f, 7f);
 
 		if (area == 0) {
 			respuesta = new Vector3 (x1, y1, 0);
