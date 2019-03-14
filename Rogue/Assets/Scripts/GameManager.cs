@@ -37,9 +37,10 @@ public class GameManager : MonoBehaviour {
 
 
 	SaveLoad datos = new SaveLoad();
-	int tipo_jugador_rn; //Tipo de jugador que la red neuronal detecto
+	int tipo_jugador_rn = -1; //Tipo de jugador que la red neuronal detecto
 
 	GameObject[] sodas,foods,ammos, coins; //Toca tener sus instancias ya que una vez desactivadas no aparecen con findObjectswhithtag
+	public Text playerType;
 
 	private int level = 0;
 	private GameObject levelImage;
@@ -82,8 +83,10 @@ public class GameManager : MonoBehaviour {
 		levelImage = GameObject.Find ("LevelImage");
 		levelText = GameObject.Find ("LevelText").GetComponent<Text>();
 		dayText = GameObject.Find ("DayText").GetComponent<Text>();
+		playerType = GameObject.Find ("PlayerText").GetComponent<Text> ();
 		dayText.text = "Day " + level;
 		levelText.text = "Day " + level;
+		playerType.text = "Player: " + tipo_jugador_rn;
 		levelImage.SetActive (true);
 		enemies.Clear ();
 		boardScript.SetupScene (level); //crear nivel
@@ -130,20 +133,16 @@ public class GameManager : MonoBehaviour {
 						//Debug.Log ("Posicion del objeto" + respuesta);
 
 						if(enemies[i].get_maxTimeCamper() == 0){ //Dar un valor de cuando campeara el objeto
-							Debug.Log("Cambio de tiempo de campeo");
 							enemies[i].set_identifiedPlayer(tipo_jugador_rn);//sirve para que el goalOK del enemigo se maneje distinto dependiendo el tipo de jugador
 							enemies [i].set_maxTimeCamper ();
 							if (tipo_jugador_rn == 0) {
-								Debug.Log ("##### ¡¡¡ Jugador tipo triunfador !!!!!!!!");
 								respuesta = item_aleatorio ();
 							} else if (tipo_jugador_rn == 2) {
-								Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
 								int seguir = enemigoASeguir (i);
 								enemies [i].set_seguir (seguir);
 								respuesta = new Vector2(enemies [seguir].transform.position.x, enemies [seguir].transform.position.y);
 								enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 							}else if(tipo_jugador_rn == 1){
-								Debug.Log ("##### ¡¡¡ Jugador tipo explorador !!!!!!!!");
 								Vector3 resp = selectedArea ();
 								enemies [i].set_areaCamper ((int)resp.z);
 								respuesta = new Vector2 (resp.x, resp.y);
@@ -151,13 +150,11 @@ public class GameManager : MonoBehaviour {
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
 						if (tipo_jugador_rn == 2) {
-							Debug.Log ("##### ¡¡¡ Jugador tipo asesino !!!!!!!!");
 							respuesta = new Vector2(enemies [enemies[i].get_seguir()].transform.position.x, enemies [enemies[i].get_seguir()].transform.position.y);
 							enemies [i].SetPosicionNodo ((int)respuesta.x, (int)respuesta.y);
 						}
 
 						if (enemies[i].get_timeElapsedCamper() < enemies[i].get_maxTimeCamper()) {
-							Debug.Log ("++++++++ cambio de movimiento a 3");
 							enemies [i].setTypeOfMoviment (3);
 						}
 
@@ -165,21 +162,17 @@ public class GameManager : MonoBehaviour {
 						enemies [i].RealizarMovimiento ();
 						/////////////////
 						if (enemies [i].get_goalOK()) {/// si ya llego al objeto entonces comienza a sumar el tiempo de campeo
-							Debug.Log("llegada al objetivo");
 							enemies [i].set_timeElapsedCamper (1);
 						}
 
 						if (enemies [i].get_timeElapsedCamper() == enemies[i].get_maxTimeCamper()) {
-							Debug.Log ("----- restauracion de movimiento");
 							if (tipo_jugador_rn == 1) {
 								areas [enemies [i].get_areaCamper ()] = false;
 							}
 							enemies [i].restoreMove();
 						}
-
-						Debug.Log ("~~~~~~ " + enemies [i].get_timeElapsedCamper () + " " +  enemies [i].get_timeResetCamper());
+							
 						if (enemies [i].get_timeElapsedCamper() > enemies [i].get_timeResetCamper() ) {
-							Debug.Log (" ******* cambio de movimiento a 3");
 							enemies [i].setTypeOfMoviment (3);
 							enemies [i].reset_timesCampers ();
 							enemies [i].set_goalOk(false);
@@ -401,6 +394,7 @@ public class GameManager : MonoBehaviour {
 	public void revisar_tipo_jugador(){
 		SaveLoad tp = new SaveLoad();
 		tipo_jugador_rn = tp.leerArchivosCsv ();
+		playerType.text = "Player: " + tipo_jugador_rn;
 		ChangeEnemyMovement = true;
 	}
 
@@ -439,15 +433,6 @@ public class GameManager : MonoBehaviour {
 
 		return respuesta;
 	}
-
-	///////////////// BORRAR LUEGO
-	/// 
-	public void borrameLuego(int type){
-		ChangeEnemyMovement = true;
-		tipo_jugador_rn = type;
-	}
-	/// 
-	/// //////////////////////////
 
 	public int getLevel(){
 		return level;

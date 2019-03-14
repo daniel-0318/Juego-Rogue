@@ -158,22 +158,52 @@ public class SaveLoad {
 		int t0 = 0;
 		int t1 = 0;
 		int t2 = 0;
-
+		int [] posiciones = new int[] {-1,-1,-1};
 		if (File.Exists ("Assets/tipos.csv")) {
 
 			StreamReader streamreader = new StreamReader ("Assets/tipos.csv");
-
 			String linea = streamreader.ReadLine ();
+			bool a = false;
+			bool b = false;
+			bool c = false;
 			while(linea != null){
-//				Debug.Log ("Encontro" + linea + "Fin");
-//				Debug.Log ("Pruebas " + (linea== " ") + (linea==null));
 				int tp = int.Parse (linea);
 				if (tp == 0) {
 					t0++;
+					if (a == false) {
+						if (posiciones [0] == -1) {
+							posiciones [0] = 0;
+						} else if (posiciones [1] == -1) {
+							posiciones [1] = 0;
+						} else if (posiciones [2] == -1) {
+							posiciones [2] = 0;
+						}
+						a = true;
+					}
 				} else if (tp == 1) {
 					t1++;
-				} else {
+					if (b == false) {
+						if (posiciones [0] == -1) {
+							posiciones [0] = 1;
+						} else if (posiciones [1] == -1) {
+							posiciones [1] = 1;
+						} else if (posiciones [2] == -1) {
+							posiciones [2] = 1;
+						}
+						b = true;
+					}
+				} else if (tp == 2){
 					t2++;
+					if (c == false) {
+						if (posiciones [0] == -1) {
+							posiciones [0] = 2;
+						} else if (posiciones [1] == -1) {
+							posiciones [1] = 2;
+						} else if (posiciones [2] == -1) {
+							posiciones [2] = 2;
+						}
+						c = true;
+					}
 				}
 				linea = streamreader.ReadLine ();
 			}
@@ -181,15 +211,37 @@ public class SaveLoad {
 			streamreader.Close ();
 		}
 		File.Delete ("Assets/tipos.csv");
+		int resp = -1;
 		if ((t0 > t1)&& (t0 > t2)) {
-			return 0;
+			return resp = 0;
 		} else if ((t1 > t0) && (t1 > t2)) {
-			return 1;
-		} else {
-			return 2;
+			resp =  1;
+		} else if ((t2 > t0) && (t2 > t1)) {
+			resp =  2;
+		}else if(t0 == t1){
+			if (posiciones [2] == 0 || (posiciones[1]== 0 && posiciones[2]!= 1)) {
+				resp =  0;
+			}
+			if (posiciones [2] == 1 || (posiciones[1]== 1 && posiciones[2]!= 0)) {
+				resp =  1;
+			}
+		}else if(t0 == t2){
+			if (posiciones [2] == 0 || (posiciones[1]== 0 && posiciones[2]!= 2)) {
+				resp =  0;
+			}
+			if (posiciones [2] == 2 || (posiciones[1]== 2 && posiciones[2]!= 0)) {
+				resp =  2;
+			}
+		}else if(t1==t2){
+			if (posiciones [2] == 1 || (posiciones[1]== 1 && posiciones[2]!= 2)) {
+				resp =  1;
+			}
+			if (posiciones [2] == 2 || (posiciones[1]== 2 && posiciones[2]!= 1)) {
+				resp =  2;
+			}
 		}
+		return resp;
 	}
-
 
 
 

@@ -6,6 +6,7 @@ using System.Collections;
 public class Player : MovingObject {
 
 	public AudioClip moveSound1, moveSound2, eatSound1, eatSound2, drinkSound1, drinkSound2, gameOverSound;
+	public GameObject[] foodTiles;
 
 	public int wallDamage = 1;
 	public int enemyDamage = 2;
@@ -92,27 +93,7 @@ public class Player : MovingObject {
 		int horizontal=0;
 		int vertical=0;
 
-		//////////////////////////   ZONA PRUEBA
-		if(Input.GetKeyDown(KeyCode.M)){
-			Debug.Log ("Entro a detectar jugador Triunfador");
-			GameManager.instance.borrameLuego (0);
 
-		}
-		if(Input.GetKeyDown(KeyCode.N)){
-			Debug.Log ("Entro a detectar jugador ASESINO");
-			GameManager.instance.borrameLuego (2);
-
-		}
-		if(Input.GetKeyDown(KeyCode.B)){
-			Debug.Log ("Entro a detectar jugador EXPLORADOR");
-			GameManager.instance.borrameLuego (1);
-
-		}
-		if(Input.GetKeyDown(KeyCode.R)){
-			GameManager.instance.cargarRedNeuronal ();
-
-		}
-		/////////////////////////////// FIN ZONA PRUEBA
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			vertical = 1;
 		}else if (Input.GetKeyDown (KeyCode.DownArrow)) {
@@ -183,7 +164,7 @@ public class Player : MovingObject {
 			bool respuesta  = hitWall.DamageWall (wallDamage);
 			cantidadPasos -= 1;
 			if (respuesta) {
-				probar_suerte_premio ();
+				probar_suerte_premio (hitWall);
 			}
 			animator.SetTrigger ("playerChop");
 		}
@@ -200,28 +181,20 @@ public class Player : MovingObject {
 
 	}
 
-	public void probar_suerte_premio (){
+	public void probar_suerte_premio (Wall hitWall){
 		float probabilidad_de_dar_premio = Random.Range (0.0f, 1f);
 		Debug.Log ("La suerte es de: " + probabilidad_de_dar_premio);
 		if (probabilidad_de_dar_premio >= 0.5f) {
 			Debug.Log("Tuvo suerte!!!!!!");
 			float premio = Random.Range (0.0f, 4.0f);
 			if (premio < 1) {
-				health += pointPerfood;
-				SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
-				healthText.text = " Health Points: " + health;
+				Instantiate(foodTiles[3],hitWall.transform.position,Quaternion.identity);
 			} else if (premio >= 1 && premio < 2) {
-				health += pointPerSoda;
-				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
-				healthText.text = " Health Points: " + health;
+				Instantiate(foodTiles[2],hitWall.transform.position,Quaternion.identity);
 			} else if (premio >= 2 && premio < 3) {
-				ammo += pointPerAmmo;
-				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
-				ammoText.text = " Ammo: " + ammo;
+				Instantiate(foodTiles[0],hitWall.transform.position,Quaternion.identity);
 			} else if (premio >= 3 && premio <= 4) {
-				score += pointPerCoin;
-				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
-				scoreText.text = "Score: " + score;
+				Instantiate(foodTiles[1],hitWall.transform.position,Quaternion.identity);
 			}
 			secretosEncontrados += 1;
 				
@@ -247,7 +220,6 @@ public class Player : MovingObject {
 			}
 
 			if (GameManager.instance.get_nivel_a_reset_pasos() == GameManager.instance.getLevel()) {
-				Debug.Log ("#################################### ENTRO ##################s");
 				GameManager.instance.reset_lista ();
 				GameManager.instance.set_nivel_a_reset_pasos (2);
 			}
